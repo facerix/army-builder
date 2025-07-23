@@ -1,0 +1,14 @@
+{
+  "name": "army-builder",
+  "version": "1.0.0",
+  "description": "Progressive web app to build army lists for Warhammer 40k and Age of Sigmar",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server --no-browser"
+  },
+  "author": "Rylee Corradini",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
