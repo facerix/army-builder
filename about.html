@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>Personnel</title>
+  <meta charset="utf-8" />
+  <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" href="https://army-builder.facerix.com/" />
+  <meta property="og:title" content="Personnel" />
+  <meta property="og:description"
+    content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
+  <meta property="og:url" content="https://army-builder.facerix.com/" />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="/icon512_maskable.png" type="image/png" />
+  <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+
+  <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+  <link rel="manifest" href="/manifest.json" />
+
+  <style>
+    header {
+      h1 { margin: 0; }
+    }
+    body {
+      height: 100vh;
+      overflow-y: scroll;
+    }
+
+    main {
+      flex-direction: column;
+      padding: 3em 15vw;
+
+      line-height: 1.75rem;
+      text-align: justify;
+    }
+
+    /* responsive design (breakpoints adopted from Bootstrap) */
+
+    /* Small devices (e.g. phones, 575px and under) */
+    @media (max-width: 575px) {
+      main.credits {
+        padding: 10px;
+      }
+    }
+
+    /* Small devices (landscape phones, 576px and up) */
+    @media (min-width: 576px) {
+      main.credits {
+        padding: 2em;
+      }
+    }
+
+    /* Medium devices (tablets, 768px and up) */
+    @media (min-width: 768px) {
+      main.credits {
+        padding: 4em;
+      }
+    }
+
+    /* Large devices (desktops, 992px and up) */
+    @media (min-width: 992px) {
+      main.credits {
+        padding: 5em;
+      }
+    }
+  </style>
+</head>
+
+<body class="fill-height watermark">
+  <header>
+    <a href="/">
+      <img src="/crossed-swords.svg" alt="Crossed-swords logo" />
+    </a>
+    <h1>About Personnel</h1>
+  </header>
+  <main class="credits">
+    <p>
+      Personnel was built using standard web technologies by me, <a href="https://www.facerix.com/about">Rylee Corradini</a>.
+      It's a Progressive Web App, meaning you can install it directly to your tablet/phone screen/desktop like
+      a regular app, and it will behave more or less the same as one, and save its data in your device storage - no login needed.
+    </p>
+
+    <p>
+      I built Personnel because I wanted an easy, free way to build and track my army lists for Warhammer 40k and Age of Sigmar.
+      It's modelled (loosely) after the official Games Workshop apps, but with a focus on simplicity, ease of use, and cost.
+      It's also a work in progress, so expect bugs and missing features.
+    </p>
+
+    <p>
+      Most art assets are from <a href="https://www.svgrepo.com/" target="_blank">SVG Repo</a>; placeholder animations were generated using
+      <a href="https://www.svgbackgrounds.com/elements/animated-svg-preloaders" target="_blank">SVGBackgrounds.com</a>.
+      Some 40k-flavor icons are from <a href="https://github.com/Locequen/40k-Data-Card" target="_blank">Locequen</a>; 
+      the faction icons are from <a href="https://github.com/Certseeds/wh40k-icon" target="_blank">Certseeds</a>.
+      All were tweaked by me, because SVG is rad that way.
+    </p>
+  </main>
+</body>
+</html>

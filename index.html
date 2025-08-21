@@ -1,40 +1,61 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <title>Army Builder</title>
-    <meta charset="utf-8" />
-    <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#ffffff" />
-    <link rel="canonical" href="https://army-builder.facerix.com/" />
-    <meta property="og:title" content="Army Builder" />
-    <meta property="og:description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-    <meta property="og:url" content="https://army-builder.facerix.com/" />
-    <meta property="og:type" content="website" />
-  
-    <link rel="icon" href="/icon512_maskable.png" type="image/png" />
-    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
 
-    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
-    <link rel="manifest" href="/manifest.json" />
-    <!-- <link rel="modulepreload" href="/index.js" /> -->
-  </head>
+<head>
+  <title>Army Builder</title>
+  <meta charset="utf-8" />
+  <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#ffffff" />
+  <link rel="canonical" href="https://army-builder.facerix.com/" />
+  <meta property="og:title" content="Army Builder" />
+  <meta property="og:description"
+    content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
+  <meta property="og:url" content="https://army-builder.facerix.com/" />
+  <meta property="og:type" content="website" />
 
-  <body class="fill-height">
-    <header>
-      <img src="/crossed-swords.svg" alt="Crossed-swords logo" />
-      <h1>Personnel</h1>
-    </header>
-    <main>
-      <h3>Your Quick & Dirty Army Builder: Coming Soon</h3>
-      <!-- TODO -->
-    </main>
+  <link rel="icon" href="/icon512_maskable.png" type="image/png" />
+  <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
 
-    <footer id="main-foot">
-      A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation
-    </footer>
-  </body>
-  <!-- <script src="/index.js" type="module"></script> -->
+  <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="modulepreload" href="/index.js" />
+</head>
+
+<body class="u-fill-height">
+  <header>
+    <img src="/crossed-swords.svg" alt="Crossed-swords logo" />
+    <h1>Personnel</h1>
+  </header>
+  <main class="u-center">
+    <h3>Your Quick & Dirty Army Builder</h3>
+    <div class="games">
+      <section class="u-flex u-flex-column u-flex-1">
+        <a href="/40k">
+          <header class="banner grimdark">
+            <img src="/images/aquila.svg" alt="imperial aquila" />
+            <h4>Warhammer 40k</h4>
+          </header>
+        </a>
+      </section>
+      
+      <section class="u-flex u-flex-column u-flex-1">
+        <a href="/aos">
+          <header class="aos banner">
+            <img src="/images/aos.png" alt="warhammer" />
+            <h4>Age of Sigmar</h4>
+          </header>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <footer id="main-foot">
+    A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation
+  </footer>
+</body>
+<script src="/index.js" type="module"></script>
+
 </html>

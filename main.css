@@ -30,11 +30,6 @@ body {
   font-variant: normal;
 }
 
-.fill-height {
-  height: -webkit-fill-available;
-  height: 100vh;
-}
-
 footer,
 header {
   flex: 0;
@@ -44,7 +39,8 @@ header {
   align-items: center;
 
   img {
-    max-height: 100%;
+    max-height: 40px;
+    margin-right: 0.5em;
   }
 }
 
@@ -96,6 +92,74 @@ main {
   padding: 8px;
   overflow-y: auto;
   background-color: #fafafa;
+}
+
+.games {
+  display: flex;
+  flex-direction: column;
+  width: -webkit-fill-available;
+  width: 100%;
+  max-width: 600px;
+  margin: 3em auto;
+  gap: 1em;
+}
+
+.banner {
+  font-size: xx-large;
+  justify-content: center;
+  padding: 3em;
+  min-width: 400px;
+
+  background-color: #274764;
+  color: white;
+
+  img {
+    width: 3em;
+    max-height: fit-content;
+    margin-left: -5rem;
+    margin-right: 1em;
+    filter: invert(1);
+  }
+
+  h4 {
+    margin: 0;
+  }
+
+  &.aos {
+    background-color: #741910;
+  }
+}
+
+a {
+  text-underline-offset: 5px;
+
+  &:hover {
+    text-decoration-style: dashed;
+  }
+
+  &:has(.grimdark) {
+    text-decoration-color: #950817;
+  }
+
+  &:has(.aos) {
+    text-decoration-color: #cebc7e;
+  }
+}
+
+section {
+  h5 {
+    margin: 0;
+  }
+  hr {
+    width: 90%;
+  }
+
+  .saved-lists {
+    /* margin-top: auto; */
+    max-height: 10vh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
 }
 
 .btn, button {
@@ -150,6 +214,14 @@ a:focus-visible {
   display: flex;
 }
 
+.u-flex-column {
+  flex-direction: column;
+}
+
+.u-flex-1 {
+  flex: 1;
+}
+
 .u-left {
   text-align: left;
 }
@@ -158,14 +230,20 @@ a:focus-visible {
   text-align: center;
 }
 
-.fill-width {
+.u-fill-width {
   width: -webkit-fill-available;
   width: 100%;
 }
 
-.fill-height {
+.u-fill-height {
   height: -webkit-fill-available;
   height: 100vh;
+}
+
+.u-stretch-height {
+  height: -webkit-fill-available;
+  height: 100%;
+  flex: 1;
 }
 
 
