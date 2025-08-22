@@ -1,6 +1,6 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
-import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
+import { FACTION_IMAGE_URLS, AOS_FACTION_NAMES } from '../src/factions.js';
 
 const listSlug = (armyList) => {
   const { id, faction, name } = armyList;
@@ -20,14 +20,12 @@ document.addEventListener("DOMContentLoaded", () => {
   DataStore.addEventListener("change", evt => {
     switch (evt.detail.changeType) {
       case "init":
-        if (!evt.detail.items.length) {
+        const aosLists = evt.detail.items.filter(list => list.game === 'aos');
+        if (!aosLists.length) {
           savedLists.append(h("p", { innerText: "No saved lists yet" }));
-          return;
         }
-        evt.detail.items.forEach(list => {
-          if (list.game === '40k') {
-            savedLists.append(listSlug(list));
-          }
+        aosLists.forEach(list => {
+          savedLists.append(listSlug(list));
         });
         document.querySelector("main").classList.remove("loading");
         break;
@@ -48,13 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
   btnNew.addEventListener("click", evt => {
     const faction = factionSelector.value;
     DataStore.addItem({
-      game: "40k",
+      game: "aos",
       faction,
-      name: `Unnamed ${FACTION_NAMES[faction]} army`,
+      name: `Unnamed ${AOS_FACTION_NAMES[faction]} army`,
       totalPoints: 0,
-      characters: [],
-      battleline: [],
-      otherUnits: []
+      regiments: [],
+      auxiliaryUnits: [],
+      lores: {
+        spell: null,
+        prayer :null,
+        manifestation: null,
+      },
+      terrain: null,
     })
   });
 })

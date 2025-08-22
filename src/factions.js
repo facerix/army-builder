@@ -73,6 +73,7 @@ export const FACTION_NAMES = {
 };
 
 export const FACTION_IMAGE_URLS = {
+  // 40k imperium
   "sisters": "/images/40k/sororitas.svg",
   "blackTemplars": "/images/40k/blackTemplars.svg",
   "bloodAngels": "/images/40k/bloodAngels.svg",
@@ -93,6 +94,7 @@ export const FACTION_IMAGE_URLS = {
   "imperialAgents": "/images/40k/imperialAquila.svg",
   "imperialKnights": "/images/40k/imperialKnights.svg",
 
+  // 40k chaos
   "daemons": "/images/40k/chaosDaemons.svg",
   "chaosKnights": "/images/40k/questorTraitoris.svg",
   "chaosMarines": "/images/40k/hereticAstartes.svg",
@@ -101,6 +103,7 @@ export const FACTION_IMAGE_URLS = {
   "thousandSons": "/images/40k/thousandSons.svg",
   "worldEaters": "/images/40k/worldEaters.svg",
 
+  // 40k xenos
   "aeldari": "/images/40k/asuryani.svg",
   "drukhari": "/images/40k/drukhari.svg",
   "gsc": "/images/40k/gsc.svg",
@@ -109,6 +112,38 @@ export const FACTION_IMAGE_URLS = {
   "orks": "/images/40k/orks.svg",
   "tyranids": "/images/40k/tyranids.svg",
   "tau": "/images/40k/tau.svg",
+
+  // aos chaos
+  "khorne": "/images/aos/khorne.svg",
+  "tzeentch": "/images/aos/tzeentch.svg",
+  "slaanesh": "/images/aos/slaanesh.svg",
+  "nurgle": "/images/aos/nurgle.svg",
+  "skaven": "/images/aos/skaven.svg",
+  "slavesToDarkness": "/images/aos/slavesToDarkness.svg",
+
+  // aos death
+  "fleshEaterCourts": "/images/aos/fleshEaterCourts.svg",
+  "nighthaunt": "/images/aos/nighthaunt.svg",
+  "bonereapers": "/images/aos/bonereapers.svg",
+  "gravelords": "/images/aos/gravelords.svg",
+
+  // aos destruction
+  "gloomspite": "/images/aos/gloomspite.svg",
+  "ironjawz": "/images/aos/ironjawz.svg",
+  "kruleboyz": "/images/aos/kruleboyz.svg",
+  "ogors": "/images/aos/ogors.svg",
+  "sonsOfBehemat": "/images/aos/sonsOfBehemat.svg",
+
+  // aos order
+  "citiesOfSigmar": "/images/aos/citiesOfSigmar.svg",
+  "daughtersOfKhaine": "/images/aos/daughtersOfKhaine.svg",
+  "fyreslayers": "/images/aos/fyreslayers.svg",
+  "idonethDeepkin": "/images/aos/idonethDeepkin.svg",
+  "kharadronOverlords": "/images/aos/kharadronOverlords.svg",
+  "luminethRealmlords": "/images/aos/luminethRealmlords.svg",
+  "seraphon": "/images/aos/seraphon.svg",
+  "stormcast": "/images/aos/sigmar.svg",
+  "sylvaneth": "/images/aos/sylvaneth.svg",
 };
 
 export const AOS_FACTION_NAMES = {

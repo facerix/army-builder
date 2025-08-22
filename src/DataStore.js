@@ -32,10 +32,10 @@ class DataStore extends EventTarget {
   // if we eventually allow other storage besides local (i.e. DB, cloud, etc), this will need to be more robust;
   // for now, just load the records from localStorage or set it up if not yet set
   async init() {
-    let savedItemsJson = window.localStorage.getItem("items");
+    let savedItemsJson = window.localStorage.getItem("armyLists");
     if (!savedItemsJson) {
       savedItemsJson = "[]";
-      window.localStorage.setItem("items", savedItemsJson);
+      window.localStorage.setItem("armyLists", savedItemsJson);
     }
     this.#items = this.#loadRecordsFromJson(savedItemsJson);
     this.#reindex();
@@ -56,7 +56,7 @@ class DataStore extends EventTarget {
   }
 
   #saveItems() {
-    window.localStorage.setItem("items", JSON.stringify(this.#items));
+    window.localStorage.setItem("armyLists", JSON.stringify(this.#items));
   }
 
   #emitChangeEvent(changeType, affectedRecords) {
