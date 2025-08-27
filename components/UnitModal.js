@@ -1,7 +1,7 @@
 import { h } from '../src/domUtils.js';
 import { v4WithTimestamp } from '../src/uuid.js';
 
-const UnitOption = unit => {
+const UnitListing = unit => {
   const row = h("div", { className: "unit-summary" }, [
     h("div", { className: "unit-info" }, [
       h("span", { className: "unit-name", innerText: unit.name }),
@@ -100,7 +100,7 @@ const CSS = `
       display: flex;
     }
 
-    #unitOptions {
+    #unitList {
       height: -webkit-fill-available;
       overflow-y: scroll;
     }
@@ -116,7 +116,7 @@ const TEMPLATE = `
       <img src="/images/close.svg" alt="cancel" tabindex="50" />
     </button>
   </header>
-  <div id="unitOptions">
+  <div id="unitList">
   </div>
 </dialog>
 `;
@@ -126,7 +126,7 @@ class UnitModal extends HTMLElement {
   #options = [];
   #modalTitle = null;
   #unitModal = null;
-  #unitOptions = null;
+  #unitList = null;
   #btnClose = null;
 
   constructor() {
@@ -151,7 +151,7 @@ class UnitModal extends HTMLElement {
     if (!this.#ready) {
       this.#modalTitle = this.shadowRoot.querySelector("#modalTitle");
       this.#unitModal = this.shadowRoot.querySelector("#unit-modal");
-      this.#unitOptions = this.shadowRoot.querySelector("#unitOptions");
+      this.#unitList = this.shadowRoot.querySelector("#unitList");
       this.#btnClose = this.shadowRoot.querySelector("#btnClose");
 
       // Set up event handlers
@@ -159,12 +159,13 @@ class UnitModal extends HTMLElement {
         this.close();
       });
 
-      this.#unitOptions.addEventListener("click", evt => {
+      this.#unitList.addEventListener("click", evt => {
         const btn = evt.target.closest("button");
         if (btn && btn.className === "add-unit") {
           const unitSummary = btn.closest(".unit-summary");
           const { unitName: name, unitPoints: points } = unitSummary.dataset;
-          const unitToAdd = { name, points: parseInt(points, 10), id: v4WithTimestamp() };
+          const unitOptions = this.#options.find(u => u.name === name)?.unitOptions;
+          const unitToAdd = { name, points: parseInt(points, 10), id: v4WithTimestamp(), unitOptions };
           
           // Dispatch custom event for unit addition
           const addEvent = new CustomEvent("unitAdded", { 
@@ -192,11 +193,11 @@ class UnitModal extends HTMLElement {
   }
 
   #render() {
-    if (!this.#unitOptions) return;
+    if (!this.#unitList) return;
     
-    this.#unitOptions.innerHTML = "";
-    this.#options.forEach(unitOption => {
-      this.#unitOptions.append(UnitOption(unitOption));
+    this.#unitList.innerHTML = "";
+    this.#options.forEach(unit => {
+      this.#unitList.append(UnitListing(unit));
     });
   }
 

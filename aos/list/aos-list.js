@@ -1,11 +1,11 @@
 import DataStore from '/src/DataStore.js';
-import '/components/CategorySection.js';
-import { MUNITORIUM } from '/src/mfm.js';
+import '/components/AOSSection.js';
+import { AOS_BATTLE_PROFILES } from '/src/mfm.js';
 import { AOS_FACTION_NAMES } from '/src/factions.js';
 
 const whenLoaded = Promise.all(
   [
-    customElements.whenDefined("category-section"),
+    customElements.whenDefined("aos-section"),
   ],
 );
 
@@ -21,9 +21,9 @@ whenLoaded.then(() => {
   const factionName = AOS_FACTION_NAMES[faction];
 
   let armyList;
-  let mfm;
+  let factionProfiles;
   if (factionName) {
-    mfm = {}; // MUNITORIUM[factionName]; TODO
+    factionProfiles = AOS_BATTLE_PROFILES[faction];
   }
 
   const btnDelete = document.querySelector("#btnDelete");
@@ -78,20 +78,26 @@ whenLoaded.then(() => {
   };
 
   const init = () => {
-    if (armyList && mfm) {
+    if (armyList && factionProfiles) {
       armyNameInput.value = armyList.name;
 
-      regimentsSection.units = armyList.regiments;
-      // regimentsSection.options = mfm.regiments;
-    
-      auxiliaryUnitsSection.units = armyList.auxiliaryUnits;
-      // auxiliaryUnitsSection.options = mfm.auxiliaryUnits;
+      regimentsSection.units = armyList.regiments ?? [];
+      regimentsSection.mode = "regiments";
+      regimentsSection.options = factionProfiles.heroes;
+      regimentsSection.subOptions = factionProfiles.units;
+
+      auxiliaryUnitsSection.units = armyList.auxiliaryUnits ?? [];
+      auxiliaryUnitsSection.mode = "units";
+      auxiliaryUnitsSection.options = [
+        ...factionProfiles.heroes,
+        ...factionProfiles.units
+      ].toSorted((a, b) => a.name.localeCompare(b.name));
     
       // loresSection.units = armyList.lores;
-      // loresSection.options = mfm.lores;
+      // loresSection.options = factionProfiles.lores;
 
       // terrainSection.units = armyList.terrain;
-      // terrainSection.options = mfm.terrain;
+      // terrainSection.options = factionProfiles.terrain;
 
       document.querySelector("body").classList.remove("loading");
     }
