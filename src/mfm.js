@@ -1809,7 +1809,6 @@ export const AOS_BATTLE_PROFILES = {
       { name: "Warden King", points: 120, modelCount: 1 }
     ],
     "units": [
-      "Black Ark Corsairs (120)",
       // TBD
     ],
     "formations": [

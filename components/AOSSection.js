@@ -1,4 +1,5 @@
 import './UnitModal.js';
+import './Regiment.js';
 import { h } from '../src/domUtils.js';
 
 const UnitRow = (unit, showOptions) => {
@@ -15,29 +16,6 @@ const UnitRow = (unit, showOptions) => {
   row.dataset.unitId = unit.id;
   return row;
 }
-
-const Regiment = (regimentData, index) => {
-  const regiment = h("div", { className: "aos-regiment" }, [
-    h("header", { className: "regiment-header" }, [
-      h("h4", { innerText: `Regiment ${index + 1}` }),
-      h("button", { className: "remove-regiment", title: "remove regiment" }, [
-        h("img", { src: "/images/circle-minus.svg", alt: "circle minus" })
-      ])
-    ]), 
-    h("div", { className: "contents" }, [
-      UnitRow(regimentData, true),
-      ...(regimentData?.units?.map(unit => UnitRow(unit, false)) || []),
-      h("button", { className: "add-unit", title: "add unit" }, [
-        h("img", { src: "/images/plus.svg", alt: "plus" }),
-        h("span", { innerText: "Add Unit to Regiment" })
-      ])
-    ]),
-  ]);
-  regiment.dataset.regimentId = regimentData.id;
-  regiment.dataset.regimentName = regimentData.name;
-  return regiment;
-}
-
 
 const CSS = `
 :host {
@@ -91,33 +69,7 @@ const CSS = `
     }
   }
 
-  .aos-regiment {
-    margin: 0.25rem 1rem;
 
-    .regiment-header {
-      background-color: #615655;
-      border-radius: 0.25rem 0.25rem 0 0;
-      color: white;
-
-      h4 {
-        margin: 0;
-        padding: 0.5rem;
-      }
-
-      button {
-        padding: 0.25rem;
-
-        img {
-          filter: invert(1);
-        }
-      }
-    }
-
-    .contents {
-      border: 1px solid #615655;
-      padding: 0.5rem;
-    }
-  }
 
   .unit-summary {
     display: flex;
@@ -140,8 +92,6 @@ const CSS = `
     font-size: small;
     margin: 0 0.75rem 0 auto;
   }
-
-
 }
 `;
 
@@ -166,6 +116,7 @@ class AOSSection extends HTMLElement {
   #data = null;
   #options = [];
   #subOptions = [];  // for regiments mode, these are the pool of units that might be available for a regiment, based on the leader's unit options
+  #points = 0;
 
   // DOM handles to things we only want to set up once
   sectionTitle = null;
@@ -194,32 +145,37 @@ class AOSSection extends HTMLElement {
   }
 
   #init() {
-    if (!this.#ready) {
+    if (!this.#ready && this.shadowRoot) {
       this.sectionTitle = this.shadowRoot.querySelector("#sectionTitle");
       this.pointsLabel = this.shadowRoot.querySelector("#pointsLabel");
       this.contentContainer = this.shadowRoot.querySelector(".contents");
       this.btnAddUnit = this.shadowRoot.querySelector("#btnAddUnit");
       this.unitModal = this.shadowRoot.querySelector("#unitModal");
       // this.confirmModal = this.shadowRoot.querySelector("confirmation-modal");
-  
+
       // populate attrs
+      this.#mode = this.getAttribute("mode") || "units";
       const title = this.getAttribute("sectionTitle");
       this.showOptions = this.hasAttribute("showOptions") && this.getAttribute("showOptions") !== "false";
       this.sectionTitle.innerText = title;
-      
+
       // set up event handlers
       this.btnAddUnit.addEventListener("click", () => {
         this.activeUnit = null;
-
-        // default modal config
-        this.unitModal.title = title;
-        this.unitModal.options = this.#options;
-        this.unitModal.showModal();
+        this.showModal();
       });
 
       // Listen for unit added events from the modal
       this.unitModal.addEventListener("unitAdded", (evt) => {
-        const unitToAdd = evt.detail.unit;
+        const { unit } = evt.detail;
+
+        const unitToAdd = (this.#mode === "regiments") ? {
+          ...unit,
+          name: `${unit.name}'s Regiment`,
+          leader: unit.name,
+          leaderPoints: unit.points,
+          units: [],
+        } : unit;
         this.#data.push(unitToAdd);
         this.#render();
         this.#emit("add", unitToAdd);
@@ -232,33 +188,12 @@ class AOSSection extends HTMLElement {
             case "remove-unit":
               const unitSummary = btn.closest(".unit-summary");
               const { unitId } = unitSummary.dataset;
-              this.removeUnit(unitId);    
+              this.removeUnit(unitId);
               break;
             case "remove-regiment":
               const regiment = btn.closest(".aos-regiment");
               const { regimentId } = regiment.dataset;
               this.removeRegiment(regimentId);
-              break;
-            case "add-unit":
-              const targetRegiment = btn.closest(".aos-regiment");
-              const { regimentName, regimentId: id } = targetRegiment.dataset;
-              const regimentOptions = this.#options.find(o => o.name === regimentName)?.unitOptions;
-              const modalOptions = regimentOptions.map(opt => {
-                if (opt.unitName) {
-                  return this.#subOptions.find(o => o.name === opt.unitName);
-                }
-                if (opt.tag) {
-                  if (opt.tag === "any") return [ ... this.#subOptions ];
-                  return [
-                    ...this.#options.filter(o => o.tags?.includes(opt.tag)),
-                    ...this.#subOptions.filter(o => o.tags?.includes(opt.tag))
-                  ];
-                }
-                return null;
-              }).flat().filter(o => o);
-              this.unitModal.options = modalOptions;
-              this.activeUnit = id;
-              this.unitModal.showModal();
               break;
             case "options":
               console.log("TODO... unit options");
@@ -272,20 +207,17 @@ class AOSSection extends HTMLElement {
   }
 
   #emit(changeType, units) {
-    const changeEvent = new CustomEvent("change", { detail: {
-      changeType,
-      units
-    }});
+    const changeEvent = new CustomEvent("change", {
+      detail: {
+        changeType,
+        units
+      }
+    });
     this.dispatchEvent(changeEvent);
   }
 
-  set mode(mode) {
-    this.#mode = mode;
-    this.#render();
-  }
-
   set units(units) {
-    this.#data = [ ...units ];
+    this.#data = [...units];
 
     if (!this.#ready) {
       this.#init();
@@ -293,8 +225,17 @@ class AOSSection extends HTMLElement {
     this.#render();
   }
 
-  set options(availableUnits) {
-    this.#options = [ ...availableUnits ];
+  set options(factionProfiles) {
+    if (this.#mode === "regiments") {
+      this.#options = factionProfiles.heroes;
+      this.#subOptions = factionProfiles.units;
+    } else {
+      this.#options = [
+        ...factionProfiles.heroes,
+        ...factionProfiles.units
+      ].toSorted((a, b) => a.name.localeCompare(b.name));
+    }
+
     if (!this.#ready) {
       this.#init();
     } else if (this.unitModal) {
@@ -303,12 +244,12 @@ class AOSSection extends HTMLElement {
     this.#render();
   }
 
-  set subOptions(availableUnits) {
-    this.#subOptions = [ ...availableUnits ];
-  }
-
   get units() {
     return { ...this.#data };
+  }
+
+  get points() {
+    return this.#points ?? 0;
   }
 
   #render() {
@@ -320,7 +261,52 @@ class AOSSection extends HTMLElement {
   };
 
   addRegiment(regiment, index) {
-    this.contentContainer.append(Regiment(regiment, index));
+    const regimentElement = document.createElement('aos-regiment');
+    regimentElement.regimentData = regiment;
+    regimentElement.index = index;
+
+    const regimentOptions = regiment?.unitOptions;
+    const modalOptions = regimentOptions.map(opt => {
+      if (opt.unitName) {
+        return this.#subOptions.find(o => o.name === opt.unitName);
+      }
+      if (opt.tag) {
+        if (opt.tag === "any") return [... this.#subOptions];
+        return [
+          ...this.#options.filter(o => o.tags?.includes(opt.tag)),
+          ...this.#subOptions.filter(o => o.tags?.includes(opt.tag))
+        ];
+      }
+      return null;
+    }).flat().filter(o => o);
+    regimentElement.options = modalOptions;
+
+    // Set up event listeners for the regiment component
+    regimentElement.addEventListener('removeRegiment', (evt) => {
+      this.removeRegiment(evt.detail);
+    });
+
+    regimentElement.addEventListener('removeUnit', (evt) => {
+      const { unitId, regimentId } = evt.detail;
+      this.removeUnit(unitId, regimentId);
+    });
+
+    regimentElement.addEventListener('addUnit', (evt) => {
+      const { unit, regimentId } = evt.detail;
+      const regiment = this.#data.find(r => r.id === regimentId);
+      regiment.units.push(unit);
+      this.recalculatePoints();
+      this.#render();
+      this.#emit("update", regiment);
+    });
+
+    this.contentContainer.append(regimentElement);
+  }
+
+  showModal() {
+    this.unitModal.title = this.#mode === "regiments" ? "Regiment" : "Unit";
+    this.unitModal.options = this.#options;
+    this.unitModal.showModal();
   }
 
   addUnit(unit) {
@@ -328,7 +314,7 @@ class AOSSection extends HTMLElement {
   }
 
   removeRegiment(regimentId) {
-    const foundNode = Array.from(this.contentContainer.querySelectorAll(".aos-regiment")).find(r => r.dataset.regimentId === regimentId);
+    const foundNode = Array.from(this.contentContainer.querySelectorAll("aos-regiment")).find(r => r.dataset.regimentId === regimentId);
     if (foundNode) {
       foundNode.remove();
       this.#data = this.#data.filter(r => r.id !== regimentId);
@@ -337,20 +323,55 @@ class AOSSection extends HTMLElement {
     }
   }
 
-  removeUnit(unitId) {
-    const foundNode = Array.from(this.contentContainer.querySelectorAll(".unit-summary")).find(u => u.dataset.unitId === unitId);
-    if (foundNode) {
-      foundNode.remove();
-      this.#data = this.#data.filter(u => u.id !== unitId);
-      this.recalculatePoints();
-      this.#emit("delete", unitId);
-    };
+  removeUnit(unitId, regimentId) {
+    if (this.#mode === "regiments") {
+      // Remove unit from regiment
+      const regiment = this.#data.find(r => r.id === regimentId);
+      if (regiment) {
+        const unitIndex = regiment.units.findIndex(u => u.id === unitId);
+        if (unitIndex !== -1) {
+          regiment.units.splice(unitIndex, 1);
+          this.#render();
+          this.recalculatePoints();
+          this.#emit("update", regiment);
+        }
+      }
+    } else {
+      // Remove unit from main section
+      const foundNode = Array.from(this.contentContainer.querySelectorAll(".unit-summary")).find(u => u.dataset.unitId === unitId);
+      if (foundNode) {
+        foundNode.remove();
+        this.#data = this.#data.filter(u => u.id !== unitId);
+        this.recalculatePoints();
+        this.#emit("delete", unitId);
+      }
+    }
   }
 
   recalculatePoints() {
-    const totalPoints = this.#data.reduce((acc, curr) => {
-      return acc + curr.points;
-    }, 0);
+    let totalPoints = 0;
+
+    if (this.#data) {
+      if (this.#mode === "regiments") {
+        // Calculate points for regiments (leader + units)
+        // (we use for loop rather than forEach to allow mutating the array in place)
+        for (let i = 0; i < this.#data.length; i++) {
+          const regiment = this.#data[i];
+          regiment.leaderPoints = regiment.leaderPoints || 0;
+          // calculate points for units in regiment
+          const unitPoints = regiment.units.reduce((acc, unit) => acc + (unit.points || 0), 0);
+          regiment.points = regiment.leaderPoints + unitPoints;
+          totalPoints += regiment.points;
+          this.#data[i] = regiment;
+        }
+      } else {
+        // Calculate points for regular units
+        totalPoints = this.#data.reduce((acc, curr) => {
+          return acc + (curr.points || 0);
+        }, 0);
+      }
+    }
+    this.#points = totalPoints;
     this.pointsLabel.innerText = totalPoints ? `${totalPoints} Points` : '';
   }
 

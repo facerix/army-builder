@@ -1,11 +1,13 @@
 import DataStore from '/src/DataStore.js';
 import '/components/AOSSection.js';
+import '/components/Regiment.js';
 import { AOS_BATTLE_PROFILES } from '/src/mfm.js';
 import { AOS_FACTION_NAMES } from '/src/factions.js';
 
 const whenLoaded = Promise.all(
   [
     customElements.whenDefined("aos-section"),
+    customElements.whenDefined("aos-regiment"),
   ],
 );
 
@@ -30,8 +32,8 @@ whenLoaded.then(() => {
   const armyNameInput = document.querySelector("#armyName");
   const regimentsSection = document.querySelector("#regiments");
   const auxiliaryUnitsSection = document.querySelector("#auxiliaryUnits");
-  const loresSection = document.querySelector("#lores");
-  const terrainSection = document.querySelector("#terrain");
+  // const loresSection = document.querySelector("#lores");
+  // const terrainSection = document.querySelector("#terrain");
   const totalPoints = document.querySelector("#totalPoints");
 
   const newArmy = () => {
@@ -52,8 +54,10 @@ whenLoaded.then(() => {
   }
 
   const recalculatePoints = () => {
+    const updatedPoints = regimentsSection.points + auxiliaryUnitsSection.points;
     if (totalPoints && armyList) {
-      totalPoints.innerText = getTotalPoints(armyList);
+      armyList.totalPoints = updatedPoints;
+      totalPoints.innerText = updatedPoints;
     }
   };
 
@@ -72,6 +76,11 @@ whenLoaded.then(() => {
         const toPrune = armyList[section].findIndex(u => u.id === affectedItems);
         armyList[section].splice(toPrune, 1);
         break;
+      case "update":
+        console.log("update", affectedItems);
+        // const regimentIndex = armyList[section].findIndex(r => r.id === affectedItems.id);
+        // armyList[section][regimentIndex] = affectedItems;
+        break;
     }
     recalculatePoints();
     save();
@@ -83,15 +92,11 @@ whenLoaded.then(() => {
 
       regimentsSection.units = armyList.regiments ?? [];
       regimentsSection.mode = "regiments";
-      regimentsSection.options = factionProfiles.heroes;
-      regimentsSection.subOptions = factionProfiles.units;
+      regimentsSection.options = factionProfiles;
 
       auxiliaryUnitsSection.units = armyList.auxiliaryUnits ?? [];
       auxiliaryUnitsSection.mode = "units";
-      auxiliaryUnitsSection.options = [
-        ...factionProfiles.heroes,
-        ...factionProfiles.units
-      ].toSorted((a, b) => a.name.localeCompare(b.name));
+      auxiliaryUnitsSection.options = factionProfiles;
     
       // loresSection.units = armyList.lores;
       // loresSection.options = factionProfiles.lores;
@@ -120,12 +125,12 @@ whenLoaded.then(() => {
   auxiliaryUnitsSection.addEventListener("change", evt => {
     onUpdate("auxiliaryUnits", evt.detail.changeType, evt.detail.units, auxiliaryUnitsSection);
   });
-  loresSection.addEventListener("change", evt => {
-    onUpdate("lores", evt.detail.changeType, evt.detail.units, loresSection);
-  });
-  terrainSection.addEventListener("change", evt => {
-    onUpdate("terrain", evt.detail.changeType, evt.detail.units, terrainSection);
-  });
+  // loresSection.addEventListener("change", evt => {
+  //   onUpdate("lores", evt.detail.changeType, evt.detail.units, loresSection);
+  // });
+  // terrainSection.addEventListener("change", evt => {
+  //   onUpdate("terrain", evt.detail.changeType, evt.detail.units, terrainSection);
+  // });
 
   DataStore.init();
 

@@ -1,6 +1,7 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
 import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
+import { MUNITORIUM } from '/src/mfm.js';
 
 const listSlug = (armyList) => {
   const { id, faction, name } = armyList;
@@ -14,6 +15,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const savedLists = document.querySelector(".saved-lists");
   const btnNew = document.querySelector(".faction-selector button");
   const factionSelector = document.querySelector("select#faction");
+
+  // disable faction options that don't have a battle profile
+  factionSelector.querySelectorAll("option").forEach(option => {
+    const faction = FACTION_NAMES[option.value];
+    if (!MUNITORIUM[faction] || !MUNITORIUM[faction]?.characters?.length || !MUNITORIUM[faction]?.otherUnits?.length) {
+      option.disabled = true;
+    }
+  });
 
   DataStore.init();
 
