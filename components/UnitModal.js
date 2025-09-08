@@ -1,18 +1,38 @@
 import { h } from '../src/domUtils.js';
 import { v4WithTimestamp } from '../src/uuid.js';
 
+// I want to define a type for the unit object for JSDoc usage but not TypeScript
+/**
+ * @typedef {Object} Unit
+ * @property {string} name
+ * @property {Object} unitOptions
+ * @property {number} points
+ * @property {string[]} tags
+ */
+
+/**
+ * 
+ * @param {Unit} unit 
+ * @returns 
+ */
 const UnitListing = unit => {
+  const { name, unitOptions, modelCount = 1 } = unit;
+  let points = unit.points;
+  if (unitOptions?.unitSize) {
+    points = `(${Object.values(unitOptions.unitSize).join(", ")})`;
+  }
   const row = h("div", { className: "unit-summary" }, [
     h("div", { className: "unit-info" }, [
-      h("span", { className: "unit-name", innerText: unit.name }),
-      h("span", { className: "unit-pts points", innerText: `${unit.points} Points` }),
+      h("span", { className: "unit-name", innerText: name }),
+      h("span", { className: "unit-pts points", innerText: `${points} Points` }),
     ]),
     h("button", { className: "add-unit", title: "add unit" }, [
       h("img", { src: "/images/plus.svg", alt: "add unit" })
     ]),
   ]);
-  row.dataset.unitName = unit.name;
-  row.dataset.unitPoints = unit.points;
+  row.dataset.unitName = name;
+  row.dataset.defaultModelCount = modelCount;
+  row.dataset.unitTags = unit.tags?.join(", ") ?? "";
   return row;
 }
 
@@ -163,9 +183,13 @@ class UnitModal extends HTMLElement {
         const btn = evt.target.closest("button");
         if (btn && btn.className === "add-unit") {
           const unitSummary = btn.closest(".unit-summary");
-          const { unitName: name, unitPoints: points } = unitSummary.dataset;
-          const unitOptions = this.#options.find(u => u.name === name)?.unitOptions;
-          const unitToAdd = { name, points: parseInt(points, 10), id: v4WithTimestamp(), unitOptions };
+          const { unitName: name, defaultModelCount } = unitSummary.dataset;
+          // Unit definition :> name: string, points: number, tags?: string[], modelCount?: number | number[], unitOptions?: object
+          const unitDef = this.#options.find(u => u.name === name);
+          const tags = unitDef.tags ?? [];
+          const points = Array.isArray(unitDef.points) ? unitDef.points[0] : unitDef.points;
+          const modelCount = parseInt(defaultModelCount, 10);
+          const unitToAdd = { name, points, id: v4WithTimestamp(), modelCount, unitOptions: unitDef.unitOptions, tags };
           
           // Dispatch custom event for unit addition
           const addEvent = new CustomEvent("unitAdded", { 

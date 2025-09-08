@@ -10,7 +10,7 @@ export const MUNITORIUM = {
       { name: "Hospitaller", points: 50, modelCount: 1 },
       { name: "Imagifier", points: 65, modelCount: 1 },
       { name: "Junith Eruita", points: 90, modelCount: 1 },
-      { name: "Ministorum Priest", points: 50, modelCount: 1 },
+      { name: "Ministorum Priest", points: 50, modelCount: 1, tags: ["Penitent"] },
       { name: "Morvenn Vahl", points: 170, modelCount: 1 },
       { name: "Palatine", points: 50, modelCount: 1 },
       { name: "Saint Celestine", points: 160, modelCount: 1 },
@@ -20,21 +20,21 @@ export const MUNITORIUM = {
       { name: "Battle Sisters Squad", points: 105, modelCount: 10 },
     ],
     "otherUnits": [
-      { name: "Arco-flagellants (x3)", points: 45 },
-      { name: "Arco-flagellants (x10)", points: 140 },
+      { name: "Arco-flagellants (x3)", points: 45, tags: ["Penitent"] },
+      { name: "Arco-flagellants (x10)", points: 140, tags: ["Penitent"] },
       { name: "Castigator", points: 170 },
       { name: "Celestian Sacresants (x5)", points: 70 },
       { name: "Celestian Sacresants (x10)", points: 130 },
       { name: "Dominion Squad", points: 115, modelCount: 10 },
       { name: "Exorcist", points: 210 },
       { name: "Immolator", points: 125 },
-      { name: "Mortifiers (x1)", points: 70 },
-      { name: "Mortifiers (x2)", points: 140 },
+      { name: "Mortifiers (x1)", points: 70, tags: ["Penitent"] },
+      { name: "Mortifiers (x2)", points: 140, tags: ["Penitent"] },
       { name: "Paragon Warsuits", points: 220, modelCount: 3 },
-      { name: "Penitent Engines (x1)", points: 75 },
-      { name: "Penitent Engines (x2)", points: 150 },
-      { name: "Repentia Squad (x5)", points: 85 },
-      { name: "Repentia Squad (x10)", points: 170 },
+      { name: "Penitent Engines (x1)", points: 75, tags: ["Penitent"] },
+      { name: "Penitent Engines (x2)", points: 150, tags: ["Penitent"] },
+      { name: "Repentia Squad (x5)", points: 85, tags: ["Penitent"] },
+      { name: "Repentia Squad (x10)", points: 170, tags: ["Penitent"] },
       { name: "Retributor Squad", points: 125, modelCount: 5 },
       { name: "Seraphim Squad (x5)", points: 85 },
       { name: "Seraphim Squad (x10)", points: 170 },
@@ -44,36 +44,102 @@ export const MUNITORIUM = {
       { name: "Zephyrim Squad (x10)", points: 160 },
     ],
     "enhancements": {
-      "Army of Faith": {
-        "Blade of Saint Ellynor": 15,
-        "Divine Aspect": 5,
-        "Litanies of Faith": 10,
-        "Triptych of the Macharian Crusade": 20
-      },
-      "Bringers of Flame": {
-        "Fire and Fury": 30,
-        "Iron Surplice of Saint Istalela": 10,
-        "Manual of Saint Griselda": 20,
-        "Righteous Rage": 15
-      },
-      "Champions of Faith": {
-        "Eyes of the Oracle": 10,
-        "Mark of Devotion": 30,
-        "Sanctified Amulet": 25,
-        "Triptych of Judgement": 15,
-      },
-      "Hallowed Martyrs": {
-        "Chaplet of Sacrifice ": 25,
-        "Mantle of Ophelia ": 20,
-        "Saintly Example": 10,
-        "Through Suffering, Strength ": 25,
-      },
-      "Penitent Host": {
-        "Catechism of Divine Penitence": 20,
-        "Psalm of Righteous Judgement": 30,
-        "Refrain of Enduring Faith": 25,
-        "Verse of Holy Piety": 15,
-      }
+      "Army of Faith": [
+        {
+          name: "Blade of Saint Ellynor",
+          points: 15,
+        },
+        {
+          name: "Divine Aspect",
+          points: 5,
+        },
+        {
+          name: "Litanies of Faith",
+          points: 10,
+          tags: ["Canoness", "Palatine"],
+        },
+        {
+          name: "Triptych of the Macharian Crusade",
+          points: 20,
+        },
+      ],
+      "Bringers of Flame": [
+        {
+          name: "Fire and Fury",
+          points: 30,
+        },
+        {
+          name: "Iron Surplice of Saint Istalela",
+          points: 10,
+          tags: ["Canoness", "Palatine"],
+        },
+        {
+          name: "Manual of Saint Griselda",
+          points: 20,
+        },
+        {
+          name: "Righteous Rage",
+          points: 15,
+        },
+      ],
+      "Champions of Faith": [
+        {
+          name: "Eyes of the Oracle",
+          points: 10,
+        },
+        {
+          name: "Mark of Devotion",
+          points: 30,
+        },
+        {
+          name: "Sanctified Amulet",
+          points: 25,
+        },
+        {
+          name: "Triptych of Judgement",
+          points: 15,
+        },
+      ],
+      "Hallowed Martyrs": [
+        {
+          name: "Chaplet of Sacrifice",
+          points: 25,
+        },
+        {
+          name: "Mantle of Ophelia",
+          points: 20,
+          tags: ["Canoness", "Palatine"],
+        },
+        {
+          name: "Saintly Example",
+          points: 10,
+        },
+        {
+          name: "Through Suffering, Strength",
+          points: 25,
+        },
+      ],
+      "Penitent Host": [
+        {
+          name: "Catechism of Divine Penitence",
+          points: 20,
+          tags: ["Canoness", "Palatine", "Ministorum Priest"]
+        },
+        {
+          name: "Psalm of Righteous Judgement",
+          points: 30,
+        },
+        {
+          name: "Refrain of Enduring Faith",
+          points: 25,
+          tags: ["Penitent"]
+        },
+        {
+          name: "Verse of Holy Piety",
+          points: 15,
+          tags: ["Penitent"],
+        },
+      ],
     }
   },
 
@@ -701,12 +767,12 @@ export const MUNITORIUM = {
     "characters": [
       { name: "Arkanyst Evaluator", points: 75 },
       { name: "Brôkhyr Iron-master", points: 75 },
-      { name: "Buri Aegnirssen", points: 110 },
+      { name: "Buri Aegnirssen", points: 110, tags: ["epic"] },
       { name: "Einhyr Champion", points: 70 },
       { name: "Grimnyr", points: 65 },
       { name: "Kâhl", points: 70 },
       { name: "Memnyr Strategist", points: 45 },
-      { name: "Ûthar the Destined", points: 95 }
+      { name: "Ûthar the Destined", points: 95, tags: ["epic"] }
     ],
     "battleline": [
       {
@@ -717,24 +783,26 @@ export const MUNITORIUM = {
     ],
     "otherUnits": [
       {
-        name: "Brôkhyr Thunderkyn (x3)",
-        modelCount: 3,
-        points: 80,
+        name: "Brôkhyr Thunderkyn",
+        modelCount: [3, 6],
+        points: [80, 160],
+        unitOptions: {
+          unitSize: {
+            "3": 80,
+            "6": 160
+          }
+        }
       },
       {
-        name: "Brôkhyr Thunderkyn (x6)",
-        modelCount: 6,
-        points: 160,
-      },
-      {
-        name: "Cthonian Beserks (x5)",
-        points: 100,
-        modelCount: 5
-      },
-      {
-        name: "Cthonian Beserks (x10)",
-        points: 200,
-        modelCount: 10
+        name: "Cthonian Beserks",
+        modelCount: [5, 10],
+        points: [100, 200],
+        unitOptions: {
+          unitSize: {
+            "5": 100,
+            "10": 200
+          }
+        }
       },
       {
         name: "Cthonian Earthshakers",
@@ -742,28 +810,30 @@ export const MUNITORIUM = {
         modelCount: 2
       },
       {
-        name: "Einhyr Hearthguard (x5)",
-        points: 135,
-        modelCount: 5
-      },
-      {
-        name: "Einhyr Hearthguard (x10)",
-        points: 270,
-        modelCount: 10,
+        name: "Einhyr Hearthguard",
+        modelCount: [5, 10],
+        points: [135, 270],
+        unitOptions: {
+          unitSize: {
+            "5": 135,
+            "10": 270
+          }
+        }
       },
       {
         name: "Hekaton Land Fortress",
         points: 240,
       },
       {
-        name: "Hernkyn Pioneers (x3)",
-        points: 80,
-        modelCount: 3
-      },
-      {
-        name: "Hernkyn Pioneers (x6)",
-        points: 160,
-        modelCount: 6
+        name: "Hernkyn Pioneers",
+        modelCount: [3, 6],
+        points: [80, 160],
+        unitOptions: {
+          unitSize: {
+            "3": 80,
+            "6": 160
+          }
+        }
       },
       {
         name: "Hernkyn Yaegirs",
@@ -771,28 +841,34 @@ export const MUNITORIUM = {
         modelCount: 10
       },
       {
-        name: "Ironkin Steeljacks (x3)",
-        points: 90,
-        modelCount: 3,
-      },
-      {
-        name: "Ironkin Steeljacks (x6)",
-        points: 180,
-        modelCount: 6,
+        name: "Ironkin Steeljacks",
+        modelCount: [3, 6],
+        points: [90, 180],
+        unitOptions: {
+          unitSize: {
+            "3": 90,
+            "6": 180
+          },
+          wargear: [
+            "Heavy Volkanite Disintegrators",
+            "Melee Weapons",
+          ]
+        }
       },
       {
         name: "Kapricus Carrier",
         points: 75,
       },
       {
-        name: "Kapricus Defender (x1)",
-        modelCount: 1,
-        points: 70,
-      },
-      {
-        name: "Kapricus Defender (x2)",
-        modelCount: 2,
-        points: 140,
+        name: "Kapricus Defender",
+        modelCount: [1, 2],
+        points: [70, 140],
+        unitOptions: {
+          unitSize: {
+            "1": 70,
+            "2": 140,
+          }
+        }
       },
       {
         name: "Sagitaur",
@@ -800,42 +876,120 @@ export const MUNITORIUM = {
       },
     ],
     "enhancements": {
-      "Brandfast Oathband": {
-        "Precursive Judgement": 15,
-        "Signature Restoration": 5,
-        "Tactical Alchemy": 10,
-        "Trivärg Cyber Implant": 30,
-      },
-      "Dêlve Assault Shift": {
-        "Dêlvwerke Navigator": 25,
-        "Multiwave System Jammer": 10,
-        "Piledriver": 15,
-        "Quake Supervisor": 20,
-      },
-      "Hearthband": {
-        "Bastion Shield": 25,
-        "High Kâhl": 30,
-        "Ironskein": 10,
-        "Quake Multigenerator": 15,
-      },
-      "Hearthfyre Arsenal": {
-        "Calculated Tenacity": 15,
-        "Fârstrydr Node": 20,
-        "Graviton Vault": 5,
-        "Mantle of Elders": 10,
-      },
-      "Needgaârd Oathband": {
-        "Ancestral Crest": 15,
-        "Dead Reckoning": 10,
-        "Iron Ambassador": 5,
-        "Oathbound Speculator": 30,
-      },
-      "Persecution Prospect": {
-        "Eye for Weakness": 25,
-        "Nomad Strategist": 20,
-        "Surgical Saboteur": 10,
-        "Writ of Acquisition": 10,
-      }
+      "Brandfast Oathband": [
+        {
+          name: "Precursive Judgement",
+          points: 15,
+        },
+        {
+          name: "Signature Restoration",
+          points: 5,
+        },
+        {
+          name: "Tactical Alchemy",
+          points: 10,
+        },
+        {
+          name: "Trivärg Cyber Implant",
+          points: 30,
+        },
+      ],
+      "Dêlve Assault Shift": [
+        {
+          name: "Dêlvwerke Navigator",
+          points: 25,
+        },
+        {
+          name: "Multiwave System Jammer",
+          points: 10,
+        },
+        {
+          name: "Piledriver",
+          points: 15,
+        },
+        {
+          name: "Quake Supervisor",
+          points: 20,
+        },
+      ],
+      "Hearthband": [
+        {
+          name: "Bastion Shield",
+          points: 25,
+        },
+        {
+          name: "High Kâhl",
+          points: 30,
+          tags: ["Kâhl"],
+        },
+        {
+          name: "Ironskein",
+          points: 10,
+        },
+        {
+          name: "Quake Multigenerator",
+          points: 15,
+          tags: ["Kâhl"],
+        },
+      ],
+      "Hearthfyre Arsenal": [
+        {
+          name: "Calculated Tenacity",
+          points: 15,
+          tags: ["Brôkhyr Iron-master", "Memnyr Strategist"],
+        },
+        {
+          name: "Fârstrydr Node",
+          points: 20,
+          tags: ["Brôkhyr Iron-master", "Memnyr Strategist"],
+        },
+        {
+          name: "Graviton Vault",
+          points: 5,
+          tags: ["Brôkhyr Iron-master"],
+        },
+        {
+          name: "Mantle of Elders",
+          points: 10,
+          tags: ["Memnyr Strategist"],
+        },
+      ],
+      "Needgaârd Oathband": [
+        {
+          name: "Ancestral Crest",
+          points: 15,
+        },
+        {
+          name: "Dead Reckoning",
+          points: 10,
+        },
+        {
+          name: "Iron Ambassador",
+          points: 5,
+        },
+        {
+          name: "Oathbound Speculator",
+          points: 30,
+        },
+      ],
+      "Persecution Prospect": [
+        {
+          name: "Eye for Weakness",
+          points: 25,
+        },
+        {
+          name: "Nomad Strategist",
+          points: 20,
+        },
+        {
+          name: "Surgical Saboteur",
+          points: 10,
+        },
+        {
+          name: "Writ of Acquisition",
+          points: 10,
+        },
+      ],
     }
   },
 

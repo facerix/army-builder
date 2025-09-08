@@ -71,13 +71,25 @@
     }
 
     #armyMetadata {
+      display: flex;
+      gap: 0.5rem;
+
       input {
         border-width: 0 0 1px 0;
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         font-size: larger;
-        margin-right: 1rem;
         padding-left: 1rem;
       }
+
+      select {
+        font-size: medium;
+      }
+    }
+
+    .category-container {
+      max-width: 98vw;
+      width: 760px;
+      margin: 0 auto;
     }
   </style>
 </head>
@@ -97,18 +109,19 @@
   </header>
   <img src="/images/40k-gear-spinner.svg" alt="spinning gear placeholder" class="loader" />
   <main class="u-center hidden">
-    <div class="u-flex" id="armyMetadata">
+    <div id="armyMetadata">
       <input id="armyName" placeholder="Name your army" />
+      <select id="detachment">
+        <option value="" disabled selected>Select a detachment</option>
+      </select>
       <p class="points">Total points: <span id="totalPoints"></span></p>
     </div>
-    <category-section sectionTitle="Characters" showOptions id="characters"></category-section>
-    <category-section sectionTitle="Battleline" id="battleline"></category-section>
-    <category-section sectionTitle="Other Units" id="otherUnits"></category-section>
+    <div class="category-container">
+      <category-section sectionTitle="Characters" heroUnits id="characters"></category-section>
+      <category-section sectionTitle="Battleline" id="battleline"></category-section>
+      <category-section sectionTitle="Other Units" id="otherUnits"></category-section>
+    </div>
   </main>
-
-  <footer id="main-foot">
-    A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation
-  </footer>
 </body>
 <script src="40k-list.js" type="module"></script>
 

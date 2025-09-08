@@ -1,4 +1,5 @@
 import DataStore from '/src/DataStore.js';
+import { h } from '/src/domUtils.js';
 import '/components/CategorySection.js';
 import { MUNITORIUM } from '/src/mfm.js';
 import { FACTION_NAMES } from '/src/factions.js';
@@ -25,11 +26,17 @@ whenLoaded.then(() => {
   const id = urlParams.get('id');
   const faction = urlParams.get('faction');
   const factionName = FACTION_NAMES[faction];
+  const detachmentSelector = document.querySelector("select#detachment");
 
   let armyList;
   let mfm;
   if (factionName) {
     mfm = MUNITORIUM[factionName];
+
+    // populate detachment selector
+    Object.keys(mfm.enhancements).forEach(detachmentName => {
+      detachmentSelector.append(h("option", { value: detachmentName, innerText: detachmentName }));
+    });
   }
 
   const btnDelete = document.querySelector("#btnDelete");
@@ -72,6 +79,9 @@ whenLoaded.then(() => {
         const toPrune = armyList[section].findIndex(u => u.id === affectedItems);
         armyList[section].splice(toPrune, 1);
         break;
+      case "update":
+        // the items are already undated in place since they're passed to CategorySection by reference
+        break;
     }
     recalculatePoints();
     save();
@@ -80,18 +90,28 @@ whenLoaded.then(() => {
   const init = () => {
     if (armyList && mfm) {
       armyNameInput.value = armyList.name;
-
-      charactersSection.units = armyList.characters;
-      charactersSection.options = mfm.characters;
-    
-      battlelineSection.units = armyList.battleline;
-      battlelineSection.options = mfm.battleline;
-    
-      otherSection.units = armyList.otherUnits;
-      otherSection.options = mfm.otherUnits;
-
+      render();
       document.querySelector("body").classList.remove("loading");
     }
+  }
+
+  const render = () => {
+    if (armyList && mfm) {
+      detachmentSelector.value = armyList.detachment || "";
+      charactersSection.units = armyList.characters;
+      charactersSection.availableUnits = mfm.characters;
+      charactersSection.options = getDetachmentOptions(mfm, armyList.detachment);
+      battlelineSection.units = armyList.battleline;
+      battlelineSection.availableUnits = mfm.battleline;
+      otherSection.units = armyList.otherUnits;
+      otherSection.availableUnits = mfm.otherUnits;
+    }
+  }
+
+  const getDetachmentOptions = (mfm, detachment) => {
+    return {
+      enhancements: mfm.enhancements[detachment] || [],
+    };
   }
 
   btnDelete.addEventListener("click", evt => {
@@ -113,6 +133,23 @@ whenLoaded.then(() => {
   });
   otherSection.addEventListener("change", evt => {
     onUpdate("otherUnits", evt.detail.changeType, evt.detail.units, otherSection);
+  });
+
+  detachmentSelector.addEventListener("change", evt => {
+    const detachmentName = evt.target.value;
+    if (detachmentName && detachmentName !== armyList.detachment) {
+      armyList.detachment = detachmentName;
+      // flush any existing character enhancements
+      armyList.characters.forEach(c => {
+        if (c.options?.enhancement) {
+          c.options.enhancement = null;
+        }
+      });
+      charactersSection.options = getDetachmentOptions(mfm, armyList.detachment);
+      recalculatePoints();
+      save();
+      render();
+    }
   });
 
   DataStore.init();

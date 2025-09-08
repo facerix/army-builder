@@ -1,16 +1,43 @@
 import './UnitModal.js';
+import './OptionsModal.js';
 import { h } from '../src/domUtils.js';
 
-const UnitRow = (unit, showOptions) => {
-  const row = h("div", { className: "unit-summary" }, [
-    h("span", { className: "unit-name", innerText: unit.name }),
-    h("span", { className: "unit-pts points", innerText: `${unit.points} Points` }),
-    ...(showOptions ? [h("button", { className: "options", title: "unit options" }, [
-      h("img", { src: "/images/gear.svg", alt: "gear" })
-    ])] : []),
+const UnitRow = (unit, options = null) => {
+  const buttons = [
     h("button", { className: "remove-unit", title: "remove unit" }, [
       h("img", { src: "/images/circle-minus.svg", alt: "circle minus" })
+    ])
+  ];
+  if (Object.keys(options).length > 0) {
+    buttons.unshift(h("button", { className: "options", title: "unit options" }, [
+      h("img", { src: "/images/gear.svg", alt: "gear" })
+    ]));
+  }
+
+  const tags = [];
+  const optionsList = [];
+  if (options?.warlord) {
+    tags.push(h("span", { className: "unit-tag", innerText: "Warlord" }));
+  }
+  if (options?.enhancement) {
+    optionsList.push(h("span", { className: "unit-option", innerText: `Enhancement: ${options.enhancement}` }));
+  }
+  if (options?.unitSize) {
+    optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${options.unitSize}` }));
+  }
+  if (unit.tags?.includes("epic")) {
+    console.log(`${unit.name} is epic`);
+    tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
+  }
+
+  const row = h("div", { className: "unit-summary" }, [
+    h("div", { className: "unit-details" }, [
+      h("span", { className: "unit-name", innerText: unit.name }),
+      h("span", { className: "unit-options" }, [ ...optionsList ]),
     ]),
+    ...tags,
+    h("span", { className: "unit-pts points", innerText: `${unit.points} Points` }),
+    ...buttons,
   ]);
   row.dataset.unitId = unit.id;
   return row;
@@ -74,7 +101,7 @@ const CSS = `
     justify-content: space-between;
     margin: 1rem;
 
-    .unit-info {
+    .unit-details {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -83,6 +110,20 @@ const CSS = `
         margin: 0;
       }
     }
+
+    .unit-options {
+      font-size: small;
+      color: #666;
+    }
+  }
+
+  .unit-tag {
+    background: #274764;
+    color: white;
+    margin-left: 0.5rem;
+    font-size: x-small;
+    padding: 4px;
+    border-radius: 4px;
   }
 
   .unit-pts {
@@ -106,13 +147,47 @@ const TEMPLATE = `
 <div class="unit-list"></div>
 
 <unit-modal id="unitModal"></unit-modal>
+<options-modal id="optionsModal"></options-modal>
 <!--confirmation-modal></confirmation-modal-->
 `;
+
+const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
+  const availableOptions = {};
+  if (!unit.tags?.includes("epic") && includeEnhancements) {
+    // filter enhancements to either match unit name or tags (e.g. "exo-armor")
+    availableOptions.enhancements = categoryOptions.enhancements?.filter(o => {
+      return !o.tags || o.tags.includes(unit.name) || o.tags.some(t => unit.tags.includes(t));
+    }) ?? [];
+  }
+  // other options
+  if (unit.unitOptions) {
+    // unitSize
+    availableOptions.unitSize = Object.keys(unit.unitOptions.unitSize).map(size => ({
+      modelCount: size,
+      points: unit.unitOptions.unitSize[size.toString()],
+      selected: size === unit.options?.unitSize,
+    }));
+
+    // wargear
+  }
+  return availableOptions;
+}
+
+const getUnitCurrentOptions = (unit, isHeroUnit = false) => {
+  const sizeOption = unit.options?.unitSize ?? unit.modelCount ? { unitSize: unit.options?.unitSize || unit.modelCount } : {};
+  return {
+    ...(isHeroUnit ? { warlord: false } : {}),
+    ...(unit.options ? unit.options : {}),
+    ...sizeOption,
+  };
+}
+
 
 class CategorySection extends HTMLElement {
   #ready = false;
   #data = null;
-  #options = [];
+  #availableUnits = [];
+  #options = {};
 
   // DOM handles to things we only want to set up once
   sectionTitle = null;
@@ -122,7 +197,7 @@ class CategorySection extends HTMLElement {
   unitModal = null;
   confirmModal = null;
   activeUnit = null;
-  showOptions = false;
+  heroUnits = false;
 
   constructor() {
     super();
@@ -147,16 +222,17 @@ class CategorySection extends HTMLElement {
       this.unitList = this.shadowRoot.querySelector(".unit-list");
       this.btnAddUnit = this.shadowRoot.querySelector("#btnAddUnit");
       this.unitModal = this.shadowRoot.querySelector("#unitModal");
+      this.optionsModal = this.shadowRoot.querySelector("#optionsModal");
       // this.confirmModal = this.shadowRoot.querySelector("confirmation-modal");
   
       // populate attrs
       const title = this.getAttribute("sectionTitle");
-      this.showOptions = this.hasAttribute("showOptions") && this.getAttribute("showOptions") !== "false";
+      this.heroUnits = this.hasAttribute("heroUnits") && this.getAttribute("heroUnits") !== "false";
       this.sectionTitle.innerText = title;
       
       // Set up the modal title and options
       this.unitModal.title = title;
-      this.unitModal.options = this.#options;
+      this.unitModal.options = this.#availableUnits;
   
       // set up event handlers
       this.btnAddUnit.addEventListener("click", () => {
@@ -174,18 +250,68 @@ class CategorySection extends HTMLElement {
 
       this.unitList.addEventListener("click", evt => {
         const btn = evt.target.closest("button");
+        const unitSummary = btn?.closest(".unit-summary");
+        const { unitId } = unitSummary?.dataset || {};
         if (btn) {
           switch (btn.className) {
             case "remove-unit":
-              const unitSummary = btn.closest(".unit-summary");
-              const { unitId } = unitSummary.dataset;
               this.removeUnit(unitId);    
               break;
             case "options":
-              console.log("TODO... unit options");
+              this.activeUnit = this.#data.find(u => u.id === unitId);
+              this.optionsModal.options = getUnitCurrentOptions(this.activeUnit, this.heroUnits);
+              this.optionsModal.availableOptions = optionsForUnit(this.#options, this.activeUnit, this.heroUnits);
+              this.optionsModal.showModal();
               break;
           }
         }
+      });
+
+      this.optionsModal.addEventListener("optionsSaved", (evt) => {
+        const options = evt.detail.options;
+        
+        // if this unit is newly promoted to warlord, remove warlord tag from all other units
+        if (options.warlord && !this.activeUnit?.options?.warlord) {
+          this.#data.forEach(u => {
+            if (u.id !== this.activeUnit.id && u.options?.warlord) {
+              u.options.warlord = false;
+            }
+          });
+        }
+
+        // if unit's enhancement has changed or been removed, update the unit and any others that may be affected
+        if (options.enhancement !== this.activeUnit.options?.enhancement) {
+          const prevEnhancementPoints = this.activeUnit.options?.enhancement ? this.#options.enhancements.find(e => e.name === this.activeUnit.options?.enhancement).points : 0;
+          if (options.enhancement) {
+            const enhancementPoints = options.enhancement ? this.#options.enhancements.find(e => e.name === options.enhancement).points : 0;
+            // remove this enhancement from any other unit that has it
+            this.#data.forEach(u => {
+              if (u.id !== this.activeUnit.id && u.options?.enhancement === options.enhancement) {
+                u.options.enhancement = null;
+                u.points -= enhancementPoints;
+              }
+            });
+
+            // update points
+            if (this.activeUnit.options?.enhancement) {
+              this.activeUnit.points -= prevEnhancementPoints;
+            }
+            this.activeUnit.points += enhancementPoints;
+          } else {
+            // remove enhancement points from unit
+            this.activeUnit.points -= prevEnhancementPoints;
+          }
+        }
+
+        // unit size
+        if (options.unitSize && options.unitSize !== this.activeUnit.modelCount) {
+          this.activeUnit.modelCount = options.unitSize;
+          this.activeUnit.points = this.activeUnit.unitOptions.unitSize[options.unitSize];
+        }
+
+        this.activeUnit.options = options;
+        this.#emit("update", this.activeUnit);
+        this.#render();
       });
 
       this.#ready = true;
@@ -209,14 +335,19 @@ class CategorySection extends HTMLElement {
     this.#render();
   }
 
-  set options(availableUnits) {
-    this.#options = [ ...availableUnits ];
+  set availableUnits(availableUnits) {
+    this.#availableUnits = [ ...availableUnits ];
     if (!this.#ready) {
       this.#init();
     } else if (this.unitModal) {
-      this.unitModal.options = this.#options;
+      this.unitModal.options = this.#availableUnits;
     }
     this.#render();
+  }
+
+  set options(options) {
+    this.#options = { ...options };
+    this.optionsModal.availableOptions = this.#options;
   }
 
   get units() {
@@ -232,7 +363,20 @@ class CategorySection extends HTMLElement {
   };
 
   addUnit(unit) {
-    this.unitList.append(UnitRow(unit, this.showOptions));
+    // normalize options
+    const options = { ...unit.options };
+    if (!options.unitSize && unit.unitOptions?.unitSize) {
+      // pick smallest unit size as default
+      const sizeOptions = Object.keys(unit.unitOptions.unitSize).map(Number);
+      const selectedSize = sizeOptions.sort((a, b) => a - b)[0].toString();
+      unit.points = unit.unitOptions.unitSize[selectedSize];
+      options.unitSize = selectedSize;
+    }
+    if (this.heroUnits && unit.options?.warlord === undefined) {
+      options.warlord = false;
+    }
+
+    this.unitList.append(UnitRow(unit, options));
   }
 
   removeUnit(unitId) {
