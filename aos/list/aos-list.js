@@ -1,7 +1,7 @@
 import DataStore from '/src/DataStore.js';
 import '/components/AOSSection.js';
 import '/components/Regiment.js';
-import { AOS_BATTLE_PROFILES } from '/src/mfm.js';
+import { BATTLE_PROFILES } from '/src/aos-army-data.js';
 import { AOS_FACTION_NAMES } from '/src/factions.js';
 
 const whenLoaded = Promise.all(
@@ -25,7 +25,7 @@ whenLoaded.then(() => {
   let armyList;
   let factionProfiles;
   if (factionName) {
-    factionProfiles = AOS_BATTLE_PROFILES[faction];
+    factionProfiles = BATTLE_PROFILES[faction];
   }
 
   const btnDelete = document.querySelector("#btnDelete");

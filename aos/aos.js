@@ -1,7 +1,7 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
 import { FACTION_IMAGE_URLS, AOS_FACTION_NAMES } from '../src/factions.js';
-import { AOS_BATTLE_PROFILES } from '/src/mfm.js';
+import { BATTLE_PROFILES } from '/src/aos-army-data.js';
 
 const listSlug = (armyList) => {
   const { id, faction, name } = armyList;
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // disable faction options that don't have a battle profile
   factionSelector.querySelectorAll("option").forEach(option => {
     const faction = option.value;
-    if (!AOS_BATTLE_PROFILES[faction] || !AOS_BATTLE_PROFILES[faction].heroes.length || !AOS_BATTLE_PROFILES[faction].units.length) {
+    if (!BATTLE_PROFILES[faction] || !BATTLE_PROFILES[faction].heroes.length || !BATTLE_PROFILES[faction].units.length) {
       option.disabled = true;
     }
   });

@@ -1,7 +1,7 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
 import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
-import { MUNITORIUM } from '/src/mfm.js';
+import { ARMIES } from '/src/40k-army-data.js';
 
 const listSlug = (armyList) => {
   const { id, faction, name } = armyList;
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // disable faction options that don't have a battle profile
   factionSelector.querySelectorAll("option").forEach(option => {
     const faction = FACTION_NAMES[option.value];
-    if (!MUNITORIUM[faction] || !MUNITORIUM[faction]?.characters?.length || !MUNITORIUM[faction]?.otherUnits?.length) {
+    if (!ARMIES[faction] || !ARMIES[faction]?.characters?.length || !ARMIES[faction]?.otherUnits?.length) {
       option.disabled = true;
     }
   });

@@ -1,7 +1,7 @@
 import DataStore from '/src/DataStore.js';
 import { h } from '/src/domUtils.js';
 import '/components/CategorySection.js';
-import { MUNITORIUM } from '/src/mfm.js';
+import { ARMIES } from '/src/40k-army-data.js';
 import { FACTION_NAMES } from '/src/factions.js';
 
 const whenLoaded = Promise.all(
@@ -29,12 +29,12 @@ whenLoaded.then(() => {
   const detachmentSelector = document.querySelector("select#detachment");
 
   let armyList;
-  let mfm;
+  let armyData;
   if (factionName) {
-    mfm = MUNITORIUM[factionName];
+    armyData = ARMIES[factionName];
 
     // populate detachment selector
-    Object.keys(mfm.enhancements).forEach(detachmentName => {
+    Object.keys(armyData.enhancements).forEach(detachmentName => {
       detachmentSelector.append(h("option", { value: detachmentName, innerText: detachmentName }));
     });
   }
@@ -88,7 +88,7 @@ whenLoaded.then(() => {
   };
 
   const init = () => {
-    if (armyList && mfm) {
+    if (armyList && armyData) {
       armyNameInput.value = armyList.name;
       render();
       document.querySelector("body").classList.remove("loading");
@@ -96,21 +96,21 @@ whenLoaded.then(() => {
   }
 
   const render = () => {
-    if (armyList && mfm) {
+    if (armyList && armyData) {
       detachmentSelector.value = armyList.detachment || "";
       charactersSection.units = armyList.characters;
-      charactersSection.availableUnits = mfm.characters;
-      charactersSection.options = getDetachmentOptions(mfm, armyList.detachment);
+      charactersSection.availableUnits = armyData.characters;
+      charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
       battlelineSection.units = armyList.battleline;
-      battlelineSection.availableUnits = mfm.battleline;
+      battlelineSection.availableUnits = armyData.battleline;
       otherSection.units = armyList.otherUnits;
-      otherSection.availableUnits = mfm.otherUnits;
+      otherSection.availableUnits = armyData.otherUnits;
     }
   }
 
-  const getDetachmentOptions = (mfm, detachment) => {
+  const getDetachmentOptions = (armyData, detachment) => {
     return {
-      enhancements: mfm.enhancements[detachment] || [],
+      enhancements: armyData.enhancements[detachment] || [],
     };
   }
 
@@ -145,7 +145,7 @@ whenLoaded.then(() => {
           c.options.enhancement = null;
         }
       });
-      charactersSection.options = getDetachmentOptions(mfm, armyList.detachment);
+      charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
       recalculatePoints();
       save();
       render();
