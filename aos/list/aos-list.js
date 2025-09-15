@@ -3,6 +3,7 @@ import '/components/AOSSection.js';
 import '/components/Regiment.js';
 import { BATTLE_PROFILES } from '/src/aos-army-data.js';
 import { AOS_FACTION_NAMES } from '/src/factions.js';
+import { h } from '/src/domUtils.js';
 
 const whenLoaded = Promise.all(
   [
@@ -21,11 +22,17 @@ whenLoaded.then(() => {
   const id = urlParams.get('id');
   const faction = urlParams.get('faction');
   const factionName = AOS_FACTION_NAMES[faction];
+  const formationSelector = document.querySelector("select#formation");
 
   let armyList;
   let factionProfiles;
   if (factionName) {
     factionProfiles = BATTLE_PROFILES[faction];
+
+    // populate formation selector
+    Object.keys(factionProfiles.formations).forEach(formationName => {
+      formationSelector.append(h("option", { value: formationName, innerText: formationName }));
+    });
   }
 
   const btnDelete = document.querySelector("#btnDelete");

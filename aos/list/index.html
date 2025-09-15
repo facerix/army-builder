@@ -71,11 +71,13 @@
     }
 
     #armyMetadata {
+      display: flex;
+      gap: 0.5rem;
+      
       input {
         border-width: 0 0 1px 0;
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         font-size: larger;
-        margin-right: 1rem;
         padding-left: 1rem;
       }
     }
@@ -97,8 +99,11 @@
   </header>
   <img src="/images/aos-ripples.svg" alt="placeholder animation" class="loader" />
   <main class="u-center">
-    <div class="u-flex" id="armyMetadata">
+    <div id="armyMetadata">
       <input id="armyName" placeholder="Name your army" />
+      <select id="formation">
+        <option value="" disabled selected>Select Battle Formation</option>
+      </select>
       <p class="points">Total points: <span id="totalPoints"></span></p>
     </div>
     <aos-section sectionTitle="Regiments" id="regiments" mode="regiments"></aos-section>

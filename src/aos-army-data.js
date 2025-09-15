@@ -261,15 +261,36 @@ export const BATTLE_PROFILES = {
       { name: "Warpvolt Scourgers", points: 180, modelCount: 3, tags: ["Skryre", "Infantry", "Weapon Team"] },
       { name: "Brood Terror [SoG]", points: 240, modelCount: 1, tags: ["Moulder", "Monster"] },
     ],
-    "formations": [
-    ],
+    "formations": {
+      "Warpcog Convocation": {},
+      "Fleshmeld Menagerie": {},
+      "Virulent Procession": {},
+      "Claw-Horde": {},
+      "Envoys of the Deepgnaw": {}, // scourge of ghyran
+      "Gathering of the Clans": {}, // scourge of ghyran
+      // TODO: support armies of renown
+      // "The Great-Grand Gnawhorde": {},
+      // "Thanquol's Mutated Menagerie": {},
+    },
     "heroicTraits": [
+      "Scurry Away",
+      "Short-Tempered",
+      "Skilled Manipulator"
     ],
     "artefacts": [
+      "Foulhide",
+      "Warpstone Charm",
+      "Skavenbrew"
     ],
-    "spellLores": [],
-    "manifestationLores": [],
-    "prayerLores": [],
+    "spellLores": [
+      "Lore of Ruin"
+    ],
+    "manifestationLores": [
+      "Manifestations of Doom"
+    ],
+    "prayerLores": [
+      "Noxious Prayers"
+    ],
   },
   "slavesToDarkness": {
     "heroes": [
