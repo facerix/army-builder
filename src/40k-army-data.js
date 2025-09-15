@@ -1,7 +1,7 @@
 export const ARMIES = {
     "Adepta Sororitas": {
       "characters": [
-        { name: "Aestred Thurga and Agathae Dolan", points: 85, modelCount: 1 },
+        { name: "Aestred Thurga and Agathae Dolan", points: 70, modelCount: 2 },
         { name: "Canoness", points: 50, modelCount: 1 },
         { name: "Canoness with Jump Pack", points: 75, modelCount: 1 },
         { name: "Daemonifuge", points: 95, modelCount: 1 },
@@ -13,35 +13,130 @@ export const ARMIES = {
         { name: "Ministorum Priest", points: 50, modelCount: 1, tags: ["Penitent"] },
         { name: "Morvenn Vahl", points: 170, modelCount: 1 },
         { name: "Palatine", points: 50, modelCount: 1 },
-        { name: "Saint Celestine", points: 160, modelCount: 1 },
+        { name: "Saint Celestine", points: 150, modelCount: 3 },
         { name: "Triumph of Saint Katherine", points: 250, modelCount: 1 },
       ],
       "battleline": [
         { name: "Battle Sisters Squad", points: 105, modelCount: 10 },
       ],
       "otherUnits": [
-        { name: "Arco-flagellants (x3)", points: 45, tags: ["Penitent"] },
-        { name: "Arco-flagellants (x10)", points: 140, tags: ["Penitent"] },
-        { name: "Castigator", points: 170 },
-        { name: "Celestian Sacresants (x5)", points: 70 },
-        { name: "Celestian Sacresants (x10)", points: 130 },
-        { name: "Dominion Squad", points: 115, modelCount: 10 },
-        { name: "Exorcist", points: 210 },
-        { name: "Immolator", points: 125 },
-        { name: "Mortifiers (x1)", points: 70, tags: ["Penitent"] },
-        { name: "Mortifiers (x2)", points: 140, tags: ["Penitent"] },
-        { name: "Paragon Warsuits", points: 220, modelCount: 3 },
-        { name: "Penitent Engines (x1)", points: 75, tags: ["Penitent"] },
-        { name: "Penitent Engines (x2)", points: 150, tags: ["Penitent"] },
-        { name: "Repentia Squad (x5)", points: 85, tags: ["Penitent"] },
-        { name: "Repentia Squad (x10)", points: 170, tags: ["Penitent"] },
-        { name: "Retributor Squad", points: 125, modelCount: 5 },
-        { name: "Seraphim Squad (x5)", points: 85 },
-        { name: "Seraphim Squad (x10)", points: 170 },
-        { name: "Sisters Novitiate Squad", points: 100, modelCount: 10 },
-        { name: "Sororitas Rhino", points: 75 },
-        { name: "Zephyrim Squad (x5)", points: 80 },
-        { name: "Zephyrim Squad (x10)", points: 160 },
+        {
+          name: "Arco-flagellants",
+          modelCount: [3, 10],
+          points: [45, 140],
+          tags: ["Penitent"],
+          unitOptions: {
+            unitSize: {
+              "3": 45,
+              "10": 140
+            }
+          }
+        },
+        {
+          name: "Castigator",
+          points: 170
+        },
+        {
+          name: "Celestian Sacresants",
+          modelCount: [5, 10],
+          points: [70, 130],
+          unitOptions: {
+            unitSize: {
+              "5": 70,
+              "10": 130
+            }
+          }
+        },
+        {
+          name: "Dominion Squad",
+          points: 115,
+          modelCount: 10
+        },
+        {
+          name: "Exorcist",
+          points: 210
+        },
+        {
+          name: "Immolator",
+          points: 125
+        },
+        {
+          name: "Mortifiers",
+          modelCount: [1, 2],
+          points: [70, 140],
+          tags: ["Penitent"],
+          unitOptions: {
+            unitSize: {
+              "1": 70,
+              "2": 140
+            }
+          }
+        },
+        {
+          name: "Paragon Warsuits",
+          points: 220,
+          modelCount: 3
+        },
+        {
+          name: "Penitent Engines",
+          modelCount: [1, 2],
+          points: [75, 150],
+          tags: ["Penitent"],
+          unitOptions: {
+            unitSize: {
+              "1": 75,
+              "2": 150
+            }
+          }
+        },
+        {
+          name: "Repentia Squad",
+          modelCount: [5, 10],
+          points: [85, 170],
+          tags: ["Penitent"],
+          unitOptions: {
+            unitSize: {
+              "5": 85,
+              "10": 170
+            }
+          }
+        },
+        {
+          name: "Retributor Squad",
+          points: 105,
+          modelCount: 5
+        },
+        {
+          name: "Seraphim Squad",
+          modelCount: [5, 10],
+          points: [85, 170],
+          unitOptions: {
+            unitSize: {
+              "5": 85,
+              "10": 170
+            }
+          }
+        },
+        {
+          name: "Sisters Novitiate Squad",
+          points: 100,
+          modelCount: 10
+        },
+        {
+          name: "Sororitas Rhino",
+          points: 75
+        },
+        {
+          name: "Zephyrim Squad",
+          modelCount: [5, 10],
+          points: [80, 160],
+          unitOptions: {
+            unitSize: {
+              "5": 80,
+              "10": 160
+            }
+          }
+        }
       ],
       "enhancements": {
         "Army of Faith": [
