@@ -162,13 +162,12 @@ const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   // other options
   if (unit.unitOptions) {
     // unitSize
-    availableOptions.unitSize = Object.keys(unit.unitOptions.unitSize).map(size => ({
-      modelCount: size,
-      points: unit.unitOptions.unitSize[size.toString()],
-      selected: size === unit.options?.unitSize,
+    availableOptions.unitSize = unit.unitOptions.unitSize.map(opt => ({
+      ...opt,
+      selected: opt.modelCount === unit.options?.unitSize,
     }));
 
-    // wargear
+    // wargear TBD
   }
   return availableOptions;
 }
@@ -304,9 +303,9 @@ class CategorySection extends HTMLElement {
         }
 
         // unit size
-        if (options.unitSize && options.unitSize !== this.activeUnit.modelCount) {
-          this.activeUnit.modelCount = options.unitSize;
-          this.activeUnit.points = this.activeUnit.unitOptions.unitSize[options.unitSize];
+        if (options.unitSize && options.unitSize != this.activeUnit.modelCount) {
+          this.activeUnit.modelCount = parseInt(options.unitSize, 10);
+          this.activeUnit.points = this.activeUnit.unitOptions.unitSize.find(opts => opts.modelCount === options.unitSize).points;
         }
 
         this.activeUnit.options = options;
@@ -365,13 +364,6 @@ class CategorySection extends HTMLElement {
   addUnit(unit) {
     // normalize options
     const options = { ...unit.options };
-    if (!options.unitSize && unit.unitOptions?.unitSize) {
-      // pick smallest unit size as default
-      const sizeOptions = Object.keys(unit.unitOptions.unitSize).map(Number);
-      const selectedSize = sizeOptions.sort((a, b) => a - b)[0].toString();
-      unit.points = unit.unitOptions.unitSize[selectedSize];
-      options.unitSize = selectedSize;
-    }
     if (this.heroUnits && unit.options?.warlord === undefined) {
       options.warlord = false;
     }

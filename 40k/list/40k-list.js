@@ -1,7 +1,7 @@
 import DataStore from '/src/DataStore.js';
 import { h } from '/src/domUtils.js';
 import '/components/CategorySection.js';
-import { ARMIES } from '/src/40k-army-data.js';
+import { get40kArmyData } from '/src/40k-army-data.js';
 import { FACTION_NAMES } from '/src/factions.js';
 
 const whenLoaded = Promise.all(
@@ -31,7 +31,7 @@ whenLoaded.then(() => {
   let armyList;
   let armyData;
   if (factionName) {
-    armyData = ARMIES[factionName];
+    armyData = get40kArmyData(factionName);
 
     // populate detachment selector
     Object.keys(armyData.enhancements).forEach(detachmentName => {

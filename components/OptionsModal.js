@@ -241,10 +241,11 @@ class OptionsModal extends HTMLElement {
   saveOptions() {
     const formData = new FormData(this.form);
     const options = Object.fromEntries(formData);
-    const { warlord, enhancement, ...rest } = options;
+    const { warlord, enhancement, unitSize, ...rest } = options;
     this.options = {
       ...(warlord ? { warlord: warlord === "on" } : {}),
       ...(enhancement ? { enhancement } : {}),
+      ...(unitSize ? { unitSize: parseInt(unitSize, 10) } : {}),
       ...rest,
     };
 

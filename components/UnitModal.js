@@ -10,6 +10,10 @@ import { v4WithTimestamp } from '../src/uuid.js';
  * @property {string[]} tags
  */
 
+const multipleUnitPoints = (unitSizes, pointValues) => {
+  return Object.values(unitSizes).map((count, idx) => `${count}x ${pointValues[idx]}`).join(", ");
+}
+
 /**
  * 
  * @param {Unit} unit 
@@ -19,7 +23,7 @@ const UnitListing = unit => {
   const { name, unitOptions, modelCount = 1 } = unit;
   let points = unit.points;
   if (unitOptions?.unitSize) {
-    points = `(${Object.values(unitOptions.unitSize).join(", ")})`;
+    points = `(${multipleUnitPoints(unitOptions.unitSize, unit.points)})`;
   }
   const row = h("div", { className: "unit-summary" }, [
     h("div", { className: "unit-info" }, [
@@ -113,7 +117,7 @@ const CSS = `
   dialog {
     padding: 0.5rem;
     min-width: 300px;
-    max-height: 90vh;
+    max-height: 90dvh;
     flex-direction: column;
     
     &:open {
@@ -186,10 +190,39 @@ class UnitModal extends HTMLElement {
           const { unitName: name, defaultModelCount } = unitSummary.dataset;
           // Unit definition :> name: string, points: number, tags?: string[], modelCount?: number | number[], unitOptions?: object
           const unitDef = this.#options.find(u => u.name === name);
-          const tags = unitDef.tags ?? [];
-          const points = Array.isArray(unitDef.points) ? unitDef.points[0] : unitDef.points;
+          const { points, tags = [], unitOptions = undefined } = unitDef;
           const modelCount = parseInt(defaultModelCount, 10);
-          const unitToAdd = { name, points, id: v4WithTimestamp(), modelCount, unitOptions: unitDef.unitOptions, tags };
+          const unitToAdd = {
+            id: v4WithTimestamp(),
+            name,
+            points,
+            modelCount,
+            tags
+          };
+          if (unitOptions) {
+            // populate options object for unit's defaults
+            unitToAdd.unitOptions = {};
+            unitToAdd.options = {};
+            Object.keys(unitOptions).forEach(option => {
+              switch (option) {
+                case "unitSize":
+                  // pick smallest unit size as default
+                  const sizeOptions = [ ...unitOptions.unitSize ]; // .sort((a, b) => a - b);
+                  const selectedSize = sizeOptions[0];
+                  unitToAdd.points = points[0];
+                  unitToAdd.options.unitSize = selectedSize;
+                  unitToAdd.unitOptions.unitSize = sizeOptions.map((modelCount, idx) => ({
+                    modelCount,
+                    points: points[idx]
+                  }));
+
+                  break;
+                default:
+                  unitToAdd.options[option] = unitOptions[option];
+                  break;
+              }
+            });
+          }
           
           // Dispatch custom event for unit addition
           const addEvent = new CustomEvent("unitAdded", { 
