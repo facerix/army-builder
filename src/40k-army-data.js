@@ -601,56 +601,36 @@ export const ARMIES = {
       */
     },
     "characters": [
-      { name: "Astorath", points: 105 },
+      { name: "Astorath", points: 105, tags: ["epic"] },
       { name: "Blood Angels Captain", points: 80 },
-      { name: "Chief Librarian Mephiston", points: 135 },
-      { name: "Commander Dante", points: 130 },
+      { name: "Chief Librarian Mephiston", points: 135, tags: ["epic"] },
+      { name: "Commander Dante", points: 130, tags: ["epic"] },
       { name: "Death Company Captain", points: 70 },
       { name: "Death Company Captain with Jump Pack", points: 75 },
-      { name: "Lemartes", points: 110 },
+      { name: "Lemartes", points: 110, tags: ["epic"] },
       { name: "Sanguinary Priest", points: 90 },
-      { name: "The Sanguinor", points: 140 }
+      { name: "The Sanguinor", points: 140, tags: ["epic"] }
     ],
     "battleline": [
       {
         name: "Death Company Marines",
-        modelCount: 5,
-        points: 85
-      },
-      {
-        name: "Death Company Marines",
-        modelCount: 10,
-        points: 160
+        modelCount: [5, 10],
+        unitOptions: { unitSize: [5, 10] }
       },
       {
         name: "Death Company Marines with Bolt Rifles",
-        modelCount: 5,
-        points: 85
-      },
-      {
-        name: "Death Company Marines with Bolt Rifles",
-        modelCount: 10,
-        points: 160
+        modelCount: [5, 10],
+        unitOptions: { unitSize: [5, 10] }
       },
       {
         name: "Death Company Marines with Jump Packs",
-        modelCount: 5,
-        points: 130
-      },
-      {
-        name: "Death Company Marines with Jump Packs",
-        modelCount: 10,
-        points: 240
+        modelCount: [5, 10],
+        unitOptions: { unitSize: [5, 10] }
       },
       {
         name: "Sanguinary Guard",
-        modelCount: 3,
-        points: 130
-      },
-      {
-        name: "Sanguinary Guard",
-        modelCount: 6,
-        points: 260
+        modelCount: [3, 6],
+        unitOptions: { unitSize: [3, 6] }
       }
     ],
     "otherUnits": [
@@ -664,30 +644,30 @@ export const ARMIES = {
       }
     ],
     "enhancements": {
-      "Angelic Inheritors": {
-        "Blazing Icon": 20,
-        "Ordained Sacrifice": 25,
-        "Prescient Flash": 20,
-        "Troubling Visions": 15
-      },
-      "Liberator Assault Group": {
-        "Gift of Foresight": 15,
-        "Icon of the Angel": 20,
-        "Rage-fuelled Warrior": 35,
-        "Speed of the Primarch": 25
-      },
-      "The Angelic Host": {
-        "Archangel's Shard": 15,
-        "Artisan of War": 20,
-        "Gleaming Pinions": 25,
-        "Visage of Death": 15
-      },
-      "The Lost Brethren": {
-        "Blood Shard": 25,
-        "Sanguinius' Grace": 20,
-        "To Slay the Warmaster": 15,
-        "Vengeful Onslaught": 10
-      }
+      "Angelic Inheritors": [
+        { name: "Blazing Icon" },
+        { name: "Ordained Sacrifice" },
+        { name: "Prescient Flash" },
+        { name: "Troubling Visions" }
+      ],
+      "Liberator Assault Group": [
+        { name: "Gift of Foresight" },
+        { name: "Icon of the Angel" },
+        { name: "Rage-fuelled Warrior" },
+        { name: "Speed of the Primarch" }
+      ],
+      "The Angelic Host": [
+        { name: "Archangel's Shard" },
+        { name: "Artisan of War" },
+        { name: "Gleaming Pinions" },
+        { name: "Visage of Death" }
+      ],
+      "The Lost Brethren": [
+        { name: "Blood Shard" },
+        { name: "Sanguinius' Grace" },
+        { name: "To Slay the Warmaster" },
+        { name: "Vengeful Onslaught" }
+      ]
     }
   },
 
@@ -1269,7 +1249,7 @@ export const ARMIES = {
     ],
     "otherUnits": [
       { name: "Aggressor Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
-      { name: "Assault Intercessors With Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Assault Intercessors with Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Ballistus Dreadnought", modelCount: 140 },
       { name: "Bladeguard Veteran Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
       { name: "Brutalis Dreadnought", modelCount: 160 },
@@ -1318,7 +1298,7 @@ export const ARMIES = {
       { name: "Suppressor Squad", modelCount: 1 },
       { name: "Terminator Assault Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Terminator Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Vanguard Veteran Squad With Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Vanguard Veteran Squad with Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Vindicator", modelCount: 1 },
       { name: "Whirlwind", modelCount: 1 },
       { name: "Astraeus", modelCount: 1 },
@@ -2005,25 +1985,49 @@ const POINTS = {
     "Ynnari Venom": 70
   },
   "Blood Angels": {
-    "Astorath": 105,
-    "Blood Angels Captain": 80,
-    "Chief Librarian Mephiston": 135,
-    "Commander Dante": 130,
-    "Death Company Captain": 70,
-    "Death Company Captain with Jump Pack": 75,
-    "Lemartes": 110,
-    "Sanguinary Priest": 90,
-    "The Sanguinor": 140,
-    "Death Company Marines (5)": 85,
-    "Death Company Marines (10)": 160,
-    "Death Company Marines with Bolt Rifles (5)": 85,
-    "Death Company Marines with Bolt Rifles (10)": 160,
-    "Death Company Marines with Jump Packs (5)": 130,
-    "Death Company Marines with Jump Packs (10)": 240,
-    "Sanguinary Guard (3)": 130,
-    "Sanguinary Guard (6)": 260,
-    "Baal Predator": 135,
-    "Death Company Dreadnought": 180
+    "units": {
+      "Astorath": 95,
+      "Baal Predator": 125,
+      "Blood Angels Captain": 80,
+      "Chief Librarian Mephiston": 120,
+      "Commander Dante": 120,
+      "Death Company Captain": 70,
+      "Death Company Captain with Jump Pack": 75,
+      "Death Company Dreadnought": 180,
+      "Death Company Marines": [85, 160],
+      "Death Company Marines with Bolt Rifles": [85, 160],
+      "Death Company Marines with Jump Packs": [120, 230],
+      "Lemartes": 100,
+      "Sanguinary Guard": [125, 260],
+      "Sanguinary Priest": 75,
+      "The Sanguinor": 140,
+    },
+    "enhancements": {
+      "Angelic Inheritors": {
+        "Blazing Icon": 20,
+        "Ordained Sacrifice": 25,
+        "Prescient Flash": 20,
+        "Troubling Visions": 15
+      },
+      "Liberator Assault Group": {
+        "Gift of Foresight": 15,
+        "Icon of the Angel": 20,
+        "Rage-fuelled Warrior": 35,
+        "Speed of the Primarch": 25
+      },
+      "The Angelic Host": {
+        "Archangel's Shard": 15,
+        "Artisan of War": 20,
+        "Gleaming Pinions": 25,
+        "Visage of Death": 15
+      },
+      "The Lost Brethren": {
+        "Blood Shard": 25,
+        "Sanguinius' Grace": 20,
+        "To Slay the Warmaster": 15,
+        "Vengeful Onslaught": 10
+      }
+    }
   },
   "Chaos Space Marines": {
     "Abaddon the Despoiler": 200,
@@ -2247,6 +2251,7 @@ const POINTS = {
       "Pedro Kantor": 90,
       "Predator Annihilator": 135,
       "Predator Destructor": 140,
+      "Razorback": 85,
       "Redemptor Dreadnought": 195,
       "Reiver Squad": [80, 160],
       "Repulsor": 180,
