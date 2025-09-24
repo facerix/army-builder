@@ -19,8 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // disable faction options that don't have a battle profile
   factionSelector.querySelectorAll("option").forEach(option => {
     const faction = FACTION_NAMES[option.value];
-    if (!ARMIES[faction] || !ARMIES[faction]?.characters?.length || !ARMIES[faction]?.otherUnits?.length) {
-      option.disabled = true;
+    if (faction) {
+      if (!ARMIES[faction] || !ARMIES[faction]?.characters?.length || !ARMIES[faction]?.otherUnits?.length) {
+        console.log(`faction '${faction}' is missing battle profile data`);
+        option.disabled = true;
+      }
     }
   });
 
