@@ -65,6 +65,7 @@ export const ARMIES = {
         }
       },
       { name: "Retributor Squad", modelCount: 5 },
+      { name: "Sanctifiers", modelCount: 9 },
       {
         name: "Seraphim Squad",
         modelCount: [5, 10],
@@ -573,15 +574,32 @@ export const ARMIES = {
   },
 
   "Astra Militarum": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Black Templars": {
-    "models": {},
+    "chapterInfo": {
+      parentFaction: "Space Marines",
+      /*
+      If your army includes one or more BLACK TEMPLARS units, it cannot include any ADEPTUS ASTARTES PSYKER models, and cannot include any of the following models that do not have the Black Templars keyword: GLADIATOR LANCER; GLADIATOR REAPER; GLADIATOR VALIANT; IMPULSOR; REPULSOR; REPULSOR EXECUTIONER.
+      */
+    },
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
 
   "Blood Angels": {
+    "chapterInfo": {
+      parentFaction: "Space Marines",
+      /*
+      If your army includes one or more DEATHWATCH units, it cannot include any of the following units: DEVASTATOR SQUAD; SCOUT SQUAD; TACTICAL SQUAD.
+      */
+    },
     "characters": [
       { name: "Astorath", points: 105 },
       { name: "Blood Angels Captain", points: 80 },
@@ -674,11 +692,16 @@ export const ARMIES = {
   },
 
   "Chaos Daemons": {
-    "models": {},
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
   "Chaos Knights": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
 
@@ -738,47 +761,91 @@ export const ARMIES = {
   },
 
   "Dark Angels": {
-    "models": {},
+    "chapterInfo": {
+      parentFaction: "Space Marines",
+    },
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
   "Death Guard": {
-    "models": {},
+    "chapterInfo": {
+      parentFaction: "Chaos Space Marines",
+    },
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
   "Deathwatch": {
-    "models": {},
+    "chapterInfo": {
+      parentFaction: "Space Marines",
+      /*
+      If your army includes one or more DEATHWATCH units, it cannot include any of the following units: DEVASTATOR SQUAD; SCOUT SQUAD; TACTICAL SQUAD.
+      */
+    },
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
   "Drukhari": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Emperor's Children": {
-    "models": {},
+    "chapterInfo": {
+      parentFaction: "Chaos Space Marines",
+    },
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
   "Genestealer Cults": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Grey Knights": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Imperial Agents": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Imperial Fists": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Imperial Knights": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Iron Hands": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
 
@@ -806,10 +873,7 @@ export const ARMIES = {
         modelCount: [3, 6],
         points: [80, 160],
         unitOptions: {
-          unitSize: {
-            "3": 80,
-            "6": 160
-          }
+          unitSize: [3, 6],
         }
       },
       {
@@ -817,10 +881,7 @@ export const ARMIES = {
         modelCount: [5, 10],
         points: [100, 200],
         unitOptions: {
-          unitSize: {
-            "5": 100,
-            "10": 200
-          }
+          unitSize: [5, 10],
         }
       },
       {
@@ -833,10 +894,7 @@ export const ARMIES = {
         modelCount: [5, 10],
         points: [135, 270],
         unitOptions: {
-          unitSize: {
-            "5": 135,
-            "10": 270
-          }
+          unitSize: [5, 10],
         }
       },
       {
@@ -848,10 +906,7 @@ export const ARMIES = {
         modelCount: [3, 6],
         points: [80, 160],
         unitOptions: {
-          unitSize: {
-            "3": 80,
-            "6": 160
-          }
+          unitSize: [3, 6],
         }
       },
       {
@@ -860,18 +915,19 @@ export const ARMIES = {
         modelCount: 10
       },
       {
-        name: "Ironkin Steeljacks",
+        name: "Ironkin Steeljacks w/ Melee Weapons",
         modelCount: [3, 6],
         points: [90, 180],
         unitOptions: {
-          unitSize: {
-            "3": 90,
-            "6": 180
-          },
-          wargear: [
-            "Heavy Volkanite Disintegrators",
-            "Melee Weapons",
-          ]
+          unitSize: [3, 6],
+        }
+      },
+      {
+        name: "Ironkin Steeljacks w/ Volkanite Disintegrators",
+        modelCount: [3, 6],
+        points: [90, 180],
+        unitOptions: {
+          unitSize: [3, 6],
         }
       },
       {
@@ -883,10 +939,7 @@ export const ARMIES = {
         modelCount: [1, 2],
         points: [70, 140],
         unitOptions: {
-          unitSize: {
-            "1": 70,
-            "2": 140,
-          }
+          unitSize: [1, 2],
         }
       },
       {
@@ -1147,101 +1200,284 @@ export const ARMIES = {
   },
 
   "Orks": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Raven Guard": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Salamanders": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Space Marines": {
-    "models": {
-      "Adrax Agatone": 85,
-      "Aggressor Squad": {
-        "3x": 120,
-        "6x": 240
-      },
-      "Ancient": 50,
-      "Ancient in Terminator Armour": 75,
-      "Apothecary": 50,
-      "Apothecary Biologis": 70,
-      "Assault Intercessor Squad": {
-        "5x": 75,
-        "10x": 150
-      },
-      "Ballistus Dreadnought": 140,
-      "Captain": 80,
-      "Captain in Gravis Armour": 80,
-      "Captain in Phobos Armour": 70,
-      "Captain in Terminator Armour": 95,
-      "Centurion Assault Squad": {
-        "3x": 150,
-        "6x": 300
-      },
-      "Chaplain": 60,
-      "Chaplain in Terminator Armour": 75,
-      "Chief Librarian Tigurius": 75,
-      "Dreadnought": 135,
-      "Eliminator Squad": {
-        "3x": 85
-      },
-      "Eradicator Squad": {
-        "3x": 100,
-        "6x": 200
-      },
-      "Intercessor Squad": {
-        "5x": 80,
-        "10x": 160
-      },
-      "Inceptor Squad": {
-        "3x": 120,
-        "6x": 240
-      },
-      "Librarian": 65,
-      "Librarian in Phobos Armour": 70,
-      "Librarian in Terminator Armour": 75,
-      "Predator Annihilator": 135,
-      "Predator Destructor": 140,
-      "Redemptor Dreadnought": 210,
-      "Repulsor": 180,
-      "Rhino": 75,
-      "Tactical Squad": {
-        "10x": 140
-      },
-      "Terminator Squad": {
-        "5x": 170,
-        "10x": 340
-      },
-      "Vindicator": 185
-    },
+    "characters": [
+      { name: "Adrax Agatone", tags: ["epic"] },
+      { name: "Aethon Shaan", tags: ["epic"] },
+      { name: "Ancient" },
+      { name: "Ancient in Terminator Armour" },
+      { name: "Apothecary" },
+      { name: "Apothecary Biologis" },
+      { name: "Bladeguard Ancient" },
+      { name: "Captain" },
+      { name: "Captain in Gravis Armour" },
+      { name: "Captain in Phobos Armour" },
+      { name: "Captain in Terminator Armour" },
+      { name: "Captain Sicarius", tags: ["epic"] },
+      { name: "Captain with Jump Pack" },
+      { name: "Chaplain" },
+      { name: "Chaplain in Terminator Armour" },
+      { name: "Chaplain on Bike" },
+      { name: "Chaplain with Jump Pack" },
+      { name: "Chief Librarian Tigurius", tags: ["epic"] },
+      { name: "Darnath Lysander", tags: ["epic"] },
+      { name: "Iron Father Feirros", tags: ["epic"] },
+      { name: "Judiciar" },
+      { name: "Kayvan Shrike", tags: ["epic"] },
+      { name: "Kor'Sarro Khan", tags: ["epic"] },
+      { name: "Librarian" },
+      { name: "Librarian in Phobos Armour" },
+      { name: "Librarian in Terminator Armour" },
+      { name: "Lieutenant" },
+      { name: "Lieutenant in Phobos Armour" },
+      { name: "Lieutenant in Reiver Armour" },
+      { name: "Lieutenant with Combi-weapon" },
+      { name: "Lieutenant Titus", tags: ["epic"] },
+      { name: "Marneus Calgar", tags: ["epic"] },
+      { name: "Pedro Kantor", tags: ["epic"] },
+      { name: "Roboute Guilliman", tags: ["epic"] },
+      { name: "Techmarine" },
+      { name: "Tor Garadon", tags: ["epic"] },
+      { name: "Uriel Ventris", tags: ["epic"] },
+      { name: "Vulkan He'stan", tags: ["epic"] },
+    ],
+    "battleline": [
+      { name: "Assault Intercessor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Heavy Intercessor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Intercessor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Tactical Squad", modelCount: 10 },
+    ],
+    "otherUnits": [
+      { name: "Aggressor Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Assault Intercessors With Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Ballistus Dreadnought", modelCount: 140 },
+      { name: "Bladeguard Veteran Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Brutalis Dreadnought", modelCount: 160 },
+      { name: "Centurion Assault Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Centurion Devastator Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Company Heroes", modelCount: 4 },
+      { name: "Desolation Squad", modelCount: 5 },
+      { name: "Devastator Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Dreadnought", modelCount: 1 },
+      { name: "Drop Pod", modelCount: 1 },
+      { name: "Eliminator Squad", modelCount: 3 },
+      { name: "Eradicator Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Firestrike Servo-turrets", modelCount: [1, 2], unitOptions: { unitSize: [1, 2] } },
+      { name: "Gladiator Lancer", modelCount: 1 },
+      { name: "Gladiator Reaper", modelCount: 1 },
+      { name: "Gladiator Valiant", modelCount: 1 },
+      { name: "Hammerfall Bunker", modelCount: 1 },
+      { name: "Hellblaster Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Impulsor", modelCount: 1 },
+      { name: "Inceptor Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Incursor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Infernus Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Infiltrator Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Invader ATV", modelCount: 1 },
+      { name: "Invictor Tactical Warsuit", modelCount: 1 },
+      { name: "Land Raider", modelCount: 1 },
+      { name: "Land Raider Crusader", modelCount: 1 },
+      { name: "Land Raider Redeemer", modelCount: 1 },
+      { name: "Outrider Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },  // figure out how to handle Invader ATV +60
+      { name: "Predator Annihilator", modelCount: 1 },
+      { name: "Predator Destructor", modelCount: 1 },
+      { name: "Razorback", modelCount: 1 },
+      { name: "Redemptor Dreadnought", modelCount: 1 },
+      { name: "Reiver Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Repulsor", modelCount: 1 },
+      { name: "Repulsor Executioner", modelCount: 1 },
+      { name: "Rhino", modelCount: 1 },
+      { name: "Scout Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Sternguard Veteran Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Storm Speeder Hailstrike", modelCount: 1 },
+      { name: "Storm Speeder Hammerstrike", modelCount: 1 },
+      { name: "Storm Speeder Thunderstrike", modelCount: 1 },
+      { name: "Stormhawk Interceptor", modelCount: 1 },
+      { name: "Stormraven Gunship", modelCount: 1 },
+      { name: "Stormtalon Gunship", modelCount: 1 },
+      { name: "Suppressor Squad", modelCount: 1 },
+      { name: "Terminator Assault Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Terminator Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Vanguard Veteran Squad With Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Vindicator", modelCount: 1 },
+      { name: "Whirlwind", modelCount: 1 },
+      { name: "Astraeus", modelCount: 1 },
+      { name: "Thunderhawk Gunship", modelCount: 1 },
+    ],
     "enhancements": {
-      "1st Company Task Force": {
-        "Fear Made Manifest": 30,
-        "Iron Resolve": 15,
-        "Rites of War": 10
-      },
-      "Tactical Flexibility": {
-        "Strategic Reserves": 10,
-        "Rapid Deployment": 15,
-        "Flanking Maneuvers": 20
-      }
-    }
+      // TODO: check enhancement restrictions
+      "1st Company Task Force": [
+        { name: "Fear Made Manifest" },
+        { name: "Iron Resolve" },
+        { name: "Rites of War" },
+        { name: "The Imperium's Sword" },
+      ],
+      "Anvil Siege Force": [
+        { name: "Architect of War" },
+        { name: "Fleet Commander" },
+        { name: "Indomitable Fury" },
+        { name: "Stoic Defender" },
+      ],
+      "Emperor's Shield": [
+        { name: "Champion of the Feast" },
+        { name: "Disciple of Rhetoricus" },
+        { name: "Indomitable Champion" },
+        { name: "Malodraxian Standard" },
+      ],
+      "Firestorm Assault Force": [
+        { name: "Adamantine Mantle" },
+        { name: "Champion of Humanity" },
+        { name: "Forged in Battle" },
+        { name: "War-tempered Artifice" },
+      ],
+      "Forgefather's Seekers": [
+        { name: "Adamantine Mantle" },
+        { name: "Forged in Battle" },
+        { name: "Immolator" },
+        { name: "War-tempered Artifice" },
+      ],
+      "Gladius Task Force": [
+        { name: "Adept of the Codex" },
+        { name: "Artificer Armour" },
+        { name: "Fire Discipline" },
+        { name: "The Honour Vehement" },
+      ],
+      "Ironstorm Spearhead": [
+        { name: "Adept of the Omnissiah" },
+        { name: "Master of Machine War" },
+        { name: "Target Augury Web" },
+        { name: "The Flesh is Weak" },
+      ],
+      "Librarius Conclave": [
+        { name: "Celerity" },
+        { name: "Fusillade" },
+        { name: "Obfuscation" },
+        { name: "Prescience" },
+      ],
+      "Shadowmark Talon": [
+        { name: "Blackwing Shroud" },
+        { name: "Coronal Susurrant" },
+        { name: "Hunter’s Instincts" },
+        { name: "Umbral Raptor" },
+      ],
+      "Stormlance Task Force": [
+        { name: "Feinting Withdrawal" },
+        { name: "Fury of the Storm" },
+        { name: "Hunter’s Instincts" },
+        { name: "Portents of Wisdom" },
+      ],
+      "Vanguard Spearhead": [
+        { name: "Execute and Redeploy" },
+        { name: "Ghostweave Cloak" },
+        { name: "Shadow War Veteran" },
+        { name: "The Blade Driven Deep" },
+      ],
+    },
   },
 
   "Space Wolves": {
-    "models": {},
-    "enhancements": {},
+    "chapterInfo": {
+      parentFaction: "Space Marines",
+      restrictions: [
+        "Apothecary",
+        "Devastator Squad",
+        "Tactical Squad"
+      ],
+    },
+    "characters": [
+      { name: "Arjac Rockfist", tags: ["epic"] },
+      { name: "Bjorn the Fell-Handed", tags: ["epic"] },
+      { name: "Iron Priest" },
+      { name: "Logan Grimnar", tags: ["epic"] },
+      { name: "Murderfang", tags: ["epic"] },
+      { name: "Njal Stormcaller", tags: ["epic"] },
+      { name: "Ragnar Blackmane", tags: ["epic"] },
+      { name: "Ulrik the Slayer", tags: ["epic"] },
+      { name: "Wolf Guard Battle Leader" },
+      { name: "Wolf Priest" },
+    ],
+    "battleline": [
+      { name: "Blood Claws", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
+      { name: "Grey Hunters", modelCount: 10 },
+    ],
+    "otherUnits": [
+      {
+        name: "Fenrisian Wolves",
+        modelCount: [5, 10],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Thunderwolf Cavalry", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Venerable Dreadnought" },
+      { name: "Wolf Guard Headtakers", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Wolf Guard Headtakers and Hunting Wolves", modelCount: [6, 12], unitOptions: { unitSize: [6, 12] } },
+      { name: "Wolf Guard Terminators", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Wulfen", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Wulfen Dreadnought" },
+      { name: "Wulfen with Storm Shields", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+    ],
+    "enhancements": {
+      "Champions of Fenris": [
+        { name: "Fangrune Pendant" },
+        { name: "Foes’ Fate" },
+        { name: "Longstrider" },
+        { name: "Wolves’ Wisdom" },
+      ],
+      "Saga of the Beastslayer": [
+        { name: "Elder’s Guidance" },
+        { name: "Helm of the Beastslayer" },
+        { name: "Hunter’s Guile" },
+        { name: "Wolf-touched" },
+      ],
+      "Saga of the Bold": [
+        { name: "Braggart’s Steel" },
+        { name: "Hordeslayer" },
+        { name: "Skjald" },
+        { name: "Thunderwolf’s Fortitude" },
+      ],
+      "Saga of the Hunter": [
+        { name: "Fenrisian Grit" },
+        { name: "Feral Rage" },
+        { name: "Swift Hunter" },
+        { name: "Wolf Master" },
+      ],
+    }
   },
   "T'au Empire": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
   "Thousand Sons": {
-    "models": {},
+    "chapterInfo": {
+      parentFaction: "Chaos Space Marines",
+    },
+    "characters": [],
+    "battleline": [],
+    "otherunits": [],
     "enhancements": {},
   },
   "Tyranids": {
@@ -1403,7 +1639,10 @@ export const ARMIES = {
     },
   },
   "Ultramarines": {
-    "models": {},
+    "characters": [],
+"battleline": [],
+"otherunits": [],
+
     "enhancements": {},
   },
 
@@ -1446,6 +1685,9 @@ export const ARMIES = {
     }
   },
   "World Eaters": {
+    "chapterInfo": {
+      parentFaction: "Chaos Space Marines",
+    },
     "models": {
       "Angron": 435,
       "Eightbound": {
@@ -1533,7 +1775,7 @@ const POINTS = {
       "Repentia Squad": [75, 160],
       "Retributor Squad": 105,
       "Saint Celestine": 150,
-      "Sanctifiers": 100, // wha? 9 models -- I don't have this unit above
+      "Sanctifiers": 100,
       "Seraphim Squad": [80, 160],
       "Sisters Novitiate Squad": 100,
       "Sororitas Rhino": 75,
@@ -1809,32 +2051,67 @@ const POINTS = {
     "Chaos Rhino": 75
   },
   "Leagues of Votann": {
-    "Arkanyst Evaluator": 75,
-    "Brôkhyr Iron-master": 75,
-    "Buri Aegnirssen": 110,
-    "Einhyr Champion": 70,
-    "Grimnyr": 65,
-    "Kâhl": 70,
-    "Memnyr Strategist": 45,
-    "Ûthar the Destined": 95,
-    "Hearthkyn Warriors": 100,
-    "Brôkhyr Thunderkyn (3)": 80,
-    "Brôkhyr Thunderkyn (6)": 160,
-    "Cthonian Beserks (5)": 100,
-    "Cthonian Beserks (10)": 200,
-    "Cthonian Earthshakers": 110,
-    "Einhyr Hearthguard (5)": 135,
-    "Einhyr Hearthguard (10)": 270,
-    "Hekaton Land Fortress": 240,
-    "Hernkyn Pioneers (3)": 80,
-    "Hernkyn Pioneers (6)": 160,
-    "Hernkyn Yaegirs": 90,
-    "Ironkin Steeljacks (3)": 90,
-    "Ironkin Steeljacks (6)": 180,
-    "Kapricus Carrier": 75,
-    "Kapricus Defender (1)": 70,
-    "Kapricus Defender (2)": 140,
-    "Sagitaur": 95
+    "units": {
+      "Arkanyst Evaluator": 75,
+      "Brôkhyr Iron-master": 75,
+      "Buri Aegnirssen": 110,
+      "Einhyr Champion": 70,
+      "Grimnyr": 65,
+      "Kâhl": 70,
+      "Memnyr Strategist": 45,
+      "Ûthar the Destined": 95,
+      "Hearthkyn Warriors": 100,
+      "Brôkhyr Thunderkyn": [80, 160],
+      "Cthonian Beserks": [100, 200],
+      "Cthonian Earthshakers": 110,
+      "Einhyr Hearthguard": [135, 270],
+      "Hekaton Land Fortress": 240,
+      "Hernkyn Pioneers": [80, 160],
+      "Hernkyn Yaegirs": 90,
+      "Ironkin Steeljacks w/ Melee Weapons": [90, 180],
+      "Ironkin Steeljacks w/ Volkanite Disintegrators": [90, 180],
+      "Kapricus Carrier": 75,
+      "Kapricus Defender": [70, 140],
+      "Sagitaur": 95
+    },
+    "enhancements": {
+      "Brandfast Oathband": {
+        "Precursive Judgement": 15,
+        "Signature Restoration": 5,
+        "Tactical Alchemy": 10,
+        "Trivärg Cyber Implant": 30,
+      },
+      "Dêlve Assault Shift": {
+        "Dêlvwerke Navigator": 25,
+        "Multiwave System Jammer": 10,
+        "Piledriver": 15,
+        "Quake Supervisor": 20,
+      },
+      "Hearthband": {
+        "Bastion Shield": 25,
+        "High Kâhl": 30,
+        "Ironskein": 10,
+        "Quake Multigenerator": 15,
+      },
+      "Hearthfyre Arsenal": {
+        "Calculated Tenacity": 15,
+        "Fârstrydr Node": 20,
+        "Graviton Vault": 5,
+        "Mantle of Elders": 10,
+      },
+      "Needgaârd Oathband": {
+        "Ancestral Crest": 15,
+        "Dead Reckoning": 10,
+        "Iron Ambassador": 5,
+        "Oathbound Specifier": 30,
+      },
+      "Persecution Prospect": {
+        "Eye for Weakness": 25,
+        "Nomad Strategist": 20,
+        "Surgical Saboteur": 10,
+        "Writ of Acquisition": 10,
+      },
+    }
   },
   "Necrons": {
     "Annihilation Barge": 105,
@@ -1900,45 +2177,225 @@ const POINTS = {
     "Triarch Stalker": 110
   },
   "Space Marines": {
-    "Adrax Agatone": 85,
-    "Aggressor Squad (3)": 120,
-    "Aggressor Squad (6)": 240,
-    "Ancient": 50,
-    "Ancient in Terminator Armour": 75,
-    "Apothecary": 50,
-    "Apothecary Biologis": 70,
-    "Assault Intercessor Squad (5)": 75,
-    "Assault Intercessor Squad (10)": 150,
-    "Ballistus Dreadnought": 140,
-    "Captain": 80,
-    "Captain in Gravis Armour": 80,
-    "Captain in Phobos Armour": 70,
-    "Captain in Terminator Armour": 95,
-    "Centurion Assault Squad (3)": 150,
-    "Centurion Assault Squad (6)": 300,
-    "Chaplain": 60,
-    "Chaplain in Terminator Armour": 75,
-    "Chief Librarian Tigurius": 75,
-    "Dreadnought": 135,
-    "Eliminator Squad (3)": 85,
-    "Eradicator Squad (3)": 100,
-    "Eradicator Squad (6)": 200,
-    "Intercessor Squad (5)": 80,
-    "Intercessor Squad (10)": 160,
-    "Inceptor Squad (3)": 120,
-    "Inceptor Squad (6)": 240,
-    "Librarian": 65,
-    "Librarian in Phobos Armour": 70,
-    "Librarian in Terminator Armour": 75,
-    "Predator Annihilator": 135,
-    "Predator Destructor": 140,
-    "Redemptor Dreadnought": 210,
-    "Repulsor": 180,
-    "Rhino": 75,
-    "Tactical Squad (10)": 140,
-    "Terminator Squad (5)": 170,
-    "Terminator Squad (10)": 340,
-    "Vindicator": 185
+    "units": {
+      "Adrax Agatone": 85,
+      "Aethon Shaan": 85,
+      "Aggressor Squad": [100, 200],
+      "Ancient": 50,
+      "Ancient in Terminator Armour": 75,
+      "Apothecary": 50,
+      "Apothecary Biologis": 70,
+      "Assault Intercessor Squad": [75, 150],
+      "Assault Intercessors with Jump Packs": [90, 170],
+      "Ballistus Dreadnought": 150,
+      "Bladeguard Ancient": 45,
+      "Bladeguard Veteran Squad": [80, 170],
+      "Brutalis Dreadnought": 160,
+      "Captain": 80,
+      "Captain in Gravis Armour": 80,
+      "Captain in Phobos Armour": 70,
+      "Captain in Terminator Armour": 95,
+      "Captain Sicarius": 85,
+      "Captain with Jump Pack": 75,
+      "Centurion Assault Squad": [150, 300],
+      "Centurion Devastator Squad": [165, 330],
+      "Chaplain": 60,
+      "Chaplain in Terminator Armour": 75,
+      "Chaplain on Bike": 75,
+      "Chaplain with Jump Pack": 75,
+      "Chief Librarian Tigurius": 75,
+      "Company Heroes": 75,
+      "Darnath Lysander": 100,
+      "Desolation Squad": 200,
+      "Devastator Squad": [120, 200],
+      "Dreadnought": 135,
+      "Drop Pod": 70,
+      "Eliminator Squad": 85,
+      "Eradicator Squad": [100, 200],
+      "Firestrike Servo-turrets": [75, 150],
+      "Gladiator Lancer": 160,
+      "Gladiator Reaper": 160,
+      "Gladiator Valiant": 150,
+      "Hammerfall Bunker": 175,
+      "Heavy Intercessor Squad": [100, 200],
+      "Hellblaster Squad": [110, 220],
+      "Impulsor": 80,
+      "Inceptor Squad": [120, 240],
+      "Incursor Squad": [80, 160],
+      "Infernus Squad": [90, 180],
+      "Infiltrator Squad": [100, 200],
+      "Intercessor Squad": [80, 160],
+      "Invader ATV": 60,
+      "Invictor Tactical Warsuit": 125,
+      "Iron Father Feirros": 95,
+      "Judiciar": 70,
+      "Kayvan Shrike": 100,
+      "Kor'Sarro Khan": 70,
+      "Land Raider": 220,
+      "Land Raider Crusader": 220,
+      "Land Raider Redeemer": 270,
+      "Librarian": 65,
+      "Librarian in Phobos Armour": 70,
+      "Librarian in Terminator Armour": 75,
+      "Lieutenant": 65,
+      "Lieutenant in Phobos Armour": 55,
+      "Lieutenant in Reiver Armour": 55,
+      "Lieutenant with Combi-weapon": 70,
+      "Lieutenant Titus": 70,
+      "Marneus Calgar": 200,
+      "Outrider Squad": [80, 160], /* Invader ATV +60 */
+      "Pedro Kantor": 90,
+      "Predator Annihilator": 135,
+      "Predator Destructor": 140,
+      "Redemptor Dreadnought": 195,
+      "Reiver Squad": [80, 160],
+      "Repulsor": 180,
+      "Repulsor Executioner": 220,
+      "Rhino": 75,
+      "Roboute Guilliman": 340,
+      "Scout Squad": [70, 140],
+      "Sternguard Veteran Squad": [100, 200],
+      "Storm Speeder Hailstrike": 115,
+      "Storm Speeder Hammerstrike": 125,
+      "Storm Speeder Thunderstrike": 150,
+      "Stormhawk Interceptor": 155,
+      "Stormraven Gunship": 280,
+      "Stormtalon Gunship": 165,
+      "Suppressor Squad": 75,
+      "Tactical Squad": 140,
+      "Techmarine": 55,
+      "Terminator Assault Squad": [180, 360],
+      "Terminator Squad": [170, 340],
+      "Tor Garadon": 90,
+      "Uriel Ventris": 95,
+      "Vanguard Veteran Squad with Jump Packs": [95, 190],
+      "Vindicator": 185,
+      "Vulkan He'stan": 100,
+      "Whirlwind": 190,
+
+      /* imperial armour (forge world models) */
+      "Astraeus": 525,
+      "Thunderhawk Gunship": 840,
+    },
+    "enhancements": {
+      "1st Company Task Force": {
+        "Fear Made Manifest": 30,
+        "Iron Resolve": 15,
+        "Rites of War": 10,
+        "The Imperium's Sword": 25,
+      },
+      "Anvil Siege Force": {
+        "Architect of War": 25,
+        "Fleet Commander": 15,
+        "Indomitable Fury": 20,
+        "Stoic Defender": 15,
+      },
+      "Emperor's Shield": {
+        "Champion of the Feast": 25,
+        "Disciple of Rhetoricus": 10,
+        "Indomitable Champion": 20,
+        "Malodraxian Standard": 20,
+      },
+      "Firestorm Assault Force": {
+        "Adamantine Mantle": 20,
+        "Champion of Humanity": 10,
+        "Forged in Battle": 15,
+        "War-tempered Artifice": 25,
+      },
+      "Forgefather's Seekers": {
+        "Adamantine Mantle": 20,
+        "Forged in Battle": 15,
+        "Immolator": 10,
+        "War-tempered Artifice": 25,
+      },
+      "Gladius Task Force": {
+        "Adept of the Codex": 20,
+        "Artificer Armour": 10,
+        "Fire Discipline": 25,
+        "The Honour Vehement": 15,
+      },
+      "Ironstorm Spearhead": {
+        "Adept of the Omnissiah": 35,
+        "Master of Machine War": 20,
+        "Target Augury Web": 30,
+        "The Flesh is Weak": 10,
+      },
+      "Librarius Conclave": {
+        "Celerity": 30,
+        "Fusillade": 35,
+        "Obfuscation": 20,
+        "Prescience": 25,
+      },
+      "Shadowmark Talon": {
+        "Blackwing Shroud": 25,
+        "Coronal Susurrant": 30,
+        "Hunter’s Instincts": 25,
+        "Umbral Raptor": 15,
+      },
+      "Stormlance Task Force": {
+        "Feinting Withdrawal": 10,
+        "Fury of the Storm": 25,
+        "Hunter’s Instincts": 25,
+        "Portents of Wisdom": 15,
+      },
+      "Vanguard Spearhead": {
+        "Execute and Redeploy": 20,
+        "Ghostweave Cloak": 15,
+        "Shadow War Veteran": 30,
+        "The Blade Driven Deep": 25,
+      },
+    },
+  },
+  "Space Wolves": {
+    "units": {
+      "Arjac Rockfist": 105,
+      "Bjorn the Fell-Handed": 170,
+      "Blood Claws": [135, 285],
+      "Fenrisian Wolves": [40, 80],
+      "Grey Hunters": 180,
+      "Iron Priest": 60,
+      "Logan Grimnar": 110,
+      "Murderfang": 160,
+      "Njal Stormcaller": 85,
+      "Ragnar Blackmane": 100,
+      "Thunderwolf Cavalry": [115, 230],
+      "Ulrik the Slayer": 70,
+      "Venerable Dreadnought": 140,
+      "Wolf Guard Battle Leader": 65,
+      "Wolf Guard Headtakers": [85, 170],
+      "Wolf Guard Headtakers and Hunting Wolves": [110, 220],
+      "Wolf Guard Terminators": [170, 340],
+      "Wolf Priest": 70,
+      "Wulfen": [85, 170],
+      "Wulfen Dreadnought": 145,
+      "Wulfen with Storm Shields": [100, 200],
+    },
+    "enhancements": {
+      "Champions of Fenris": {
+        "Fangrune Pendant": 15,
+        "Foes’ Fate": 15,
+        "Longstrider": 20,
+        "Wolves’ Wisdom": 30,
+      },
+      "Saga of the Beastslayer": {
+        "Elder’s Guidance": 20,
+        "Helm of the Beastslayer": 15,
+        "Hunter’s Guile": 20,
+        "Wolf-touched": 15,
+      },
+      "Saga of the Bold": {
+        "Braggart’s Steel": 20,
+        "Hordeslayer": 15,
+        "Skjald": 15,
+        "Thunderwolf’s Fortitude": 25,
+      },
+      "Saga of the Hunter": {
+        "Fenrisian Grit": 15,
+        "Feral Rage": 10,
+        "Swift Hunter": 20,
+        "Wolf Master": 5,
+      },
+    }
   },
   "Tyranids": {
     "Barbgaunts (5)": 55,
@@ -2060,12 +2517,29 @@ const POINTS = {
   }
 };
 
+const sortByName = (a, b) => a.name.localeCompare(b.name);
 const cachedArmyData = {};
 
 export const get40kArmyData = (faction) => {
   if (!cachedArmyData[faction]) {
     const rawFactionData = ARMIES[faction];
     const points = POINTS[faction];
+
+    // if faction is a (imperium/chaos) space marine chapter, pull the relevant units and points and merge them here
+    if (rawFactionData.chapterInfo) {
+      const parentFaction = ARMIES[rawFactionData.chapterInfo.parentFaction];
+      const parentPoints = POINTS[rawFactionData.chapterInfo.parentFaction];
+      if (parentFaction && parentPoints) {
+        rawFactionData.characters.push(...parentFaction.characters); rawFactionData.characters.sort(sortByName);
+        rawFactionData.battleline.push(...parentFaction.battleline); rawFactionData.battleline.sort(sortByName);
+        rawFactionData.otherUnits.push(...parentFaction.otherUnits); rawFactionData.otherUnits.sort(sortByName);
+        
+        rawFactionData.enhancements = { ...rawFactionData.enhancements, ...parentFaction.enhancements };
+        points.units = { ...points.units, ...parentPoints.units };
+        points.enhancements = { ...points.enhancements, ...parentPoints.enhancements };
+      }
+    }
+
     const dataWithPoints = {
       characters: rawFactionData.characters.map(u => getPointsForUnit(u, points.units)),
       battleline: rawFactionData.battleline.map(u => getPointsForUnit(u, points.units)),
