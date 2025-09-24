@@ -26,8 +26,11 @@ const UnitRow = (unit, options = null) => {
     optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${options.unitSize}` }));
   }
   if (unit.tags?.includes("epic")) {
-    console.log(`${unit.name} is epic`);
     tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
+  }
+  // model count for units without a unit size option
+  if (!options?.unitSize && unit.modelCount > 1) {
+    optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${unit.modelCount}` }));
   }
 
   const row = h("div", { className: "unit-summary" }, [
