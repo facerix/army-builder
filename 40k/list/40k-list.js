@@ -3,6 +3,7 @@ import { h } from '/src/domUtils.js';
 import '/components/CategorySection.js';
 import { get40kArmyData } from '/src/40k-army-data.js';
 import { FACTION_NAMES } from '/src/factions.js';
+import { exportArmyList } from '/src/parsers.js';
 
 const whenLoaded = Promise.all(
   [
@@ -40,6 +41,7 @@ whenLoaded.then(() => {
   }
 
   const btnDelete = document.querySelector("#btnDelete");
+  const btnExport = document.querySelector("#btnExport");
   const armyNameInput = document.querySelector("#armyName");
   const charactersSection = document.querySelector("#characters");
   const battlelineSection = document.querySelector("#battleline");
@@ -113,6 +115,12 @@ whenLoaded.then(() => {
       enhancements: armyData.enhancements[detachment] || [],
     };
   }
+
+  btnExport.addEventListener("click", evt => {
+    const exported = exportArmyList(armyList);
+    navigator.clipboard.writeText(exported);
+    alert("Army list exported to clipboard");
+  });
 
   btnDelete.addEventListener("click", evt => {
     if (confirm("Delete this army list: are you sure?")) {

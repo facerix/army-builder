@@ -34,10 +34,13 @@
       }
 
       .actions {
+        display: flex;
         margin-left: auto;
 
         button {
           border-color: transparent;
+          padding: 0.25em;
+          margin-left: 0.5em;
         }
       }
     }
@@ -102,6 +105,9 @@
     <img src="/images/aquila.svg" alt="Warhammer logo" />
     <h1>40k Army List</h1>
     <span class="actions">
+      <button id="btnExport" title="Export this army list">
+        <img src="/images/clipboard-copy.svg" alt="clipboard icon" />
+      </button>
       <button id="btnDelete" title="Delete this army list">
         <img src="/images/trash.svg" alt="trash icon" />
       </button>
