@@ -1,9 +1,11 @@
 import DataStore from '/src/DataStore.js';
 import '/components/AOSSection.js';
 import '/components/Regiment.js';
+import '/components/UpdateNotification.js';
 import { BATTLE_PROFILES } from '/src/aos-army-data.js';
 import { AOS_FACTION_NAMES } from '/src/factions.js';
 import { h } from '/src/domUtils.js';
+import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
 
 const whenLoaded = Promise.all(
   [
@@ -18,6 +20,9 @@ const getTotalPoints = (list) => {
 }
 
 whenLoaded.then(() => {
+  // Initialize service worker
+  serviceWorkerManager.init();
+  
   const urlParams = new URL(window.location).searchParams;
   const id = urlParams.get('id');
   const faction = urlParams.get('faction');

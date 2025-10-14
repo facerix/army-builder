@@ -1,9 +1,11 @@
 import DataStore from '/src/DataStore.js';
 import { h } from '/src/domUtils.js';
 import '/components/CategorySection.js';
+import '/components/UpdateNotification.js';
 import { get40kArmyData } from '/src/40k-army-data.js';
 import { FACTION_NAMES } from '/src/factions.js';
 import { exportArmyList } from '/src/parsers.js';
+import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
 
 const whenLoaded = Promise.all(
   [
@@ -40,6 +42,9 @@ whenLoaded.then(() => {
     });
   }
 
+  // Initialize service worker
+  serviceWorkerManager.init();
+  
   const btnDelete = document.querySelector("#btnDelete");
   const btnExport = document.querySelector("#btnExport");
   const armyNameInput = document.querySelector("#armyName");

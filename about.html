@@ -5,13 +5,12 @@
 <head>
   <title>Personnel</title>
   <meta charset="utf-8" />
-  <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
+  <meta name="description" content="Progressive web app to build tabletop army lists" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="canonical" href="https://army-builder.facerix.com/" />
   <meta property="og:title" content="Personnel" />
-  <meta property="og:description"
-    content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
+  <meta property="og:description" content="Progressive web app to build tabletop army lists" />
   <meta property="og:url" content="https://army-builder.facerix.com/" />
   <meta property="og:type" content="website" />
 
@@ -100,5 +99,12 @@
       Most were tweaked by me, because SVG is rad that way.
     </p>
   </main>
+
+  <update-notification></update-notification>
+  <script type="module">
+    import './components/UpdateNotification.js';
+    import { serviceWorkerManager } from './src/ServiceWorkerManager.js';
+    serviceWorkerManager.init();
+  </script>
 </body>
 </html>

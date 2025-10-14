@@ -260,6 +260,11 @@ site-header:not(:defined) {
   }
 }
 
+/* component manages its own visibility */
+update-notification {
+  display: none;
+}
+
 /* view transitions */
 
 @view-transition {

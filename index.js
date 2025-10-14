@@ -1,29 +1,12 @@
 import { parseAOSlist } from './src/parsers.js';
-// import './components/SiteHeader.js';
-// import DataStore from './src/DataStore.js';
+import { serviceWorkerManager } from './src/ServiceWorkerManager.js';
+import './components/UpdateNotification.js';
 
-// const whenLoaded = Promise.all(
-// 	[
-// 		customElements.whenDefined("site-header"),
-// 	],
-// );
-
-// whenLoaded.then(() => {
-  // DataStore.init();
-
-  // DataStore.addEventListener("change", evt => {
-  //   switch (evt.detail.changeType) {
-  //     case "init":
-  //       // TODO: load whatever data we need for the home page
-  //       break;
-  //     default:
-  //       // no action to take otherwise
-  //       break;
-  //   }
-  // });
-
-  // we actually don't need to do anything else here right now beyond loading SiteHeader.js
-// });
+const whenLoaded = Promise.all(
+	[
+		customElements.whenDefined("update-notification"),
+	],
+);
 
 const AOS_LIST = `Clan Skryre 1000/1000 pts
 -----
@@ -52,10 +35,13 @@ Gnawhole
 Created with Warhammer Age of Sigmar: The App
 App: v1.17.0 (3) | Data: v310`
 
-document.addEventListener("DOMContentLoaded", () => {
+whenLoaded.then(() => {
+  // Initialize service worker
+  serviceWorkerManager.init();
+  
   console.log(parseAOSlist(AOS_LIST));
 
   // document.querySelector("#faction-select-aos").addEventListener("change", evt => {
   //   console.log(evt.currentTarget.value)
   // })
-})
+});

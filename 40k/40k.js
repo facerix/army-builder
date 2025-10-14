@@ -1,7 +1,9 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
 import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
-import { ARMIES } from '/src/40k-army-data.js';
+import { ARMIES } from '../src/40k-army-data.js';
+import { serviceWorkerManager } from '../src/ServiceWorkerManager.js';
+import '../components/UpdateNotification.js';
 
 const listSlug = (armyList) => {
   const { id, faction, name } = armyList;
@@ -12,6 +14,9 @@ const listSlug = (armyList) => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Initialize service worker
+  serviceWorkerManager.init();
+  
   const savedLists = document.querySelector(".saved-lists");
   const btnNew = document.querySelector(".faction-selector button");
   const factionSelector = document.querySelector("select#faction");
