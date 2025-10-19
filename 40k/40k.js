@@ -1,7 +1,7 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
 import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
-import { ARMIES } from '../src/40k-army-data.js';
+import { ARMIES } from './40k-army-data.js';
 import { serviceWorkerManager } from '../src/ServiceWorkerManager.js';
 import '../components/UpdateNotification.js';
 

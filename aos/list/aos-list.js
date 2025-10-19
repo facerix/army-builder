@@ -2,7 +2,7 @@ import DataStore from '/src/DataStore.js';
 import '/components/AOSSection.js';
 import '/components/Regiment.js';
 import '/components/UpdateNotification.js';
-import { BATTLE_PROFILES } from '/src/aos-army-data.js';
+import { BATTLE_PROFILES } from '../aos-army-data.js';
 import { AOS_FACTION_NAMES } from '/src/factions.js';
 import { h } from '/src/domUtils.js';
 import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';

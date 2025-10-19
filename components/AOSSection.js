@@ -264,8 +264,10 @@ class AOSSection extends HTMLElement {
     const regimentElement = document.createElement('aos-regiment');
     regimentElement.regimentData = regiment;
     regimentElement.index = index;
+    debugger;
 
-    const regimentOptions = regiment?.unitOptions;
+    const regimentOptions = regiment?.unitOptions ?? [];
+    console.log("regimentOptions", regimentOptions);
     const modalOptions = regimentOptions.map(opt => {
       if (opt.unitName) {
         return this.#subOptions.find(o => o.name === opt.unitName);

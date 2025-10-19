@@ -1,7 +1,7 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
 import { FACTION_IMAGE_URLS, AOS_FACTION_NAMES } from '../src/factions.js';
-import { BATTLE_PROFILES } from '../src/aos-army-data.js';
+import { BATTLE_PROFILES } from './aos-army-data.js';
 import { serviceWorkerManager } from '../src/ServiceWorkerManager.js';
 import '../components/UpdateNotification.js';
 

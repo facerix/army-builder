@@ -1,7 +1,7 @@
 // Service Worker for Personnel (Army Builder)
 // Version will be automatically updated during build process
 
-const CACHE_VERSION = '1.2.0'; // This will be replaced by build script
+const CACHE_VERSION = '1.3.5'; // This will be replaced by build script
 const CACHE_NAME = `personnel-cache-v${CACHE_VERSION}`;
 
 // Files that should be cached with version control
@@ -13,10 +13,12 @@ const VERSIONED_FILES = [
   '/main.css',
   '/40k/index.html',
   '/40k/40k.js',
+  '/40k/40k-army-data.js',
   '/40k/list/index.html',
   '/40k/list/40k-list.js',
   '/aos/index.html',
   '/aos/aos.js',
+  '/aos/aos-army-data.js',
   '/aos/lb.html',
   '/aos/list/index.html',
   '/aos/list/aos-list.js',
@@ -25,8 +27,6 @@ const VERSIONED_FILES = [
   '/components/OptionsModal.js',
   '/components/Regiment.js',
   '/components/UnitModal.js',
-  '/src/40k-army-data.js',
-  '/src/aos-army-data.js',
   '/src/DataStore.js',
   '/src/DBDataStore.js',
   '/src/domUtils.js',
@@ -41,9 +41,8 @@ const VERSIONED_FILES = [
 // These files can be cached indefinitely and won't change between versions
 const STATIC_ASSET_PATTERNS = [
   '/images/',        // All files under /images/ (including subdirectories)
+  '/icons/',        // All files under /icons/ (including subdirectories)
   '/crossed-swords.svg',
-  '/icon512_maskable.png',
-  '/icon512_rounded.png'
 ];
 
 /**

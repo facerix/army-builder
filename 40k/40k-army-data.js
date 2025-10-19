@@ -1,3 +1,47 @@
+/*
+Imperium
+  Adepta Sororitas
+  Adeptus Custodes
+  Adeptus Mechanicus
+  Astra Militarum
+  Grey Knights
+  Imperial Agents
+  Imperial Knights
+
+Space Marines
+  Black Templars
+  Blood Angels
+  Dark Angels
+  Deathwatch
+  Imperial Fists (no codex)
+  Iron Hands (no codex)
+  Raven Guard (no codex)
+  Salamanders (no codex)
+  Space Marines
+  Space Wolves
+  Ultramarines (no codex)
+  White Scars (no codex)
+
+Chaos
+  Chaos Space Marines
+  Death Guard
+  Emperor's Children
+  Thousand Sons
+  World Eaters
+  Chaos Daemons
+  Chaos Knights
+
+Xenos
+  Aeldari
+  Drukhari
+  Genestealer Cults
+  Leagues of Votann
+  Necrons
+  Orks
+  Tyranids
+  T'au Empire
+*/
+
 export const ARMIES = {
   "Adepta Sororitas": {
     "characters": [
@@ -575,11 +619,11 @@ export const ARMIES = {
 
   "Astra Militarum": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Black Templars": {
     "chapterInfo": {
       parentFaction: "Space Marines",
@@ -589,7 +633,7 @@ export const ARMIES = {
     },
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
 
@@ -674,57 +718,128 @@ export const ARMIES = {
   "Chaos Daemons": {
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Chaos Knights": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
 
   "Chaos Space Marines": {
-    "models": {
-      "Abaddon the Despoiler": 200,
-      "Chaos Lord": 75,
-      "Chaos Sorcerer": 60,
-      "Chaos Space Marine Squad": {
-        "5x": 80,
-        "10x": 150
-      },
-      "Chaos Terminator Squad": {
-        "5x": 190,
-        "10x": 380
-      },
-      "Cultists": {
-        "10x": 50,
-        "20x": 100
-      },
-      "Helbrute": 130,
-      "Khorne Berzerkers": {
-        "5x": 90,
-        "10x": 180
-      },
-      "Noise Marines": {
-        "5x": 90,
-        "10x": 180
-      },
-      "Plague Marines": {
-        "5x": 90,
-        "10x": 180
-      },
-      "Thousand Sons": {
-        "5x": 90,
-        "10x": 180
-      },
-      "Vindicator": 185,
-      "Predator": 135,
-      "Land Raider": 240,
-      "Dreadnought": 135,
-      "Chaos Rhino": 75
-    },
+
+      /*
+      Abaddon the Despoiler / 280
+      Accursed Cultists / 8-90 | 16-195
+      Chaos Bikers / 3-70 | 6-130
+      Chaos Land Raider / 240
+      Chaos Lord / 90
+      Chaos Lord in Terminator Armour / 95
+      Chaos Lord with Jump Pack / 80
+      Chaos Predator Annihilator / 135
+      Chaos Predator Destructor / 140
+      Chaos Rhino / 75
+      Chaos Spawn / 2-70
+      Chaos Terminator Squad / 5-180 | 10-360
+      Chaos Vindicator / 185
+      Chosen / 5-125 | 10-250
+      Cultist Firebrand / 1-45
+      Cultist Mob / 10-50 | 20-100
+      Cypher / 1-90
+      Dark Apostle / 3-65
+      Dark Commune / 5-80
+      Defiler / 190
+      Fabius Bile / 2-85
+      Fellgor Beastmen / 10-70
+      Forgefiend / 180
+      Haarken Worldclaimer / 1-90
+      Havocs / 5-125
+      Helbrute / 130
+      Heldrake / 205
+      Heretic Astartes Daemon Prince / 165
+      Heretic Astartes Daemon Prince with Wings / 180
+      Huron Blackheart / 80
+      Khorne Lord of Skulls / 450
+      Legionaries / 5-90 | 10-170
+      Lord Discordant on Helstalker / 160
+      Master of Executions / 80
+      Master of Possession / 60
+      Maulerfiend / 130
+      Nemesis Claw / 5-110 | 10-190
+      Noctilith Crown / 125
+      Obliterators / 2-160
+      Possessed / 5-120 | 10-240
+      Raptors / 5-90 | 10-170
+      Sorcerer / 60
+      Sorcerer in Terminator Armour / 80
+      Traitor Enforcer / 2-55
+      Traitor Guardsmen Squad / 10-70
+      Vashtorr the Arkifane / 175
+      Venomcrawler / 120
+      Warp Talons / 5-125 | 10-270
+      Warpsmith / 70
+      */
+    "characters": [
+      { name: "Abaddon the Despoiler", tags: ["epic"] },
+      { name: "Chaos Lord" },
+      { name: "Chaos Lord In Terminator Armour" },
+      { name: "Chaos Lord with Jump Pack" },
+      { name: "Cultist Firebrand" },
+      { name: "Cypher", tags: ["epic", "fallen"] },
+      { name: "Dark Apostle" },
+      { name: "Dark Commune" },
+      { name: "Fabius Bile", tags: ["epic"] },
+      { name: "Haarken Worldclaimer", tags: ["epic"] },
+      { name: "Heretic Astartes Daemon Prince" },
+      { name: "Heretic Astartes Daemon Prince With Wings" },
+      { name: "Huron Blackheart", tags: ["epic"] },
+      { name: "Lord Discordant On Helstalker" },
+      { name: "Master of Executions" },
+      { name: "Master of Possession" },
+      { name: "Sorcerer" },
+      { name: "Sorcerer In Terminator Armour" },
+      { name: "Traitor Enforcer" },
+      { name: "Vashtorr The Arkifane", tags: ["epic"] },
+      { name: "Warpsmith" },
+    ],
+    "battleline": [
+      { name: "Cultist Mob", unitOptions: { unitSize: [8, 16] } },
+      { name: "Legionaries", unitOptions: { unitSize: [5, 10] } },
+      { name: "Traitor Guardsmen Squad", unitOptions: { unitSize: [5, 10] } },
+      // { name: "Khorne Berzerkers", unitOptions: { unitSize: [5, 10] } },
+      // { name: "Plague Marines", unitOptions: { unitSize: [5, 10] } },
+      // { name: "Rubric Marines", unitOptions: { unitSize: [5, 10] } },
+    ],
+    "otherUnits": [
+      { name: "Accursed Cultists", unitOptions: { unitSize: [8, 16] } },
+      { name: "Chaos Bikers", unitOptions: { unitSize: [3, 6] } },
+      { name: "Chaos Land Raider" },
+      { name: "Chaos Predator Annihilator" },
+      { name: "Chaos Predator Destructor" },
+      { name: "Chaos Rhino" },
+      { name: "Chaos Spawn" },
+      { name: "Chaos Terminator Squad" },
+      { name: "Chaos Vindicator" },
+      { name: "Chosen" },
+      { name: "Defiler" },
+      { name: "Fellgor Beastmen" },
+      { name: "Forgefiend" },
+      { name: "Havocs" },
+      { name: "Helbrute" },
+      { name: "Heldrake" },
+      { name: "Khorne Lord Of Skulls" },
+      { name: "Maulerfiend" },
+      { name: "Nemesis Claw" },
+      { name: "Obliterators" },
+      { name: "Possessed" },
+      { name: "Raptors" },
+      { name: "Venomcrawler" },
+      { name: "Warp Talons" },
+      // { name: "Noise Marines", unitOptions: { unitSize: [5, 10] } },
+    ],
     "enhancements": {
       "Disciples of the Dark Gods": {
         "Dark Pact": 15,
@@ -736,7 +851,7 @@ export const ARMIES = {
         "World Eaters": 20,
         "Death Guard": 25,
         "Thousand Sons": 25
-      }
+      },
     }
   },
 
@@ -746,18 +861,20 @@ export const ARMIES = {
     },
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Death Guard": {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Deathwatch": {
     "chapterInfo": {
       parentFaction: "Space Marines",
@@ -767,65 +884,52 @@ export const ARMIES = {
     },
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Drukhari": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Emperor's Children": {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Genestealer Cults": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Grey Knights": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Imperial Agents": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
-  "Imperial Fists": {
-    "characters": [],
-"battleline": [],
-"otherunits": [],
 
-    "enhancements": {},
-  },
   "Imperial Knights": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
-    "enhancements": {},
-  },
-  "Iron Hands": {
-    "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
 
@@ -1181,25 +1285,11 @@ export const ARMIES = {
 
   "Orks": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
-  "Raven Guard": {
-    "characters": [],
-"battleline": [],
-"otherunits": [],
 
-    "enhancements": {},
-  },
-  "Salamanders": {
-    "characters": [],
-"battleline": [],
-"otherunits": [],
-
-    "enhancements": {},
-  },
   "Space Marines": {
     "characters": [
       { name: "Adrax Agatone", tags: ["epic"] },
@@ -1444,226 +1534,131 @@ export const ARMIES = {
       ],
     }
   },
+
   "T'au Empire": {
     "characters": [],
-"battleline": [],
-"otherunits": [],
-
+    "battleline": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Thousand Sons": {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
     "characters": [],
     "battleline": [],
-    "otherunits": [],
+    "otherUnits": [],
     "enhancements": {},
   },
+
   "Tyranids": {
-    "models": {
-      "Barbgaunts": {
-        "5x": 55,
-        "10x": 110,
-      },
-      "Biovores": {
-        "1x": 50,
-        "2x": 100,
-        "3x": 150
-      },
-      "Broodlord": 80,
-      "Carnifexes": {
-        "1x": 115,
-        "2x": 230
-      },
-      "Deathleaper": 80,
-      "Exocrine": 140,
-      "Gargoyles": {
-        "10x": 85,
-        "20x": 170,
-      },
-      "Genestealers": {
-        "5x": 75,
-        "10x": 150,
-      },
-      "Harpy": 215,
-      "Haruspex": 125,
-      "Hive Crone": 200,
-      "Hive Guard": {
-        "3x": 100,
-        "6x": 200
-      },
-      "Hive Tyrant": 225,
-      "Hormagaunts": {
-        "10x": 65,
-        "20x": 130,
-      },
-      "Lictor": 60,
-      "Maleceptor": 170,
-      "Mawloc": 145,
-      "Mucolid Spores": {
-        "1x": 30,
-        "2x": 60
-      },
-      "Neurogaunts": {
-        "11x": 45,
-        "22x": 90,
-      },
-      "Neurolictor": 80,
-      "Neurotyrant": 105,
-      "Norn Assimilator": 275,
-      "Norn Emissary": 260,
-      "Old One Eye": 150,
-      "Parasite of Mortrex": 80,
-      "Psychophage": 95,
-      "Pyrovores": {
-        "1x": 40,
-        "2x": 70,
-        "3x": 105
-      },
-      "Raveners": {
-        "3x": 75,
-        "6x": 150,
-      },
-      "Ripper Swarms": {
-        "1x": 25,
-        "2x": 40,
-        "3x": 50
-      },
-      "Screamer-Killer": 145,
-      "Spore Mines": {
-        "3x": 55,
-        "6x": 110
-      },
-      "Sporocyst": 145,
-      "Termagants": {
-        "10x": 60,
-        "20x": 120,
-      },
-      "Tervigon": 175,
-      "The Swarmlord": 240,
-      "Toxicrene": 150,
-      "Trygon": 140,
-      "Tyranid Warriors with Melee Bio-weapons": {
-        "3x": 75,
-        "6x": 150,
-      },
-      "Tyranid Warriors with Ranged Bio-weapons": {
-        "3x": 65,
-        "6x": 130,
-      },
-      "Tyrannocyte": 105,
-      "Tyrannofex": 200,
-      "Tyrant Guard": {
-        "3x": 80,
-        "6x": 160,
-      },
-      "Venomthropes": {
-        "3x": 70,
-        "6x": 140
-      },
-      "Von Ryan's Leapers": {
-        "3x": 70,
-        "6x": 140,
-      },
-      "Winged Hive Tyrant": 200,
-      "Winged Tyranid Prime": 65,
-      "Zoanthropes": {
-        "3x": 100,
-        "6x": 200,
-      }
-    },
+    "characters": [
+      { name: "Broodlord", tags: ["Vanguard Invader", "Psyker", "Synapse"] },
+      { name: "Deathleaper", tags: ["epic", "Vanguard Invader"] },
+      { name: "Hive Tyrant", tags: ["Monster", "Psyker", "Synapse"] },
+      { name: "Hyperadapted Raveners", tags: ["Vanguard Invader", "Synapse"] },
+      { name: "Neurotyrant", tags: ["Monster", "Psyker", "Synapse"] },
+      { name: "Old One Eye", tags: ["epic", "Monster"] },
+      { name: "Parasite of Mortrex", tags: ["Vanguard Invader", "Synapse"] },
+      { name: "Tervigon", tags: ["Monster", "Psyker", "Synapse"] },
+      { name: "The Swarmlord", tags: ["epic", "Monster", "Psyker", "Synapse"] },
+      { name: "Winged Hive Tyrant", tags: ["Monster", "Vanguard Invader", "Psyker", "Synapse"] },
+      { name: "Winged Tyranid Prime", tags: ["Vanguard Invader", "Synapse"] },
+    ],
+    "battleline": [
+      { name: "Gargoyles", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] }, tags: ["Vanguard Invader"] },
+      { name: "Hormagaunts", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
+      { name: "Termagants", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
+    ],
+    "otherUnits": [
+      { name: "Barbgaunts", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Biovores", modelCount: [1, 2, 3], unitOptions: { unitSize: [1, 2, 3] } },
+      { name: "Carnifexes", modelCount: [1, 2], unitOptions: { unitSize: [1, 2] }, tags: ["Monster"] },
+      { name: "Exocrine", tags: ["Monster"] },
+      { name: "Genestealers", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] }, tags: ["Vanguard Invader"] },
+      { name: "Harpy", tags: ["Monster", "Vanguard Invader"] },
+      { name: "Haruspex", tags: ["Monster"] },
+      { name: "Hive Crone", tags: ["Monster", "Vanguard Invader"] },
+      { name: "Hive Guard", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Lictor", tags: ["Vanguard Invader"] },
+      { name: "Maleceptor", tags: ["Monster", "Psyker", "Synapse"] },
+      { name: "Mawloc", tags: ["Monster", "Vanguard Invader"] },
+      { name: "Mucolid Spores", modelCount: [1, 2], unitOptions: { unitSize: [1, 2] } },
+      { name: "Neurogaunts", modelCount: [11, 22], unitOptions: { unitSize: [11, 22] } },
+      { name: "Neurolictor", tags: ["Vanguard Invader", "Synapse"] },
+      { name: "Norn Assimilator", tags: ["Monster", "Synapse"] },
+      { name: "Norn Emissary", tags: ["Monster", "Psyker", "Synapse"] },
+      { name: "Psychophage", tags: ["Monster"] },
+      { name: "Pyrovores", modelCount: [1, 2, 3], unitOptions: { unitSize: [1, 2, 3] } },
+      { name: "Raveners", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Vanguard Invader"] },
+      { name: "Ripper Swarms", modelCount: [1, 2, 3], unitOptions: { unitSize: [1, 2, 3] } },
+      { name: "Screamer-Killer", tags: ["Monster"] },
+      { name: "Spore Mines", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Sporocyst", tags: ["Monster"] },
+      { name: "Toxicrene", tags: ["Monster"] },
+      { name: "Trygon", tags: ["Monster", "Vanguard Invader"] },
+      { name: "Tyranid Warriors with Melee Bio-weapons", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Synapse"] },
+      { name: "Tyranid Warriors with Ranged Bio-weapons", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Synapse"] },
+      { name: "Tyrannocyte", tags: ["Monster", "Vanguard Invader"] },
+      { name: "Tyrannofex", tags: ["Monster"] },
+      { name: "Tyrant Guard", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Venomthropes", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Von Ryan's Leapers", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Vanguard Invader"] },
+      { name: "Zoanthropes", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Psyker", "Synapse"] },
+    ],
     "enhancements": {
-      "Assimilation Swarm": {
-        "Biophagic Flow": 10,
-        "Instinctive Defence": 15,
-        "Parasitic Biomorphology": 25,
-        "Regenerating Monstrosity": 20,
-      },
-      "Crusher Stampede": {
-        "Enraged Reserves": 20,
-        "Monstrous Nemesis": 25,
-        "Null Nodules": 10,
-        "Ominous Presence": 15,
-      },
-      "Invasion Fleet": {
-        "Adaptive Biology": 25,
-        "Alien Cunning": 30,
-        "Perfectly Adapted": 15,
-        "Synaptic Linchpin": 20,
-      },
-      "Synaptic Nexus": {
-        "Power of the Hive Mind": 10,
-        "Psychostatic Disruption": 30,
-        "Synaptic Control": 20,
-        "The Dirgeheart of Kharis": 15,
-      },
-      "Unending Swarm": {
-        "Adrenalised Onslaught": 15,
-        "Naturalised Camouflage": 30,
-        "Piercing Talons": 25,
-        "Relentless Hunger": 20,
-      },
-      "Vanguard Onslaught": {
-        "Chameleonic": 15,
-        "Hunting Grounds": 20,
-        "Neuronode": 20,
-        "Stalker": 10,
-      },
-      "Warrior Bioform Onslaught": {
-        "Elevated Might": 30,
-        "Ocular Adaptation": 20,
-        "Sensory Assimilation": 20,
-        "Synaptic Tyrant": 10,
-      },
+      "Assimilation Swarm": [
+        { name: "Biophagic Flow" },
+        { name: "Instinctive Defence" },
+        { name: "Parasitic Biomorphology" },
+        { name: "Regenerating Monstrosity" },
+      ],
+      "Crusher Stampede": [
+        { name: "Enraged Reserves", tags: ["Monster"] },
+        { name: "Monstrous Nemesis", tags: ["Monster"] },
+        { name: "Null Nodules", tags: ["Monster"] },
+        { name: "Ominous Presence", tags: ["Monster"] },
+      ],
+      "Invasion Fleet": [
+        { name: "Adaptive Biology" },
+        { name: "Alien Cunning" },
+        { name: "Perfectly Adapted" },
+        { name: "Synaptic Linchpin" },
+      ],
+      "Subterranean Assault": [
+        { name: "Synaptic Strategy" },
+        { name: "Tremor Senses" },
+        { name: "Trygon Prime", tags: ["Trygon"] },
+        { name: "Vanguard Intellect" },
+      ],
+      "Synaptic Nexus": [
+        { name: "Power of the Hive Mind", tags: ["Psyker"] },
+        { name: "Psychostatic Disruption", tags: ["Synapse"] },
+        { name: "Synaptic Control", tags: ["Synapse"] },
+        { name: "The Dirgeheart of Kharis", tags: ["Synapse"] },
+      ],
+      "Unending Swarm": [
+        { name: "Adrenalised Onslaught" },
+        { name: "Naturalised Camouflage" },
+        { name: "Piercing Talons" },
+        { name: "Relentless Hunger" },
+      ],
+      "Vanguard Onslaught": [
+        { name: "Chameleonic", tags: ["Vanguard Invader"] },
+        { name: "Hunting Grounds" },
+        { name: "Neuronode" },
+        { name: "Stalker", tags: ["Vanguard Invader"] },
+      ],
+      "Warrior Bioform Onslaught": [
+        { name: "Elevated Might" },
+        { name: "Ocular Adaptation", tags: ["Winged Tyranid Prime"] },
+        { name: "Sensory Assimilation", tags: ["Winged Tyranid Prime"] },
+        { name: "Synaptic Tyrant", tags: ["Neurotyrant"] },
+      ],
     },
-  },
-  "Ultramarines": {
-    "characters": [],
-"battleline": [],
-"otherunits": [],
-
-    "enhancements": {},
   },
 
-  "White Scars": {
-    "models": {
-      "Kor'sarro Khan": 70,
-      "Jagatai Khan": 130,
-      "White Scars Captain": 80,
-      "White Scars Chaplain": 60,
-      "White Scars Librarian": 75,
-      "White Scars Primaris Captain": 85,
-      "White Scars Intercessor Squad": {
-        "5x": 80,
-        "10x": 160
-      },
-      "White Scars Biker Squad": {
-        "3x": 120,
-        "6x": 240
-      },
-      "White Scars Outriders": {
-        "3x": 90,
-        "6x": 180
-      },
-      "White Scars Assault Intercessor Squad": {
-        "5x": 90,
-        "10x": 180
-      }
-    },
-    "enhancements": {
-      "Hunt and Kill": {
-        "Master of the Hunt": 15,
-        "Swift Attack": 20,
-        "Lightning Assault": 25
-      },
-      "Tactical Flexibility": {
-        "Strategic Reserves": 10,
-        "Rapid Deployment": 15,
-        "Flanking Maneuvers": 20
-      }
-    }
-  },
   "World Eaters": {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
@@ -1795,7 +1790,7 @@ const POINTS = {
       },
     }
   },
-  "Adeptus Custodes": {
+  "Adeptus Custodes (to refactor)": {
     "Aleya": 65,
     "Blade Champion": 120,
     "Knight-Centura": 55,
@@ -1846,7 +1841,7 @@ const POINTS = {
     "Witchseekers (x9)": 115,
     "Witchseekers (x10)": 125
   },
-  "Adeptus Mechanicus": {
+  "Adeptus Mechanicus (refactor needed)": {
     "Archaeopter Fusilave": 160,
     "Archaeopter Stratoraptor": 185,
     "Archaeopter Transvector": 150,
@@ -1895,7 +1890,7 @@ const POINTS = {
     "Tech-Priest Manipulus": 60,
     "Technoarcheologist": 45
   },
-  "Aeldari": {
+  "Aeldari (to refactor)": {
     "Asurmen": 135,
     "Autarch": 85,
     "Autarch Wayleaper": 80,
@@ -1984,6 +1979,18 @@ const POINTS = {
     "Ynnari Reavers (6)": 120,
     "Ynnari Venom": 70
   },
+  "Astra Militarum (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Black Templars (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
   "Blood Angels": {
     "units": {
       "Astorath": 95,
@@ -2029,30 +2036,186 @@ const POINTS = {
       }
     }
   },
+  "Chaos Daemons (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Chaos Knights (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
   "Chaos Space Marines": {
-    "Abaddon the Despoiler": 200,
-    "Chaos Lord": 75,
-    "Chaos Sorcerer": 60,
-    "Chaos Space Marine Squad (5)": 80,
-    "Chaos Space Marine Squad (10)": 150,
-    "Chaos Terminator Squad (5)": 190,
-    "Chaos Terminator Squad (10)": 380,
-    "Cultists (10)": 50,
-    "Cultists (20)": 100,
-    "Helbrute": 130,
-    "Khorne Berzerkers (5)": 90,
-    "Khorne Berzerkers (10)": 180,
-    "Noise Marines (5)": 90,
-    "Noise Marines (10)": 180,
-    "Plague Marines (5)": 90,
-    "Plague Marines (10)": 180,
-    "Thousand Sons (5)": 90,
-    "Thousand Sons (10)": 180,
-    "Vindicator": 185,
-    "Predator": 135,
-    "Land Raider": 240,
-    "Dreadnought": 135,
-    "Chaos Rhino": 75
+    "units": {
+      "Abaddon the Despoiler": 280,
+      "Accursed Cultists": [90, 195],
+      "Chaos Bikers": [70, 130],
+      "Chaos Land Raider": 240,
+      "Chaos Lord": 90,
+      "Chaos Lord in Terminator Armour": 95,
+      "Chaos Lord with Jump Pack": 80,
+      "Chaos Predator Annihilator": 135,
+      "Chaos Predator Destructor": 140,
+      "Chaos Rhino": 75,
+      "Chaos Spawn": 70,
+      "Chaos Terminator Squad": [180, 360],
+      "Chaos Vindicator": 185,
+      "Chosen": [125, 250],
+      "Cultist Firebrand": 45,
+      "Cultist Mob": [50, 100],
+      "Cypher": 90,
+      "Dark Apostle": 65,
+      "Dark Commune": 80,
+      "Defiler": 190,
+      "Fabius Bile": 85,
+      "Fellgor Beastmen": 70,
+      "Forgefiend": 180,
+      "Haarken Worldclaimer": 90,
+      "Havocs": 125,
+      "Helbrute": 130,
+      "Heldrake": 205,
+      "Heretic Astartes Daemon Prince": 165,
+      "Heretic Astartes Daemon Prince with Wings": 180,
+      "Huron Blackheart": 80,
+      "Khorne Lord of Skulls": 450,
+      "Legionaries": [90, 170],
+      "Lord Discordant on Helstalker": 160,
+      "Master of Executions": 80,
+      "Master of Possession": 60,
+      "Maulerfiend": 130,
+      "Nemesis Claw": [110, 190],
+      "Noctilith Crown": 125,
+      "Obliterators": 160,
+      "Possessed": [120, 240],
+      "Raptors": [90, 170],
+      "Sorcerer": 60,
+      "Sorcerer in Terminator Armour": 80,
+      "Traitor Enforcer": 55,
+      "Traitor Guardsmen Squad": 70,
+      "Vashtorr the Arkifane": 175,
+      "Venomcrawler": 120,
+      "Warp Talons": [125, 270],
+      "Warpsmith": 70,
+    },
+    "enhancements": {
+      "Cabal of Chaos": {
+        "Eye of Z’desh": 25,
+        "Infernal Avatar": 20,
+        "Mind Blade": 25,
+        "Touched by the Warp": 10,
+      },
+      "Chaos Cult": {
+        "Amulet of Tainted Vigour": 20,
+        "Cultist’s Brand": 20,
+        "Incendiary Goad": 15,
+        "Warped Foresight": 10,
+      },
+      "Creations of Bile": {
+        "Helm of All-seeing": 25,
+        "Living Carapace": 15,
+        "Prime Test Subject": 35,
+        "Surgical Precision": 10,
+      },
+      "Deceptors": {
+        "Cursed Fang": 10,
+        "Falsehood": 10,
+        "Shroud of Obfuscation": 15,
+        "Soul Link": 5,
+      },
+      "Dread Talons": {
+        "Eater of Dread": 15,
+        "Night’s Shroud": 20,
+        "Warp‑fuelled Thrusters": 20,
+        "Willbreaker": 10,
+      },
+      "Fellhammer Siege‑host": {
+        "Bastion Plate": 10,
+        "Iron Artifice": 10,
+        "Ironbound Enmity": 15,
+        "Warp Tracer": 20,
+      },
+      "Pactbound Zealots": {
+        "Eye of Tzeentch": 15,
+        "Intoxicating Elixir": 15,
+        "Orbs of Unlife": 15,
+        "Talisman of Burning Blood": 15,
+      },
+      "Renegade Raiders": {
+        "Despot’s Claim": 15,
+        "Dread Reaver": 15,
+        "Mark of the Hound": 25,
+        "Tyrant’s Lash": 20,
+      },
+      "Soulforged Warpack": {
+        "Forge’s Blessing": 20,
+        "Invigorated Mechatendrils": 15,
+        "Tempting Addendum": 25,
+        "Soul Harvester": 15,
+      },
+      "Veterans of the Long War": {
+        "Eager for Vengeance": 20,
+        "Eye of Abaddon": 15,
+        "Mark of Legend": 10,
+        "Warmaster’s Gift": 15,
+      },
+    }
+  },
+  "Dark Angels (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Death Guard (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Deathwatch (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Drukhari (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Emperor's Children (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Genestealer Cults (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Grey Knights (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Imperial Agents (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Imperial Knights (TODO)": {
+    "units": {
+    },
+    "enhancements": {
+    }
   },
   "Leagues of Votann": {
     "units": {
@@ -2117,7 +2280,7 @@ const POINTS = {
       },
     }
   },
-  "Necrons": {
+  "Necrons (refactor)": {
     "Annihilation Barge": 105,
     "C'tan Shard of the Deceiver": 265,
     "C'tan Shard of the Nightbringer": 305,
@@ -2179,6 +2342,12 @@ const POINTS = {
     "Triarch Praetorians (5)": 100,
     "Triarch Praetorians (10)": 200,
     "Triarch Stalker": 110
+  },
+  "Orks": {
+    "units": {
+    },
+    "enhancements": {
+    }
   },
   "Space Marines": {
     "units": {
@@ -2402,93 +2571,118 @@ const POINTS = {
       },
     }
   },
-  "Tyranids": {
-    "Barbgaunts (5)": 55,
-    "Barbgaunts (10)": 110,
-    "Biovores (1)": 50,
-    "Biovores (2)": 100,
-    "Biovores (3)": 150,
-    "Broodlord": 80,
-    "Carnifexes (1)": 115,
-    "Carnifexes (2)": 230,
-    "Deathleaper": 80,
-    "Exocrine": 140,
-    "Gargoyles (10)": 85,
-    "Gargoyles (20)": 170,
-    "Genestealers (5)": 75,
-    "Genestealers (10)": 150,
-    "Harpy": 215,
-    "Haruspex": 125,
-    "Hive Crone": 200,
-    "Hive Guard (3)": 100,
-    "Hive Guard (6)": 200,
-    "Hive Tyrant": 225,
-    "Hormagaunts (10)": 65,
-    "Hormagaunts (20)": 130,
-    "Lictor": 60,
-    "Maleceptor": 170,
-    "Mawloc": 145,
-    "Mucolid Spores (1)": 30,
-    "Mucolid Spores (2)": 60,
-    "Neurogaunts (11)": 45,
-    "Neurogaunts (22)": 90,
-    "Neurolictor": 80,
-    "Neurotyrant": 105,
-    "Norn Assimilator": 275,
-    "Norn Emissary": 260,
-    "Old One Eye": 150,
-    "Parasite of Mortrex": 80,
-    "Psychophage": 95,
-    "Pyrovores (1)": 40,
-    "Pyrovores (2)": 70,
-    "Pyrovores (3)": 105,
-    "Raveners (3)": 75,
-    "Raveners (6)": 150,
-    "Ripper Swarms (1)": 25,
-    "Ripper Swarms (2)": 40,
-    "Ripper Swarms (3)": 50,
-    "Screamer-Killer": 145,
-    "Spore Mines (3)": 55,
-    "Spore Mines (6)": 110,
-    "Sporocyst": 145,
-    "Termagants (10)": 60,
-    "Termagants (20)": 120,
-    "Tervigon": 175,
-    "The Swarmlord": 240,
-    "Toxicrene": 150,
-    "Trygon": 140,
-    "Tyranid Warriors with Melee Bio-weapons (3)": 75,
-    "Tyranid Warriors with Melee Bio-weapons (6)": 150,
-    "Tyranid Warriors with Ranged Bio-weapons (3)": 65,
-    "Tyranid Warriors with Ranged Bio-weapons (6)": 130,
-    "Tyrannocyte": 105,
-    "Tyrannofex": 200,
-    "Tyrant Guard (3)": 80,
-    "Tyrant Guard (6)": 160,
-    "Venomthropes (3)": 70,
-    "Venomthropes (6)": 140,
-    "Von Ryan's Leapers (3)": 70,
-    "Von Ryan's Leapers (6)": 140,
-    "Winged Hive Tyrant": 200,
-    "Winged Tyranid Prime": 65,
-    "Zoanthropes (3)": 100,
-    "Zoanthropes (6)": 200
+  "T'au Empire": {
+    "units": {
+    },
+    "enhancements": {
+    }
   },
-  "White Scars": {
-    "Kor'sarro Khan": 70,
-    "Jagatai Khan": 130,
-    "White Scars Captain": 80,
-    "White Scars Chaplain": 60,
-    "White Scars Librarian": 75,
-    "White Scars Primaris Captain": 85,
-    "White Scars Intercessor Squad (5)": 80,
-    "White Scars Intercessor Squad (10)": 160,
-    "White Scars Biker Squad (3)": 120,
-    "White Scars Biker Squad (6)": 240,
-    "White Scars Outriders (3)": 90,
-    "White Scars Outriders (6)": 180,
-    "White Scars Assault Intercessor Squad (5)": 90,
-    "White Scars Assault Intercessor Squad (10)": 180
+  "Thousand Sons": {
+    "units": {
+    },
+    "enhancements": {
+    }
+  },
+  "Tyranids": {
+    "units": {
+      "Barbgaunts": [55, 110],
+      "Biovores": [50, 100, 150],
+      "Broodlord": 80,
+      "Carnifexes": [115, 230],
+      "Deathleaper": 80,
+      "Exocrine": 140,
+      "Gargoyles": [85, 170],
+      "Genestealers": [75, 150],
+      "Harpy": 215,
+      "Haruspex": 125,
+      "Hive Crone": 200,
+      "Hive Guard": [90, 180],
+      "Hive Tyrant": 225,
+      "Hormagaunts": [65, 130],
+      "Lictor": 60,
+      "Maleceptor": 170,
+      "Mawloc": 145,
+      "Mucolid Spores": [30, 60],
+      "Neurogaunts": [45, 90],
+      "Neurolictor": 80,
+      "Neurotyrant": 105,
+      "Norn Assimilator": 275,
+      "Norn Emissary": 260,
+      "Old One Eye": 150,
+      "Parasite of Mortrex": 80,
+      "Psychophage": 95,
+      "Pyrovores": [40, 70, 105],
+      "Raveners": [75, 150],
+      "Ripper Swarms": [25, 40, 50],
+      "Screamer-Killer": 145,
+      "Spore Mines": [55, 110],
+      "Sporocyst": 145,
+      "Termagants": [60, 120],
+      "Tervigon": 175,
+      "The Swarmlord": 220,
+      "Toxicrene": 150,
+      "Trygon": 140,
+      "Tyranid Warriors with Melee Bio-weapons": [75, 150],
+      "Tyranid Warriors with Ranged Bio-weapons": [65, 130],
+      "Tyrannocyte": 105,
+      "Tyrannofex": 200,
+      "Tyrant Guard": [80, 160],
+      "Venomthropes": [70, 140],
+      "Von Ryan's Leapers": [70, 140],
+      "Winged Hive Tyrant": 170,
+      "Winged Tyranid Prime": 65,
+      "Zoanthropes": [100, 200]
+    },
+    "enhancements": {
+      "Assimilation Swarm": {
+        "Biophagic Flow": 10,
+        "Instinctive Defence": 15,
+        "Parasitic Biomorphology": 25,
+        "Regenerating Monstrosity": 20,
+      },
+      "Crusher Stampede": {
+        "Enraged Reserves": 20,
+        "Monstrous Nemesis": 25,
+        "Null Nodules": 10,
+        "Ominous Presence": 15,
+      },
+      "Invasion Fleet": {
+        "Adaptive Biology": 25,
+        "Alien Cunning": 30,
+        "Perfectly Adapted": 15,
+        "Synaptic Linchpin": 20,
+      },
+      "Subterranean Assault": {
+        "Synaptic Strategy": 15,
+        "Tremor Senses": 20,
+        "Trygon Prime": 20,
+        "Vanguard Intellect": 15,
+      },
+      "Synaptic Nexus": {
+        "Power of the Hive Mind": 10,
+        "Psychostatic Disruption": 30,
+        "Synaptic Control": 20,
+        "The Dirgeheart of Kharis": 15,
+      },
+      "Unending Swarm": {
+        "Adrenalised Onslaught": 15,
+        "Naturalised Camouflage": 30,
+        "Piercing Talons": 25,
+        "Relentless Hunger": 20,
+      },
+      "Vanguard Onslaught": {
+        "Chameleonic": 15,
+        "Hunting Grounds": 20,
+        "Neuronode": 20,
+        "Stalker": 10,
+      },
+      "Warrior Bioform Onslaught": {
+        "Elevated Might": 30,
+        "Ocular Adaptation": 20,
+        "Sensory Assimilation": 20,
+        "Synaptic Tyrant": 10,
+      },
+    }
   },
   "World Eaters": {
     "Angron": 435,
@@ -2530,7 +2724,7 @@ export const get40kArmyData = (faction) => {
     const rawFactionData = ARMIES[faction];
     const points = POINTS[faction];
 
-    // if faction is a (imperium/chaos) space marine chapter, pull the relevant units and points and merge them here
+    // if faction is an (imperium or chaos) space marine chapter, pull the relevant units and points and merge them here
     if (rawFactionData.chapterInfo) {
       const parentFaction = ARMIES[rawFactionData.chapterInfo.parentFaction];
       const parentPoints = POINTS[rawFactionData.chapterInfo.parentFaction];
