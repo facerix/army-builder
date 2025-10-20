@@ -128,114 +128,114 @@ export const BATTLE_PROFILES = {
   "skaven": {
     "heroes": [
       {
-        name: "Arch-Warlock", points: 170, unitOptions: [
+        name: "Arch-Warlock", points: 170, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Skryre" },
-        ]
+        ] }
       },
-      { name: "Clawlord", points: 70, modelCount: 1, unitOptions: [{ tag: "Verminus" }], tags: ["Overclaw"] },
-      { name: "Clawlord on Gnaw-beast", points: 110, modelCount: 1, unitOptions: [{ tag: "Verminus" }], tags: ["Overclaw"] },
+      { name: "Clawlord", points: 70, modelCount: 1, unitOptions: { regimentUnits: [{ tag: "Verminus" }] }, tags: ["Overclaw"] },
+      { name: "Clawlord on Gnaw-beast", points: 110, modelCount: 1, unitOptions: { regimentUnits: [{ tag: "Verminus" }] }, tags: ["Overclaw"] },
       {
-        name: "Deathmaster", points: 100, modelCount: 1, unitOptions: [
+        name: "Deathmaster", points: 100, modelCount: 1, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Eshin" },
-        ], tags: ["Overclaw"]
+        ] }, tags: ["Overclaw"]
       },
       {
-        name: "Grey Seer", points: 120, modelCount: 1, unitOptions: [
+        name: "Grey Seer", points: 120, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Grey Seer on Screaming Bell", points: 350, modelCount: 1, unitOptions: [
+        name: "Grey Seer on Screaming Bell", points: 350, modelCount: 1, unitOptions: { regimentUnits:      [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Grey Seer on Screaming Bell [SoG]", points: 310, modelCount: 1, unitOptions: [
+        name: "Grey Seer on Screaming Bell [SoG]", points: 310, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Krittok Foulblade", points: 160, modelCount: 1, unitOptions: [
+        name: "Krittok Foulblade", points: 160, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Lord Skreech Verminking", points: 380, modelCount: 1, unitOptions: [
+        name: "Lord Skreech Verminking", points: 380, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Master Moulder", points: 80, modelCount: 1, unitOptions: [
+        name: "Master Moulder", points: 80, modelCount: 1, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Moulder" },
-        ], tags: ["Overclaw"]
+        ] }, tags: ["Overclaw"]
       },
       {
-        name: "Plague Priest on Plague Furnace", points: 310, modelCount: 1, unitOptions: [
+        name: "Plague Priest on Plague Furnace", points: 310, modelCount: 1, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Pestilens" },
-        ]
+        ] }
       },
       {
-        name: "Thanquol on Boneripper", points: 360, modelCount: 1, unitOptions: [
+        name: "Thanquol on Boneripper", points: 360, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Verminlord Corruptor", points: 320, modelCount: 1, unitOptions: [
+        name: "Verminlord Corruptor", points: 320, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Verminlord Deceiver", points: 390, modelCount: 1, unitOptions: [
+        name: "Verminlord Deceiver", points: 390, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Verminlord Warbringer", points: 310, modelCount: 1, unitOptions: [
+        name: "Verminlord Warbringer", points: 310, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Verminlord Warpseer", points: 320, modelCount: 1, unitOptions: [
+        name: "Verminlord Warpseer", points: 320, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Vizzik Skour, Prophet of the Horned Rat", points: 380, modelCount: 1, unitOptions: [
+        name: "Vizzik Skour, Prophet of the Horned Rat", points: 380, modelCount: 1, unitOptions: { regimentUnits: [
           { tag: "Overclaw" },
           { tag: "any" },
-        ]
+        ] }
       },
       {
-        name: "Warlock Bombardier", points: 90, modelCount: 1, unitOptions: [
+        name: "Warlock Bombardier", points: 90, modelCount: 1, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Skryre" },
-        ], tags: ["Overclaw"]
+        ] }, tags: ["Overclaw"]
       },
       {
-        name: "Warlock Engineer", points: 110, modelCount: 1, unitOptions: [
+        name: "Warlock Engineer", points: 110, modelCount: 1, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Skryre" },
-        ], tags: ["Overclaw"]
+        ] }, tags: ["Overclaw"]
       },
       {
-        name: "Warlock Galvaneer", points: 140, modelCount: 1, unitOptions: [
+        name: "Warlock Galvaneer", points: 140, modelCount: 1, unitOptions: { regimentUnits: [
           { unitName: "Clanrats", available: 1 },
           { tag: "Skryre" },
-        ], tags: ["Overclaw"]
+        ] }, tags: ["Overclaw"]
       }
     ],
     "units": [

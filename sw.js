@@ -1,7 +1,7 @@
 // Service Worker for Personnel (Army Builder)
 // Version will be automatically updated during build process
 
-const CACHE_VERSION = '1.3.5'; // This will be replaced by build script
+const CACHE_VERSION = '1.3.6'; // This will be replaced by build script
 const CACHE_NAME = `personnel-cache-v${CACHE_VERSION}`;
 
 // Files that should be cached with version control

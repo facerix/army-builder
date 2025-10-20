@@ -264,10 +264,8 @@ class AOSSection extends HTMLElement {
     const regimentElement = document.createElement('aos-regiment');
     regimentElement.regimentData = regiment;
     regimentElement.index = index;
-    debugger;
 
-    const regimentOptions = regiment?.unitOptions ?? [];
-    console.log("regimentOptions", regimentOptions);
+    const regimentOptions = regiment?.options?.regimentUnits || [];
     const modalOptions = regimentOptions.map(opt => {
       if (opt.unitName) {
         return this.#subOptions.find(o => o.name === opt.unitName);
@@ -376,19 +374,6 @@ class AOSSection extends HTMLElement {
     this.#points = totalPoints;
     this.pointsLabel.innerText = totalPoints ? `${totalPoints} Points` : '';
   }
-
-  // #onUnitSave() {
-  //   this.unitModal.close();
-
-  //   if (this.activeUnit) {
-  //     // editing existing
-  //     DataStore.updateUnitInRoster(this.activeUnit.dataset.unitId, this.unitCard.unit, this.#data.id);
-
-  //   } else {
-  //     // adding new
-  //     DataStore.addUnitToRoster(this.unitCard.unit, this.#data.id);
-  //   }
-  // }
 };
 
 window.customElements.define('aos-section', AOSSection);
