@@ -21,7 +21,7 @@ const getTotalPoints = (list) => {
 
 whenLoaded.then(() => {
   // Initialize service worker
-  serviceWorkerManager.init();
+  serviceWorkerManager.register();
   
   const urlParams = new URL(window.location).searchParams;
   const id = urlParams.get('id');

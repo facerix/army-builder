@@ -1,139 +1,191 @@
-/**
- * Service Worker Manager
- * Handles service worker registration, updates, and notifications
- */
+// Singleton module for service worker registration
+// Provides centralized management of service worker lifecycle
+import { isDevelopmentMode } from './domUtils.js';
 
 export class ServiceWorkerManager {
+  #isRegistered = false;
+  #registration = null;
+  #listenersSetup = false;
+  #developmentMode = isDevelopmentMode();
+  #swFile = this.#developmentMode ? '/sw-dev.js' : '/sw.js';
+
   constructor() {
-    this.pendingWorker = null;
-    this.updateCheckInterval = null;
-    this.isSupported = 'serviceWorker' in navigator;
+    // Prevent multiple instances
+    if (ServiceWorkerManager.instance) {
+      return ServiceWorkerManager.instance;
+    }
+    ServiceWorkerManager.instance = this;
   }
 
   /**
-   * Initialize service worker registration and update handling
+   * Register the service worker if supported and not already registered
+   * @returns {Promise<ServiceWorkerRegistration|null>}
    */
-  async init() {
-    if (!this.isSupported) {
-      console.log('Service Worker not supported');
-      return;
+  async register() {
+    // Check if service workers are supported
+    if (!('serviceWorker' in navigator)) {
+      console.warn(`[Personnel] Service Workers not supported in this browser`);
+      return null;
+    }
+
+    // Check if there's already an active registration
+    const existingRegistration = await navigator.serviceWorker.getRegistration();
+    if (existingRegistration) {
+      console.log(`[Personnel] Service Worker already registered`);
+      this.#registration = existingRegistration;
+      this.#isRegistered = true;
+      // Only set up update listeners if not already done
+      if (!this.#listenersSetup) {
+        this.#setupUpdateListeners();
+      }
+      return this.#registration;
+    }
+
+    // Don't register multiple times in the same instance
+    if (this.#isRegistered) {
+      console.log(`[Personnel] Service Worker already registered in this instance`);
+      return this.#registration;
     }
 
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('SW registered: ', registration);
-      
-      this.setupUpdateHandling(registration);
-      this.startPeriodicUpdateChecks(registration);
-      
+      // Wait for page to load before registering
+      if (document.readyState === 'loading') {
+        await new Promise(resolve => {
+          window.addEventListener('load', resolve, { once: true });
+        });
+      }
+
+      // Register the service worker
+      this.#registration = await navigator.serviceWorker.register(this.#swFile);
+      this.#isRegistered = true;
+
+      console.log(`[Personnel] Service Worker registered successfully:`, this.#registration.scope);
+
+      // Set up event listeners for service worker updates
+      this.#setupUpdateListeners();
+
+      return this.#registration;
     } catch (error) {
-      console.log('SW registration failed: ', error);
+      console.error(`[Personnel] Service Worker registration failed:`, error);
+      return null;
     }
   }
 
   /**
-   * Set up update detection and notification
+   * Set up listeners for service worker updates
+   * @private
    */
-  setupUpdateHandling(registration) {
-    registration.addEventListener('updatefound', () => {
-      console.log('New service worker found');
-      this.pendingWorker = registration.installing;
-      
-      this.pendingWorker.addEventListener('statechange', () => {
-        if (this.pendingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          console.log('New service worker installed, showing update notification');
-          this.showUpdateNotification();
+  #setupUpdateListeners() {
+    if (!this.#registration || this.#listenersSetup) return;
+
+    // Listen for updates to the service worker
+    this.#registration.addEventListener('updatefound', () => {
+      const newWorker = this.#registration.installing;
+      console.log(`[Personnel] New service worker installing...`);
+
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          console.log(`[Personnel] New service worker available. Consider refreshing the page.`);
+          // Dispatch event with the actual new worker
+          this.#dispatchUpdateEvent(newWorker);
         }
       });
+    });
+    
+    this.#listenersSetup = true;
+  }
+
+  /**
+   * Dispatch a custom event when a service worker update is available
+   * @private
+   */
+  #dispatchUpdateEvent(pendingWorker) {
+    const event = new CustomEvent('sw-update-available', {
+      detail: {
+        registration: this.#registration,
+        pendingWorker: pendingWorker || this.#registration.waiting
+      }
+    });
+    window.dispatchEvent(event);
+  }
+
+  /**
+   * Get the current registration
+   * @returns {ServiceWorkerRegistration|null}
+   */
+  getRegistration() {
+    return this.#registration;
+  }
+
+  /**
+   * Check if service worker is registered
+   * @returns {boolean}
+   */
+  isRegistered() {
+    return this.#isRegistered;
+  }
+
+  /**
+   * Get cache information from the service worker
+   * @returns {Promise<Object>}
+   */
+  async getCacheInfo() {
+    if (!this.#registration || !this.#registration.active) {
+      return null;
+    }
+
+    return new Promise((resolve) => {
+      const messageChannel = new MessageChannel();
+      messageChannel.port1.onmessage = (event) => {
+        resolve(event.data);
+      };
+
+      this.#registration.active.postMessage(
+        { type: 'GET_CACHE_INFO' },
+        [messageChannel.port2]
+      );
     });
   }
 
   /**
-   * Start periodic update checks
+   * Force service worker to skip waiting and activate
+   * @returns {Promise<void>}
    */
-  startPeriodicUpdateChecks(registration) {
-    // Check for updates on page load
-    registration.update();
-    
-    // Set up periodic update checks (every 30 minutes)
-    this.updateCheckInterval = setInterval(() => {
-      registration.update();
-    }, 30 * 60 * 1000);
-  }
-
-  /**
-   * Show update notification to user
-   */
-  showUpdateNotification() {
-    // Try to find the update-notification web component
-    const updateNotification = document.querySelector('update-notification');
-    
-    if (updateNotification) {
-      updateNotification.show(this.pendingWorker);
+  async skipWaiting() {
+    if (!this.#registration || !this.#registration.waiting) {
+      return;
     }
-  }
 
-  /**
-   * Handle user accepting the update
-   * @param {ServiceWorker} pendingWorker - The pending service worker (optional, uses this.pendingWorker if not provided)
-   */
-  handleUpdateNow(pendingWorker = null) {
-    const worker = pendingWorker || this.pendingWorker;
+    this.#registration.waiting.postMessage({ type: 'SKIP_WAITING' });
     
-    if (worker) {
-      // Tell the service worker to skip waiting and activate
-      worker.postMessage({ type: 'SKIP_WAITING' });
-      
-      // Listen for the controlling service worker to change
-      navigator.serviceWorker.addEventListener('controllerchange', () => {
-        window.location.reload();
-      });
-    }
+    // Wait for the new service worker to take control
+    return new Promise((resolve) => {
+      navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
+    });
   }
 
   /**
-   * Manually check for updates
+   * Handle update now request from UpdateNotification component
+   * @param {ServiceWorker} pendingWorker - The pending service worker
+   * @returns {Promise<void>}
    */
-  async checkForUpdates() {
-    if (!this.isSupported) return false;
+  async handleUpdateNow(pendingWorker) {
+    console.log(`[Personnel] Handling update now request`);
     
     try {
-      const registration = await navigator.serviceWorker.getRegistration();
-      if (registration) {
-        await registration.update();
-        return true;
-      }
+      // Skip waiting and activate the new service worker
+      await this.skipWaiting();
+      
+      // Reload the page to use the new service worker
+      window.location.reload();
     } catch (error) {
-      console.error('[ServiceWorkerManager] Failed to check for updates:', error);
-    }
-    return false;
-  }
-
-  /**
-   * Force trigger an update notification for testing
-   */
-  async forceUpdateNotification() {
-    if (this.pendingWorker) {
-      this.showUpdateNotification();
-    } else {
-      console.warn('[ServiceWorkerManager] No pending worker available for testing');
-    }
-  }
-
-  /**
-   * Clean up resources
-   */
-  destroy() {
-    if (this.updateCheckInterval) {
-      clearInterval(this.updateCheckInterval);
-      this.updateCheckInterval = null;
+      console.error(`[Personnel] Failed to update service worker:`, error);
     }
   }
 }
 
-// Export a singleton instance
+// Create and export singleton instance
 export const serviceWorkerManager = new ServiceWorkerManager();
 
 // Make it globally accessible for UpdateNotification component
 window.serviceWorkerManager = serviceWorkerManager;
-

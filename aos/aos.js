@@ -15,7 +15,7 @@ const listSlug = (armyList) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   // Initialize service worker
-  serviceWorkerManager.init();
+  serviceWorkerManager.register();
   
   const savedLists = document.querySelector(".saved-lists");
   const btnNew = document.querySelector(".faction-selector button");

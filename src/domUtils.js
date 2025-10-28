@@ -106,7 +106,22 @@ export const htmlToMarkdown = (html) => {
   return out;
 }
 
-
 export const queryParams = (paramsObject) => {
   return '?' + Object.keys(paramsObject).map(k => `${k}=${paramsObject[k]}`).join('&');
+}
+
+/**
+ * Centralized function to determine if the app is running in development mode
+ * @returns {boolean} true if in development mode, false otherwise
+ */
+export const isDevelopmentMode = () => {
+	try {
+		return location.hostname === 'localhost' || 
+		       location.hostname === '127.0.0.1' || 
+		       location.hostname.includes('local') ||
+		       location.search.includes('dev=true');
+	} catch (e) {
+		// In case location is not available (e.g., in Service Worker context)
+		return false;
+	}
 }

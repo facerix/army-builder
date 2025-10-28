@@ -43,7 +43,7 @@ whenLoaded.then(() => {
   }
 
   // Initialize service worker
-  serviceWorkerManager.init();
+  serviceWorkerManager.register();
   
   const btnDelete = document.querySelector("#btnDelete");
   const btnExport = document.querySelector("#btnExport");

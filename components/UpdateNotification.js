@@ -32,7 +32,7 @@ class UpdateNotification extends HTMLElement {
           position: fixed;
           top: 20px;
           right: 20px;
-          background: #ee4343;
+          background: linear-gradient(135deg, #7a7a7a 0%, #3a3a3a 50%, #5a5a5a 100%);
           color: white;
           padding: 15px;
           border-radius: 8px;
@@ -53,7 +53,7 @@ class UpdateNotification extends HTMLElement {
         
         .update-notification button {
           background: white;
-          color: #ee4343;
+          color: #5a5a5a;
           border: none;
           padding: 8px 16px;
           border-radius: 4px;
@@ -64,7 +64,7 @@ class UpdateNotification extends HTMLElement {
         }
         
         .update-notification button:hover {
-          background: #f3efe6;
+          background: #f0f0f0;
         }
         
         .update-notification button:active {
@@ -115,6 +115,7 @@ class UpdateNotification extends HTMLElement {
     const notification = this.shadowRoot.querySelector('.update-notification');
     
     if (notification) {
+      this.style.display = 'block';
       notification.style.display = 'block';
       this.isVisible = true;
       
@@ -136,6 +137,7 @@ class UpdateNotification extends HTMLElement {
     const notification = this.shadowRoot.querySelector('.update-notification');
     
     if (notification) {
+      this.style.display = 'none';
       notification.style.display = 'none';
       this.isVisible = false;
       
