@@ -2,67 +2,25 @@
     "name": "Personnel - Tabletop Army Builder",
     "short_name": "Personnel",
     "start_url": "/",
-    "description": "Progressive web app to build army lists for Warhammer 40k and Age of Sigmar",
-    "theme_color": "#ee4343",
+    "description": "A simple web app to build army lists for tabletop gaming",
+    "theme_color": "#2EC6FE",
     "background_color": "#f3f4f5",
+    "orientation": "any",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "en-US",
     "icons": [
         {
             "purpose": "maskable",
             "sizes": "512x512",
-            "src": "icons/icon512_maskable.png",
+            "src": "icon512_maskable.png",
             "type": "image/png"
         },
         {
             "purpose": "any",
             "sizes": "512x512",
-            "src": "icons/icon512_rounded.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "384x384",
-            "src": "icons/icon-384x384.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "192x192",
-            "src": "icons/icon-192x192.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "144x144",
-            "src": "icons/icon-144x144.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "128x128",
-            "src": "icons/icon-128x128.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "96x96",
-            "src": "icons/icon-96x96.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "72x72",
-            "src": "icons/icon-72x72.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "48x48",
-            "src": "icons/icon-48x48.png",
+            "src": "icon512_rounded.png",
             "type": "image/png"
         }
-    ],
-    "orientation": "any",
-    "display": "standalone",
-    "dir": "auto",
-    "lang": "en-US"
+    ]
 }
