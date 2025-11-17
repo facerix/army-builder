@@ -106,12 +106,12 @@ whenLoaded.then(() => {
     if (armyList && armyData) {
       detachmentSelector.value = armyList.detachment || "";
       charactersSection.units = armyList.characters;
-      charactersSection.availableUnits = armyData.characters;
+      charactersSection.availableUnits = armyData.units.filter(u => u.tags?.includes("Character"));
       charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
       battlelineSection.units = armyList.battleline;
-      battlelineSection.availableUnits = armyData.battleline;
+      battlelineSection.availableUnits = armyData.units.filter(u => u.tags?.includes("Battleline"));
       otherSection.units = armyList.otherUnits;
-      otherSection.availableUnits = armyData.otherUnits;
+      otherSection.availableUnits = armyData.units.filter(u => !u.tags?.includes("Character") && !u.tags?.includes("Battleline"));
     }
   }
 

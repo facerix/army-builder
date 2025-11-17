@@ -44,58 +44,60 @@ Xenos
 
 export const ARMIES = {
   "Adepta Sororitas": {
-    "characters": [
-      { name: "Aestred Thurga and Agathae Dolan", modelCount: 2 },
-      { name: "Canoness", modelCount: 1 },
-      { name: "Canoness with Jump Pack", modelCount: 1 },
-      { name: "Daemonifuge", modelCount: 2 },
-      { name: "Dialogus", modelCount: 1 },
-      { name: "Dogmata", modelCount: 1 },
-      { name: "Hospitaller", modelCount: 1 },
-      { name: "Imagifier", modelCount: 1 },
-      { name: "Junith Eruita", modelCount: 1 },
-      { name: "Ministorum Priest", modelCount: 1, tags: ["Penitent"] },
-      { name: "Morvenn Vahl", modelCount: 1 },
-      { name: "Palatine", modelCount: 1 },
-      { name: "Saint Celestine", modelCount: 3 },
-      { name: "Triumph of Saint Katherine", modelCount: 1 },
-    ],
-    "battleline": [
-      { name: "Battle Sisters Squad", modelCount: 10 },
-    ],
-    "otherUnits": [
+    "units": [
+      /* characters */
+      { name: "Aestred Thurga and Agathae Dolan", modelCount: 2, tags: ["Character", "Epic Hero", "Infantry", "Grenades"] },
+      { name: "Canoness", tags: ["Character", "Infantry", "Grenades", "Canoness"] },
+      { name: "Canoness with Jump Pack", tags: ["Character", "Infantry", "Jump Pack", "Fly", "Grenades", "Canoness"] },
+      { name: "Daemonifuge", modelCount: 2, tags: ["Character", "Epic Hero", "Infantry", "Grenades", "Daemonifuge"] },
+      { name: "Dialogus", tags: ["Character", "Infantry", "Dialogus"] },
+      { name: "Dogmata", tags: ["Character", "Infantry", "Grenades", "Dogmata"] },
+      { name: "Hospitaller", tags: ["Character", "Infantry", "Hospitaller"] },
+      { name: "Imagifier", tags: ["Character", "Infantry", "Grenades", "Imagifier"] },
+      { name: "Junith Eruita", modelCount: 1, tags: ["Character", "Epic Hero", "Mounted", "Fly", "Junith Eruita"] },
+      { name: "Ministorum Priest", modelCount: 1, tags: ["Character", "Infantry", "Penitent", "Ministorum Priest"] },
+      { name: "Morvenn Vahl", modelCount: 1, tags: ["Character", "Epic Hero", "Vehicle", "Walker", "Morvenn Vahl"] },
+      { name: "Palatine", modelCount: 1, tags: ["Character", "Infantry", "Grenades", "Palatine"] },
+      { name: "Saint Celestine", modelCount: 3, tags: ["Character", "Epic Hero", "Infantry", "Jump Pack", "Fly", "Grenades", "Saint Celestine"] },
+      { name: "Triumph of Saint Katherine", modelCount: 1, tags: ["Character", "Epic Hero", "Infantry", "Grenades", "Triumph of Saint Katherine"] },
+      /* battleline */
+      { name: "Battle Sisters Squad", modelCount: 10, tags: ["Battleline", "Infantry", "Grenades", "Battle Sisters Squad"] },
+      /* dedicated transports */
+      { name: "Immolator", tags: ["Vehicle", "Smoke", "Transport", "Dedicated Transport", "Immolator"] },
+      { name: "Sororitas Rhino", tags: ["Vehicle", "Transport", "Dedicated Transport", "Smoke", "Sororitas Rhino"] },
+
       {
         name: "Arco-flagellants",
         modelCount: [3, 10],
-        tags: ["Penitent"],
+        tags: ["Infantry", "Penitent", "Arco-flagellants"],
         unitOptions: {
           unitSize: [3, 10],
         }
       },
-      { name: "Castigator", modelCount: 1 },
+      { name: "Castigator", tags: ["Vehicle", "Smoke", "Castigator"] },
       {
         name: "Celestian Sacresants",
         modelCount: [5, 10],
+        tags: ["Infantry", "Grenades", "Celestian Sacresants"],
         unitOptions: {
           unitSize: [5, 10],
         }
       },
-      { name: "Dominion Squad", modelCount: 10 },
-      { name: "Exorcist", modelCount: 1 },
-      { name: "Immolator", modelCount: 1 },
+      { name: "Dominion Squad", modelCount: 10, tags: ["Infantry", "Grenades", "Dominion Squad"] },
+      { name: "Exorcist", tags: ["Vehicle", "Smoke", "Exorcist"] },
       {
         name: "Mortifiers",
         modelCount: [1, 2],
-        tags: ["Penitent"],
+        tags: ["Vehicle", "Walker", "Penitent", "Mortifiers"],
         unitOptions: {
           unitSize: [1, 2],
         }
       },
-      { name: "Paragon Warsuits", modelCount: 3 },
+      { name: "Paragon Warsuits", modelCount: 3, tags: ["Vehicle", "Walker", "Grenades", "Paragon Warsuits"] },
       {
         name: "Penitent Engines",
         modelCount: [1, 2],
-        tags: ["Penitent"],
+        tags: ["Vehicle", "Walker", "Penitent", "Penitent Engines"],
         unitOptions: {
           unitSize: [1, 2],
         }
@@ -103,25 +105,26 @@ export const ARMIES = {
       {
         name: "Repentia Squad",
         modelCount: [5, 10],
-        tags: ["Penitent"],
+        tags: ["Infantry", "Grenades", "Penitent", "Repentia Squad"],
         unitOptions: {
           unitSize: [5, 10],
         }
       },
-      { name: "Retributor Squad", modelCount: 5 },
-      { name: "Sanctifiers", modelCount: 9 },
+      { name: "Retributor Squad", modelCount: 5, tags: ["Infantry", "Grenades", "Retributor Squad"] },
+      { name: "Sanctifiers", modelCount: 9, tags: ["Infantry", "Grenades", "Sanctifiers"] },
       {
         name: "Seraphim Squad",
         modelCount: [5, 10],
+        tags: ["Infantry", "Jump Pack", "Fly", "Grenades", "Seraphim Squad"],
         unitOptions: {
           unitSize: [5, 10],
         }
       },
-      { name: "Sisters Novitiate Squad", modelCount: 10 },
-      { name: "Sororitas Rhino", modelCount: 1 },
+      { name: "Sisters Novitiate Squad", modelCount: 10, tags: ["Infantry", "Grenades", "Sisters Novitiate Squad"] },
       {
         name: "Zephyrim Squad",
         modelCount: [5, 10],
+        tags: ["Infantry", "Jump Pack", "Fly", "Grenades", "Zephyrim Squad"],
         unitOptions: {
           unitSize: [5, 10],
         }
@@ -208,419 +211,549 @@ export const ARMIES = {
   },
 
   "Adeptus Custodes": {
-    "characters": [
-      { name: "Aleya", points: 65, modelCount: 1 },
-      { name: "Blade Champion", points: 120, modelCount: 1 },
-      { name: "Knight-Centura", points: 55, modelCount: 1 },
-      { name: "Shield-Captain", points: 130, modelCount: 1 },
-      { name: "Shield-Captain in Allarus Terminator Armour", points: 130, modelCount: 1 },
-      { name: "Shield-Captain on Dawneagle Jetbike", points: 150, modelCount: 1 },
-      { name: "Trajann Valoris", points: 140, modelCount: 1 },
-      { name: "Valerian", points: 110, modelCount: 1 },
-    ],
-    "battleline": [
-      { name: "Custodian Guard (x4)", points: 170, modelCount: 4 },
-      { name: "Custodian Guard (x5)", points: 215, modelCount: 5 },
-    ],
-    "otherUnits": [
-      { name: "Agamatus Custodians (x3)", points: 225 },
-      { name: "Agamatus Custodians (x6)", points: 450 },
-      { name: "Allarus Custodians (x2)", points: 130 },
-      { name: "Allarus Custodians (x3)", points: 195 },
-      { name: "Allarus Custodians (x5)", points: 325 },
-      { name: "Allarus Custodians (x6)", points: 390 },
-      { name: "Anathema Psykana Rhino", points: 75 },
-      { name: "Aquilon Custodians (x3)", points: 195 },
-      { name: "Aquilon Custodians (x6)", points: 390 },
-      { name: "Ares Gunship", points: 580 },
-      { name: "Caladius Grav-tank", points: 215 },
-      { name: "Contemptor-Achillus Dreadnought", points: 155 },
-      { name: "Contemptor-Galatus Dreadnought", points: 165 },
-      { name: "Coronus Grav-carrier", points: 200 },
-      { name: "Custodian Guard with Adrasite and Pyrithite Spears", points: 250, modelCount: 5 },
-      { name: "Custodian Wardens (x4)", points: 210 },
-      { name: "Custodian Wardens (x5)", points: 260 },
-      { name: "Orion Assault Dropship", points: 690 },
-      { name: "Pallas Grav-attack", points: 105 },
-      { name: "Prosecutors (x4)", points: 40 },
-      { name: "Prosecutors (x5)", points: 50 },
-      { name: "Prosecutors (x9)", points: 90 },
-      { name: "Prosecutors (x10)", points: 100 },
-      { name: "Sagittarum Custodians", points: 225, modelCount: 5 },
-      { name: "Telemon Heavy Dreadnought", points: 225 },
-      { name: "Venerable Contemptor Dreadnought", points: 170 },
-      { name: "Venerable Land Raider", points: 240 },
-      { name: "Venatari Custodians (x3)", points: 165 },
-      { name: "Venatari Custodians (x6)", points: 330 },
-      { name: "Vertus Praetors (x2)", points: 150 },
-      { name: "Vertus Praetors (x3)", points: 225 },
-      { name: "Vigilators (x4)", points: 50 },
-      { name: "Vigilators (x5)", points: 65 },
-      { name: "Vigilators (x9)", points: 115 },
-      { name: "Vigilators (x10)", points: 125 },
-      { name: "Witchseekers (x4)", points: 50 },
-      { name: "Witchseekers (x5)", points: 65 },
-      { name: "Witchseekers (x9)", points: 115 },
-      { name: "Witchseekers (x10)", points: 125 },
+    "units": [
+      /* characters */
+      { name: "Aleya", points: 65, tags: ["Character", "Epic Hero", "Infantry", "Anathema Psykana", "Aleya"] },
+      { name: "Blade Champion", points: 120, tags: ["Character", "Infantry", "Blade Champion"] },
+      { name: "Knight-Centura", points: 55, tags: ["Character", "Infantry", "Anathema Psykana", "Knight-Centura"] },
+      { name: "Shield-Captain", points: 130, tags: ["Character", "Infantry", "Shield-Captain"] },
+      { name: "Shield-Captain in Allarus Terminator Armour", points: 130, tags: ["Character", "Infantry", "Terminator", "Shield-Captain"] },
+      { name: "Shield-Captain on Dawneagle Jetbike", points: 150, tags: ["Character", "Mounted", "Fly", "Dawneagle Jetbike", "Shield-Captain"] },
+      { name: "Trajann Valoris", points: 140, tags: ["Character", "Epic Hero", "Infantry", "Trajann Valoris"] },
+      { name: "Valerian", points: 110, tags: ["Character", "Epic Hero", "Infantry", "Shield-Captain", "Valerian"] },
+      /* battleline */
+      { name: "Custodian Guard", modelCount: [4, 5], tags: ["Battleline", "Infantry", "Custodian Guard"], unitOptions: { unitSize: [4, 5] } },
+      /* dedicated transports */
+      { name: "Anathema Psykana Rhino", tags: ["Vehicle", "Transport", "Dedicated Transport", "Smoke", "Anathema Psykana", "Rhino"] },
+
+      { name: "Allarus Custodians", modelCount: [2, 3, 5, 6], tags: ["Infantry", "Terminator", "Allarus Custodians"], unitOptions: { unitSize: [2, 3, 5, 6] } },
+      { name: "Custodian Wardens", modelCount: [4, 5], tags: ["Infantry", "Custodian Wardens"], unitOptions: { unitSize: [4, 5] } },
+      { name: "Prosecutors", modelCount: [4, 5, 9, 10], tags: ["Infantry", "Anathema Psykana", "Prosecutors"], unitOptions: { unitSize: [4, 5, 9, 10] } },
+      { name: "Venerable Contemptor Dreadnought", tags: ["Vehicle", "Walker", "Venerable Contemptor Dreadnought"] },
+      { name: "Venerable Land Raider", tags: ["Vehicle", "Transport", "Smoke", "Venerable Land Raider"] },
+      { name: "Vertus Praetors", modelCount: [2, 3], tags: ["Mounted", "Fly", "Vertus Praetors"], unitOptions: { unitSize: [2, 3] } },
+      { name: "Vigilators", modelCount: [4, 5, 9, 10], tags: ["Infantry", "Anathema Psykana", "Vigilators"], unitOptions: { unitSize: [4, 5, 9, 10] } },
+      { name: "Witchseekers", modelCount: [4, 5, 9, 10], tags: ["Infantry", "Anathema Psykana", "Witchseekers"], unitOptions: { unitSize: [4, 5, 9, 10] } },
+
+      /* forge world models */
+      { name: "Agamatus Custodians", modelCount: [3, 6], tags: ["Mounted", "Fly", "Agamatus Custodians"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Aquilon Custodians", modelCount: [3, 6], tags: ["Infantry", "Terminator", "Aquilon Custodians"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Ares Gunship", tags: ["Vehicle", "Aircraft", "Fly", "Ares Gunship"] },
+      { name: "Caladius Grav-tank", tags: ["Vehicle", "Fly", "Caladius Grav-tank"] },
+      { name: "Contemptor-Achillus Dreadnought", tags: ["Vehicle", "Walker", "Contemptor-Achillus Dreadnought"] },
+      { name: "Contemptor-Galatus Dreadnought", tags: ["Vehicle", "Walker", "Contemptor-Galatus Dreadnought"] },
+      { name: "Coronus Grav-carrier", tags: ["Vehicle", "Transport", "Fly", "Coronus Grav-carrier"] },
+      { name: "Custodian Guard with Adrasite and Pyrithite Spears", modelCount: 5, tags: ["Infantry", "Custodian Guard with Adrasite and Pyrithite Spears"] },
+      { name: "Orion Assault Dropship", tags: ["Vehicle", "Transport", "Aircraft", "Fly", "Orion Assault Dropship"] },
+      { name: "Pallas Grav-attack", tags: ["Vehicle", "Fly", "Pallas Grav-attack"] },
+      { name: "Sagittarum Custodians", modelCount: 5, tags: ["Infantry", "Sagittarum Custodians"] },
+      { name: "Telemon Heavy Dreadnought", tags: ["Vehicle", "Walker", "Telemon Heavy Dreadnought"] },
+      { name: "Venatari Custodians", modelCount: [3, 6], tags: ["Infantry", "Fly", "Jump Pack", "Venatari Custodians"], unitOptions: { unitSize: [3, 6] } },
     ],
     "enhancements": {
-      "Auric Champions": {
-        "Blade Imperator": 25,
-        "Inspirational Exemplar": 10,
-        "Martial Philosopher": 30,
-        "Veiled Blade": 25
-      },
-      "Lions of the Emperor": {
-        "Admonimortis": 10,
-        "Fierce Conqueror": 15,
-        "Praesidius": 25,
-        "Superior Creation": 25
-      },
-      "Null Maiden Vigil": {
-        "Enhanced Voidsheen Cloak": 10,
-        "Huntress' Eye": 15,
-        "Oblivion Knigh": 25,
-        "Raptor Blade": 5
-      },
-      "Shield Host": {
-        "Auric Mantle": 15,
-        "Castellan's Mark": 20,
-        "From the Hall of Armouries": 25,
-        "Panoptispex": 5
-      },
-      "Solar Spearhead": {
-        "Adamantine Talisman": 25,
-        "Augury Uplink": 35,
-        "Honoured Fallen": 15,
-        "Veteran of the Kataphraktoi": 10
-      },
-      "Talons of the Emperor": {
-        "Aegis Projector": 20,
-        "Champion of the Imperium": 25,
-        "Gift of Terran Artifice": 15,
-        "Radiant Mantle": 30
-      }
+      "Auric Champions": [
+        {
+          name: "Blade Imperator",
+        },
+        {
+          name: "Inspirational Exemplar",
+        },
+        {
+          name: "Martial Philosopher",
+        },
+        {
+          name: "Veiled Blade",
+        },
+      ],
+      "Lions of the Emperor": [
+        {
+          name: "Admonimortis",
+          tags: ["Shield-Captain"],
+        },
+        {
+          name: "Fierce Conqueror",
+          tags: ["Shield-Captain"],
+        },
+        {
+          name: "Praesidius",
+        },
+        {
+          name: "Superior Creation",
+          tags: ["Infantry"],
+        },
+      ],
+      "Null Maiden Vigil": [
+        {
+          name: "Enhanced Voidsheen Cloak",
+          tags: ["Anathema Psykana"],
+        },
+        {
+          name: "Huntress' Eye",
+          tags: ["Anathema Psykana"],
+        },
+        {
+          name: "Oblivion Knigh",
+          tags: ["Anathema Psykana"],
+        },
+        {
+          name: "Raptor Blade",
+          tags: ["Anathema Psykana"],
+        },
+      ],
+      "Shield Host": [
+        {
+          name: "Auric Mantle",
+          tags: ["Shield-Captain", "Blade Champion"],
+        },
+        {
+          name: "Castellan's Mark",
+          tags: ["Shield-Captain"],
+        },
+        {
+          name: "From the Hall of Armouries",
+          tags: ["Shield-Captain"],
+        },
+        {
+          name: "Panoptispex",
+          tags: ["Shield-Captain", "Blade Champion"],
+        },
+      ],
+      "Solar Spearhead": [
+        {
+          name: "Adamantine Talisman",
+        },
+        {
+          name: "Augury Uplink",
+        },
+        {
+          name: "Honoured Fallen",
+          /* TODO: this detachment has special rules that allow you to designate walkers as characters;
+              figure out how to support this */
+          tags: ["Vehicle"],
+        },
+        {
+          name: "Veteran of the Kataphraktoi",
+          tags: ["Infantry", "Mounted"],
+        },
+      ],
+      "Talons of the Emperor": [
+        {
+          name: "Aegis Projector",
+        },
+        {
+          name: "Champion of the Imperium",
+        },
+        {
+          name: "Gift of Terran Artifice",
+        },
+        {
+          name: "Radiant Mantle",
+        },
+      ],
     }
   },
 
   "Adeptus Mechanicus": {
-    "models": {
-      "Archaeopter Fusilave": 160,
-      "Archaeopter Stratoraptor": 185,
-      "Archaeopter Transvector": 150,
-      "Belisarius Cawl": 135,
-      "Corpuscarii Electro-Priests": {
-        "5x": 65,
-        "10x": 130
-      },
-      "Cybernetica Datasmith": 35,
-      "Fulgurite Electro-Priests": {
-        "5x": 70,
-        "10x": 140
-      },
-      "Ironstrider Ballistarii": {
-        "1x": 75,
-        "2x": 150,
-        "3x": 225
-      },
-      "Kastelan Robots": {
-        "2x": 180,
-        "4x": 360
-      },
-      "Kataphron Breachers": {
-        "3x": 160,
-        "6x": 320
-      },
-      "Kataphron Destroyers": {
-        "3x": 105,
-        "6x": 210
-      },
-      "Onager Dunecrawler": 155,
-      "Pteraxii Skystalkers": {
-        "5x": 70,
-        "10x": 140
-      },
-      "Pteraxii Sterylizors": {
-        "5x": 80,
-        "10x": 160
-      },
-      "Serberys Raiders": {
-        "3x": 60,
-        "6x": 120
-      },
-      "Serberys Sulphurhounds": {
-        "3x": 55,
-        "6x": 110
-      },
-      "Sicarian Infiltrators": {
-        "5x": 70,
-        "10x": 140
-      },
-      "Sicarian Ruststalkers": {
-        "5x": 75,
-        "10x": 150
-      },
-      "Skitarii Marshal": 35,
-      "Skitarii Rangers": {
-        "10x": 85
-      },
-      "Skitarii Vanguard": {
-        "10x": 95
-      },
-      "Skorpius Disintegrator": 175,
-      "Skorpius Dunerider": 85,
-      "Sydonian Dragoons with Radium Jezzails": {
-        "1x": 55,
-        "2x": 100,
-        "3x": 150
-      },
-      "Sydonian Dragoons with Taser Lances": {
-        "1x": 70,
-        "2x": 140,
-        "3x": 210
-      },
-      "Sydonian Skatros": 50,
-      "Tech-Priest Dominus": 65,
-      "Tech-Priest Enginseer": 55,
-      "Tech-Priest Manipulus": 60,
-      "Technoarcheologist": 45
-    },
+    "units": [
+      /* characters */
+      { name: "Belisarius Cawl", tags: ["Character", "Epic Hero", "Cult Mechanicus", "Tech-Priest", "Monster"] },
+      { name: "Cybernetica Datasmith", tags: ["Character", "Infantry", "Legio Cybernetica", "Tech-Priest"] },
+      { name: "Skitarii Marshal", tags: ["Character", "Infantry", "Skitarii"] },
+      { name: "Sydonian Skatros", tags: ["Character", "Infantry", "Skitarii", "Sydonian"] },
+      { name: "Tech-Priest Dominus", tags: ["Character", "Infantry", "Cult Mechanicus", "Tech-Priest"] },
+      { name: "Tech-Priest Enginseer", tags: ["Character", "Infantry", "Cult Mechanicus", "Tech-Priest"] },
+      { name: "Tech-Priest Manipulus", tags: ["Character", "Infantry", "Cult Mechanicus", "Tech-Priest"] },
+      { name: "Technoarcheologist", tags: ["Character", "Infantry", "Cult Mechanicus", "Tech-Priest"] },
+      /* battleline */
+      { name: "Skitarii Rangers", tags: ["Battleline", "infantry", "skitarii"], modelCount: 10 },
+      { name: "Skitarii Vanguard", tags: ["Battleline", "infantry", "skitarii"], modelCount: 10 },
+
+      { name: "Archaeopter Fusilave", tags: ["vehicle", "aircraft", "fly", "skitarii"] },
+      { name: "Archaeopter Stratoraptor", tags: ["vehicle", "aircraft", "fly", "skitarii"] },
+      { name: "Archaeopter Transvector", tags: ["vehicle", "aircraft", "transport", "fly", "skitarii"] },
+      { name: "Corpuscarii Electro-Priests", modelCount: [5, 10], tags: ["infantry", "cult mechanicus", "electro-priests"] },
+      { name: "Fulgurite Electro-Priests", modelCount: [5, 10], tags: ["infantry", "cult mechanicus", "electro-priests"] },
+      { name: "Ironstrider Ballistarii", modelCount: [1, 2, 3], tags: ["vehicle", "walker", "smoke", "skitarii"] },
+      { name: "Kastelan Robots", modelCount: [2, 4], tags: ["vehicle", "walker", "legio cybernetica"] },
+      { name: "Kataphron Breachers", modelCount: [3, 6], tags: ["infantry", "cult mechanicus", "kataphron"] },
+      { name: "Kataphron Destroyers", modelCount: [3, 6], tags: ["infantry", "cult mechanicus", "kataphron"] },
+      { name: "Onager Dunecrawler", tags: ["vehicle", "walker", "skitarii", "smoke"] },
+      { name: "Pteraxii Skystalkers", modelCount: [5, 10], tags: ["infantry", "fly", "jump pack", "grenades", "skitarii", "pteraxii"] },
+      { name: "Pteraxii Sterylizors", modelCount: [5, 10], tags: ["infantry", "fly", "jump pack", "skitarii", "pteraxii"] },
+      { name: "Serberys Raiders", modelCount: [3, 6], tags: ["mounted", "skitarii"] },
+      { name: "Serberys Sulphurhounds", modelCount: [3, 6], tags: ["mounted", "skitarii"] },
+      { name: "Servitor Battleclade", modelCount: 9, tags: ["infantry", "cult mechanicus", "servitor"] },
+      { name: "Sicarian Infiltrators", modelCount: [5, 10], tags: ["infantry", "skitarii", "sicarian"] },
+      { name: "Sicarian Ruststalkers", modelCount: [5, 10], tags: ["infantry", "skitarii", "sicarian"] },
+      { name: "Skorpius Disintegrator", tags: ["vehicle", "skitarii", "smoke"] },
+      { name: "Skorpius Dunerider", tags: ["vehicle", "transport", "dedicated transport", "skitarii", "smoke"] },
+      { name: "Sydonian Dragoons with Radium Jezzails", modelCount: [1, 2, 3], tags: ["vehicle", "walker", "smoke", "skitarii", "sydonian"] },
+      { name: "Sydonian Dragoons with Taser Lances", modelCount: [1, 2, 3], tags: ["vehicle", "walker", "smoke", "skitarii", "sydonian"] },
+    ],
     "enhancements": {
-      "Cohort Cybernetica": {
-        "Arch-negator": 10,
-        "Emotionless Clarity": 15,
-        "Lord of Machines": 20,
-        "Necromechanic": 25
-      },
-      "Data-psalm Conclave": {
-        "Data-blessed Autosermon": 20,
-        "Mantle of the Gnosticarch": 15,
-        "Mechanicus Locum": 10,
-        "Temporcopia": 25
-      },
-      "Explorator Maniple": {
-        "Artisan": 15,
-        "Genetor": 25,
-        "Logis": 20,
-        "Magos": 15
-      },
-      "Haloscreed Battle Clade": {
-        "Cognitive Reinforcement": 35,
-        "Inloaded Lethality": 15,
-        "Sanctified Ordnance": 10,
-        "Transoracular Dyad Wafer": 30
-      },
-      "Rad-zone Corps": {
-        "Autoclavic Denunciation": 15,
-        "Malphonic Susurrus": 20,
-        "Peerless Eradicator": 20,
-        "Radial Suffusion": 25
-      },
-      "Skitarii Hunter Cohort": {
-        "Battle-sphere Uplink": 30,
-        "Cantic Thrallnet": 25,
-        "Clandestine Infiltrator": 20,
-        "Veiled Hunter": 10
-      }
+      "Cohort Cybernetica": [
+        {
+          name: "Arch-negator",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Emotionless Clarity",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Lord of Machines",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Necromechanic",
+          tags: ["Tech-Priest"],
+        },
+      ],
+      "Data-psalm Conclave": [
+        {
+          name: "Data-blessed Autosermon",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Mantle of the Gnosticarch",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Mechanicus Locum",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Temporcopia",
+          tags: ["Tech-Priest"],
+        },
+      ],
+      "Explorator Maniple": [
+        {
+          name: "Artisan",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Genetor",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Logis",
+          tags: ["Tech-Priest"],
+        },
+        {
+          name: "Magos",
+          tags: ["Tech-Priest"],
+        },
+      ],
+      "Haloscreed Battle Clade": [
+        {
+          name: "Cognitive Reinforcement",
+          tags: ["!Cybernetica Datasmith"],
+        },
+        {
+          name: "Inloaded Lethality",
+          tags: ["Tech-Priest Dominus", "Tech-Priest Manipulus"],
+        },
+        {
+          name: "Sanctified Ordnance",
+        },
+        {
+          name: "Transoracular Dyad Wafer",
+          tags: ["Cybernetica Datasmith"],
+        },
+      ],
+      "Rad-zone Corps": [
+        {
+          name: "Autoclavic Denunciation",
+        },
+        {
+          name: "Malphonic Susurrus",
+        },
+        {
+          name: "Peerless Eradicator",
+        },
+        {
+          name: "Radial Suffusion",
+        },
+      ],
+      "Skitarii Hunter Cohort": [
+        {
+          name: "Battle-sphere Uplink",
+          tags: ["Skitarii"],
+        },
+        {
+          name: "Cantic Thrallnet",
+          tags: ["Skitarii Marshal"],
+        },
+        {
+          name: "Clandestine Infiltrator",
+          tags: ["Skitarii"],
+        },
+        {
+          name: "Veiled Hunter",
+          tags: ["Skitarii Marshal"],
+        },
+      ],
     }
   },
 
   "Aeldari": {
-    /*
-    Other
-      Corsair Voidscarred
-      Crimson Hunter
-      D-cannon Platform
-      Dark Reapers
-      Dire Avengers
-      Falcon
-      Fire Dragons
-      Fire Prism
-      Hemlock Wraithfighter
-      Howling Banshees
-      Night Spinner
-      Rangers
-      Shadow Weaver Platform
-      Shining Spears
-      Shroud Runners
-      Skyweavers
-      Striking Scorpions
-      Swooping Hawks
-      Troupe
-      Vibro Cannon Platform
-      Voidweaver
-      Vypers
-      War Walkers
-      Warlock Conclave
-      Warlock Skyrunners
-      Warp Spiders
-      Windriders
-      Wraithblades
-      Wraithguard
-      Wraithknight
-      Wraithknight with Ghostglaive
-      Wraithlord
-      Ynnari Incubi
-      Ynnari Reavers
-    */
-    "characters": [
-      { name: "Asurmen", points: 135 },
-      { name: "Autarch", points: 85 },
-      { name: "Autarch Wayleaper", points: 80 },
-      { name: "Avatar of Khaine", points: 300 },
-      { name: "Baharroth", points: 115 },
-      { name: "Death Jester", points: 90 },
-      { name: "Eldrad Ulthran", points: 110 },
-      { name: "Farseer", points: 70 },
-      { name: "Farseer Skyrunner", points: 80 },
-      { name: "Fuegan", points: 120 },
-      { name: "Jain Zar", points: 105 },
-      { name: "Lhykhis", points: 120 },
-      { name: "Maugan Ra", points: 100 },
-      { name: "Shadowseer", points: 60 },
-      { name: "Solitaire", points: 115 },
-      { name: "Spiritseer", points: 65 },
-      { name: "The Visarch", points: 90 },
-      { name: "The Yncarne", points: 260 },
-      { name: "Troupe Master", points: 75 },
-      { name: "Warlock", points: 45 },
-      { name: "Ynnari Archon", points: 85 },
-      { name: "Ynnari Succubus", points: 45 },
-      { name: "Yvraine", points: 100 },
-    ],
-    "battleline": [
-      { name: "Corsair Voidreavers (x5)", points: 60, modelCount: 5 },
-      { name: "Corsair Voidreavers (x10)", points: 120, modelCount: 10 },
-      { name: "Corsair Voidscarred (x5)", points: 80, modelCount: 5 },
-      { name: "Corsair Voidscarred (x10)", points: 160, modelCount: 10 },
-      { name: "Guardian Defenders (x11)", points: 100, modelCount: 11 },
-      { name: "Storm Guardians (x11)", points: 100, modelCount: 11 },
-      { name: "Ynnari Kabalite Warriors (x10)", points: 110, modelCount: 10 },
-      { name: "Ynnari Wyches (x10)", points: 90, modelCount: 10 },
-    ],
-    "otherUnits": [
-      { name: "Crimson Hunter", points: 160 },
-      { name: "D-cannon Platform", points: 125 },
-      { name: "Dark Reapers (x5)", points: 90, modelCount: 5 },
-      { name: "Dark Reapers (x10)", points: 195, modelCount: 10 },
-      { name: "Dire Avengers (x5)", points: 80, modelCount: 5 },
-      { name: "Dire Avengers (x10)", points: 160, modelCount: 10 },
-      { name: "Falcon", points: 130 },
-      { name: "Fire Dragons (x5)", points: 120, modelCount: 5 },
-      { name: "Fire Dragons (x10)", points: 220, modelCount: 10 },
-      { name: "Fire Prism", points: 150 },
-      { name: "Hemlock Wraithfighter", points: 155 },
-      { name: "Howling Banshees (x5)", points: 95, modelCount: 5 },
-      { name: "Howling Banshees (x10)", points: 190, modelCount: 10 },
-      { name: "Night Spinner", points: 190 },
-      { name: "Rangers (x5)", points: 55, modelCount: 5 },
-      { name: "Rangers (x10)", points: 110, modelCount: 10 },
-      { name: "Shadow Weaver Platform", points: 75 },
-      { name: "Shining Spears (x3)", points: 110, modelCount: 3 },
-      { name: "Shining Spears (x6)", points: 220, modelCount: 6 },
-      { name: "Shroud Runners (x3)", points: 80, modelCount: 3 },
-      { name: "Shroud Runners (x6)", points: 160, modelCount: 6 },
-      { name: "Skyweavers (x2)", points: 95, modelCount: 2 },
-      { name: "Skyweavers (x4)", points: 190, modelCount: 4 },
-      { name: "Starweaver", points: 80 },
-      { name: "Storm Guardians (x11)", points: 100, modelCount: 11 },
-      { name: "Striking Scorpions (x5)", points: 85, modelCount: 5 },
-      { name: "Striking Scorpions (x10)", points: 150, modelCount: 10 },
-      { name: "Swooping Hawks (x5)", points: 85, modelCount: 5 },
-      { name: "Swooping Hawks (x10)", points: 170, modelCount: 10 },
-      { name: "Troupe (x5)", points: 85, modelCount: 5 },
-      { name: "Troupe (x6)", points: 100, modelCount: 6 },
-      { name: "Troupe (x11)", points: 190, modelCount: 11 },
-      { name: "Troupe (x12)", points: 205, modelCount: 12 },
-      { name: "Troupe Master", points: 75 },
-      { name: "Vibro Cannon Platform", points: 60 },
-      { name: "Voidweaver", points: 125 },
-      { name: "Vyper", points: 65 },
-      { name: "War Walker", points: 85 },
-      { name: "Warlock", points: 45 },
-      { name: "Warlock Conclave (x2)", points: 55, modelCount: 2 },
-      { name: "Warlock Conclave (x4)", points: 130, modelCount: 4 },
-      { name: "Warlock Skyrunners (x1)", points: 45, modelCount: 1 },
-      { name: "Warlock Skyrunners (x2)", points: 90, modelCount: 2 },
-      { name: "Warp Spiders (x5)", points: 95, modelCount: 5 },
-      { name: "Warp Spiders (x10)", points: 190, modelCount: 10 },
-      { name: "Wave Serpent", points: 125 },
-      { name: "Windriders (x3)", points: 80, modelCount: 3 },
-      { name: "Windriders (x6)", points: 160, modelCount: 6 },
-      { name: "Wraithblades (x5)", points: 170, modelCount: 5 },
-      { name: "Wraithguard (x5)", points: 170, modelCount: 5 },
-      { name: "Wraithknight", points: 435 },
-      { name: "Wraithknight with Ghostglaive", points: 420 },
-      { name: "Wraithlord", points: 140 },
-      { name: "Ynnari Incubi (x5)", points: 85, modelCount: 5 },
-      { name: "Ynnari Incubi (x10)", points: 170, modelCount: 10 },
-      { name: "Ynnari Raider", points: 80 },
-      { name: "Ynnari Reavers (x3)", points: 65, modelCount: 3 },
-      { name: "Ynnari Reavers (x6)", points: 120, modelCount: 6 },
-      { name: "Ynnari Venom", points: 70 },
+    "units": [
+      /* characters */
+      { name: "Asurmen", tags: ["Character", "Epic Hero", "Infantry", "Grenades", "Aspect Warrior", "Phoenix Lord", "Asuryani"] },
+      { name: "Autarch", tags: ["Character", "Infantry", "Grenades", "Asuryani"] },
+      { name: "Autarch Wayleaper", tags: ["Character", "Infantry", "Jump Pack", "Fly", "Grenades", "Asuryani"] },
+      { name: "Avatar of Khaine", tags: ["Character", "Epic Hero", "Monster", "Daemon", "Asuryani"] },
+      { name: "Baharroth", tags: ["Character", "Epic Hero", "Infantry", "Jump Pack", "Fly", "Grenades", "Aspect Warrior", "Phoenix Lord", "Asuryani"] },
+      { name: "Death Jester", tags: ["Character", "Infantry", "Harlequin"] },
+      { name: "Eldrad Ulthran", tags: ["Character", "Epic Hero", "Infantry", "Psyker", "Farseer", "Asuryani"] },
+      { name: "Farseer", tags: ["Character", "Infantry", "Psyker", "Farseer", "Asuryani"] },
+      { name: "Farseer Skyrunner", tags: ["Character", "Mounted", "Fly", "Psyker", "Farseer", "Asuryani"] },
+      { name: "Fuegan", tags: ["Character", "Epic Hero", "Infantry", "Grenades", "Aspect Warrior", "Phoenix Lord", "Asuryani"] },
+      { name: "Jain Zar", tags: ["Character", "Epic Hero", "Infantry", "Aspect Warrior", "Phoenix Lord", "Asuryani"] },
+      { name: "Lhykhis", tags: ["Character", "Epic Hero", "Infantry", "Jump Pack", "Fly", "Aspect Warrior", "Phoenix Lord", "Asuryani"] },
+      { name: "Maugan Ra", tags: ["Character", "Epic Hero", "Infantry", "Aspect Warrior", "Phoenix Lord", "Asuryani"] },
+      { name: "Shadowseer", tags: ["Character", "Infantry", "Psyker", "Grenades", "Harlequin"] },
+      { name: "Solitaire", tags: ["Character", "Epic Hero", "Infantry", "Harlequin"], warlord: false },
+      { name: "Spiritseer", tags: ["Character", "Infantry", "Psyker", "Asuryani"] },
+      { name: "The Visarch", tags: ["Character", "Epic Hero", "Infantry", "Ynnari"] },
+      { name: "The Yncarne", tags: ["Character", "Epic Hero", "Monster", "Fly", "Psyker", "Daemon", "Ynnari"] },
+      { name: "Troupe Master", tags: ["Character", "Infantry", "Grenades", "Harlequin"] },
+      { name: "Warlock", tags: ["Character", "Infantry", "Psyker", "Asuryani"] },
+      { name: "Ynnari Archon", tags: ["Character", "Infantry", "Archon", "Ynnari"] },
+      { name: "Ynnari Succubus", tags: ["Character", "Infantry", "Ynnari"] },
+      { name: "Yvraine", tags: ["Character", "Epic Hero", "Infantry", "Psyker", "Ynnari"] },
+      /* battleline */
+      {
+        name: "Corsair Voidreavers",
+        modelCount: [5, 10],
+        tags: ["Battleline", "Infantry", "Grenades", "Anhrathe", "Corsair Voidreavers", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Guardian Defenders", modelCount: 11, tags: ["Battleline", "Infantry", "Grenades", "Guardians", "Guardian Defenders", "Asuryani"] },
+      { name: "Storm Guardians", modelCount: 11, tags: ["Battleline", "Infantry", "Grenades", "Guardians", "Storm Guardians", "Asuryani"] },
+      { name: "Ynnari Kabalite Warriors", modelCount: 10, tags: ["Battleline", "Infantry", "Kabalite Warriors", "Ynnari"] },
+      { name: "Ynnari Wyches", modelCount: 10, tags: ["Battleline", "Infantry", "Grenades", "Wyches", "Ynnari"] },
+
+      /* dedicated transports */
+      { name: "Starweaver", modelCount: 1, tags: ["Vehicle", "Transport", "Dedicated Transport", "Smoke", "Fly", "Starweaver", "Harlequin"] },
+      { name: "Wave Serpent", modelCount: 1, tags: ["Vehicle", "Transport", "Dedicated Transport", "Fly", "Wave Serpent", "Asuryani"] },
+      { name: "Ynnari Raider", modelCount: 1, tags: ["Vehicle", "Transport", "Dedicated Transport", "Fly", "Raider", "Ynnari"] },
+      { name: "Ynnari Venom", modelCount: 1, tags: ["Vehicle", "Transport", "Dedicated Transport", "Fly", "Venom", "Ynnari"] },
+
+      {
+        name: "Corsair Voidscarred",
+        modelCount: [5, 10],
+        tags: ["Infantry", "Grenades", "Anhrathe", "Corsair Voidscarred", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Crimson Hunter", tags: ["Vehicle", "Fly", "Aircraft", "Aspect Warrior", "Crimson Hunter", "Asuryani"] },
+      { name: "D-cannon Platform", tags: ["Infantry", "Support Weapon", "D-cannon Platform", "Asuryani"] },
+      {
+        name: "Dark Reapers",
+        modelCount: [5, 10],
+        tags: ["Infantry", "Aspect Warrior", "Dark Reapers", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      {
+        name: "Dire Avengers",
+        modelCount: [5, 10],
+        tags: ["Infantry", "Grenades", "Aspect Warrior", "Dire Avengers", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Falcon", tags: ["Vehicle", "Fly", "Transport", "Falcon", "Asuryani"] },
+      {
+        name: "Fire Dragons",
+        modelCount: [5, 10],
+        tags: ["Infantry", "Grenades", "Aspect Warrior", "Fire Dragons", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Fire Prism", tags: ["Vehicle", "Fly", "Fire Prism", "Asuryani"] },
+      { name: "Hemlock Wraithfighter", tags: ["Vehicle", "Fly", "Aircraft", "Psyker", "Wraith Construct", "Hemlock Wraithfighter", "Asuryani"] },
+      {
+        name: "Howling Banshees",
+        modelCount: [5, 10],
+        tags: ["Infantry", "Aspect Warrior", "Howling Banshees", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Night Spinner", tags: ["Vehicle", "Fly", "Night Spinner", "Asuryani"] },
+      {
+        name: "Rangers",
+        modelCount: [5, 10],
+        tags: ["Infantry", "Rangers", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      { name: "Shadow Weaver Platform", tags: ["Infantry", "Support Weapon", "Shadow Weaver Platform", "Asuryani"] },
+      {
+        name: "Shining Spears",
+        modelCount: [3, 6],
+        tags: ["Mounted", "Fly", "Aspect Warrior", "Shining Spears", "Asuryani"],
+        unitOptions: {
+          unitSize: [3, 6],
+        }
+      },
+      {
+        name: "Shroud Runners", modelCount: [3, 6], tags: ["Mounted", "Fly", "Shroud Runners", "Asuryani"],
+        unitOptions: {
+          unitSize: [3, 6],
+        }
+      },
+      {
+        name: "Skyweavers", modelCount: [2, 4], tags: ["Mounted", "Fly", "Smoke", "Skyweavers", "Harlequin"],
+        unitOptions: {
+          unitSize: [2, 4],
+        }
+      },
+      {
+        name: "Striking Scorpions", modelCount: [5, 10], tags: ["Infantry", "Aspect Warrior", "Striking Scorpions", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      {
+        name: "Swooping Hawks", modelCount: [5, 10], tags: ["Infantry", "Jump Pack", "Fly", "Grenades", "Aspect Warrior", "Swooping Hawks", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      {
+        name: "Troupe", modelCount: [5, 6, 11, 12], tags: ["Infantry", "Grenades", "Troupe", "Harlequin"],
+        unitOptions: {
+          unitSize: [5, 6, 11, 12],
+        }
+      },
+      { name: "Vibro Cannon Platform", tags: ["Infantry", "Support Weapon", "Vibro Cannon Platform", "Asuryani"] },
+      { name: "Voidweaver", tags: ["Vehicle", "Fly", "Voidweaver", "Harlequin"] },
+      {
+        name: "Vyper", modelCount: [1, 2], tags: ["Vehicle", "Fly", "Vyper", "Asuryani"],
+        unitOptions: {
+          unitSize: [1, 2],
+        }
+      },
+      {
+        name: "War Walker", modelCount: [1, 2], tags: ["Vehicle", "Walker", "War Walker", "Asuryani"],
+        unitOptions: {
+          unitSize: [1, 2],
+        }
+      },
+      {
+        name: "Warlock Conclave", modelCount: [2, 4], tags: ["Infantry", "Psyker", "Warlock", "Warlock Conclave", "Asuryani"],
+        unitOptions: {
+          unitSize: [2, 4],
+        }
+      },
+      {
+        name: "Warlock Skyrunners", modelCount: [1, 2], tags: ["Mounted", "Fly", "Psyker", "Warlock", "Warlock Skyrunners", "Asuryani"],
+        unitOptions: {
+          unitSize: [1, 2],
+        }
+      },
+      {
+        name: "Warp Spiders", modelCount: [5, 10], tags: ["Infantry", "Jump Pack", "Fly", "Aspect Warrior", "Warp Spiders", "Asuryani"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      {
+        name: "Windriders", modelCount: [3, 6], tags: ["Mounted", "Fly", "Windriders", "Asuryani"],
+        unitOptions: {
+          unitSize: [3, 6],
+        }
+      },
+      { name: "Wraithblades", modelCount: 5, tags: ["Infantry", "Wraith Construct", "Wraithblades", "Asuryani"] },
+      { name: "Wraithguard", modelCount: 5, tags: ["Infantry", "Wraith Construct", "Wraithguard", "Asuryani"] },
+      { name: "Wraithknight", tags: ["Monster", "Titanic", "Towering", "Walker", "Wraith Construct", "Wraithknight", "Asuryani"] },
+      { name: "Wraithknight with Ghostglaive", modelCount: 1, tags: ["Monster", "Titanic", "Towering", "Walker", "Wraith Construct", "Wraithknight with Ghostglaive", "Asuryani"] },
+      { name: "Wraithlord", modelCount: 1, tags: ["Monster", "Walker", "Wraith Construct", "Wraithlord", "Asuryani"] },
+      {
+        name: "Ynnari Incubi", modelCount: [5, 10], tags: ["Infantry", "Ynnari Incubi", "Ynnari"],
+        unitOptions: {
+          unitSize: [5, 10],
+        }
+      },
+      {
+        name: "Ynnari Reavers", modelCount: [3, 6], tags: ["Mounted", "Fly", "Ynnari Reavers", "Ynnari"],
+        unitOptions: {
+          unitSize: [3, 6],
+        }
+      },
+      { name: "Phantom Titan", modelCount: 1, tags: ["Monster", "Titanic", "Towering", "Walker", "Wraith Construct", "Phantom Titan", "Asuryani"] },
+      { name: "Revenant Titan", modelCount: 1, tags: ["Monster", "Titanic", "Towering", "Walker", "Fly", "Wraith Construct", "Revenant Titan", "Asuryani"] },
     ],
     "enhancements": {
-      "Armoured Warhost": {
-        "Guiding Presence": 25,
-        "Guileful Strategist": 15,
-        "Harmonisation Matrix": 30,
-        "Spirit Stone of Raelyth": 20
-      },
-      "Aspect Host": {
-        "Aspect of Murder": 25,
-        "Mantle of Wisdom": 30,
-        "Shimmerstone": 15,
-        "Strategic Savant": 15
-      },
-      "Devoted of Ynnead": {
-        "Borrowed Vigour": 10,
-        "Gaze of Ynnead": 15,
-        "Morbid Might": 15,
-        "Storm of Whispers": 10
-      },
-      "Ghosts of the Webway": {
-        "Cegorach’s Coil": 25,
-        "Mask of Secrets": 15,
-        "Mistweave": 15,
-        "Murder’s Jest": 20
-      },
-      "Guardian Battlehost": {
-        "Breath of Vaul": 10,
-        "Craftworld’s Champion": 25,
-        "Ethereal Pathway": 30,
-        "Protector of the Paths": 20
-      },
-      "Seer Council": {
-        "Lucid Eye": 30,
-        "Runes of Warding": 25,
-        "Stone of Eldritch Fury": 15,
-        "Torc of Morai-Heg": 20
-      },
-      "Spirit Conclave": {
-        "Higher Duty": 25,
-        "Light of Clarity": 30,
-        "Rune of Mists": 10,
-        "Stave of Kurnous": 15
-      },
-      "Warhost": {
-        "Gift of Foresight": 15,
-        "Phoenix Gem": 35,
-        "Psychic Destroyer": 30,
-        "Timeless Strategist": 15
-      },
-      "Windrider Host": {
-        "Echoes of Ulthanesh": 20,
-        "Firstdrawn Blade": 10,
-        "Mirage Field": 25,
-        "Seersight Strike": 15
-      },
+      "Armoured Warhost": [
+        { name: "Guiding Presence", tags: ["Psyker"] },
+        { name: "Guileful Strategist" },
+        { name: "Harmonisation Matrix" },
+        { name: "Spirit Stone of Raelyth", tags: ["Psyker"] }
+      ],
+      "Aspect Host": [
+        { name: "Aspect of Murder", tags: ["Autarch", "Autarch Wayleaper"] },
+        { name: "Mantle of Wisdom", tags: ["Autarch", "Autarch Wayleaper"] },
+        { name: "Shimmerstone", tags: ["Autarch", "Autarch Wayleaper"] },
+        { name: "Strategic Savant", tags: ["Autarch", "Autarch Wayleaper"] }
+      ],
+      "Devoted of Ynnead": [
+        { name: "Borrowed Vigour", tags: ["Archon"] },
+        { name: "Gaze of Ynnead", tags: ["Farseer"] },
+        { name: "Morbid Might", tags: ["Succubus"] },
+        { name: "Storm of Whispers", tags: ["Warlock"] }
+      ],
+      "Ghosts of the Webway": [
+        { name: "Cegorach’s Coil", tags: ["Troupe Master"] },
+        { name: "Mask of Secrets", tags: ["Harlequin"] },
+        { name: "Mistweave", tags: ["Shadowseer"] },
+        { name: "Murder’s Jest", tags: ["Death Jester"] }
+      ],
+      "Guardian Battlehost": [
+        { name: "Breath of Vaul", tags: ["Asuryani"] },
+        { name: "Craftworld’s Champion", tags: ["Asuryani"] },
+        { name: "Ethereal Pathway", tags: ["Asuryani"] },
+        { name: "Protector of the Paths", tags: ["Asuryani"] }
+      ],
+      "Seer Council": [
+        { name: "Lucid Eye", tags: ["Asuryani+Psyker"] },
+        { name: "Runes of Warding", tags: ["Asuryani+Psyker"] },
+        { name: "Stone of Eldritch Fury", tags: ["Asuryani+Psyker"] },
+        { name: "Torc of Morai-Heg", tags: ["Asuryani+Psyker"] }
+      ],
+      "Spirit Conclave": [
+        { name: "Higher Duty", tags: ["Spiritseer"] },
+        { name: "Light of Clarity", tags: ["Spiritseer"] },
+        { name: "Rune of Mists", tags: ["Spiritseer"] },
+        { name: "Stave of Kurnous", tags: ["Spiritseer"] }
+      ],
+      "Warhost": [
+        { name: "Gift of Foresight", tags: ["Asuryani"] },
+        { name: "Phoenix Gem", tags: ["Asuryani"] },
+        { name: "Psychic Destroyer", tags: ["Asuryani+Psyker"] },
+        { name: "Timeless Strategist", tags: ["Asuryani"] }
+      ],
+      "Windrider Host": [
+        { name: "Echoes of Ulthanesh", tags: ["Asuryani+Mounted"] },
+        { name: "Firstdrawn Blade", tags: ["Asuryani+Mounted"] },
+        { name: "Mirage Field", tags: ["Asuryani+Mounted"] },
+        { name: "Seersight Strike", tags: ["Asuryani+Mounted+Psyker"] }
+      ],
     }
   },
 
   "Astra Militarum": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
@@ -631,9 +764,7 @@ export const ARMIES = {
       If your army includes one or more BLACK TEMPLARS units, it cannot include any ADEPTUS ASTARTES PSYKER models, and cannot include any of the following models that do not have the Black Templars keyword: GLADIATOR LANCER; GLADIATOR REAPER; GLADIATOR VALIANT; IMPULSOR; REPULSOR; REPULSOR EXECUTIONER.
       */
     },
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
@@ -644,47 +775,51 @@ export const ARMIES = {
       If your army includes one or more DEATHWATCH units, it cannot include any of the following units: DEVASTATOR SQUAD; SCOUT SQUAD; TACTICAL SQUAD.
       */
     },
-    "characters": [
-      { name: "Astorath", points: 105, tags: ["epic"] },
-      { name: "Blood Angels Captain", points: 80 },
-      { name: "Chief Librarian Mephiston", points: 135, tags: ["epic"] },
-      { name: "Commander Dante", points: 130, tags: ["epic"] },
-      { name: "Death Company Captain", points: 70 },
-      { name: "Death Company Captain with Jump Pack", points: 75 },
-      { name: "Lemartes", points: 110, tags: ["epic"] },
-      { name: "Sanguinary Priest", points: 90 },
-      { name: "The Sanguinor", points: 140, tags: ["epic"] }
-    ],
-    "battleline": [
+    "units": [
+      /* characters */
+      { name: "Astorath", points: 105, tags: ["Character", "Epic Hero"] },
+      { name: "Blood Angels Captain", points: 80, tags: ["Character"] },
+      { name: "Chief Librarian Mephiston", points: 135, tags: ["Character", "Epic Hero"] },
+      { name: "Commander Dante", points: 130, tags: ["Character", "Epic Hero"] },
+      { name: "Death Company Captain", points: 70, tags: ["Character"] },
+      { name: "Death Company Captain with Jump Pack", points: 75, tags: ["Character"] },
+      { name: "Lemartes", points: 110, tags: ["Character", "Epic Hero"] },
+      { name: "Sanguinary Priest", points: 90, tags: ["Character"] },
+      { name: "The Sanguinor", points: 140, tags: ["Character", "Epic Hero"] },
+      /* battleline */
       {
         name: "Death Company Marines",
         modelCount: [5, 10],
+        tags: ["Infantry", "Grenades", "Tacticus", "Death Company", "Death Company Marines"],
         unitOptions: { unitSize: [5, 10] }
       },
       {
         name: "Death Company Marines with Bolt Rifles",
         modelCount: [5, 10],
+        tags: ["Infantry", "Grenades", "Tacticus", "Death Company", "Death Company Marines with Bolt Rifles"],
         unitOptions: { unitSize: [5, 10] }
       },
       {
         name: "Death Company Marines with Jump Packs",
         modelCount: [5, 10],
+        tags: ["Infantry", "Jump Pack", "Fly", "Grenades", "Tacticus", "Death Company", "Death Company Marines with Jump Packs"],
         unitOptions: { unitSize: [5, 10] }
       },
       {
         name: "Sanguinary Guard",
         modelCount: [3, 6],
+        tags: ["Infantry", "Fly", "Jump Pack", "Grenades", "Tacticus", "Sanguinary Guard"],
         unitOptions: { unitSize: [3, 6] }
-      }
-    ],
-    "otherUnits": [
+      },
       {
         name: "Baal Predator",
-        points: 135
+        points: 135,
+        tags: ["Vehicle", "Smoke", "Baal Predator"]
       },
       {
         name: "Death Company Dreadnought",
-        points: 180
+        points: 180,
+        tags: ["Vehicle", "Walker", "Dreadnought", "Death Company", "Death Company Dreadnought"]
       }
     ],
     "enhancements": {
@@ -716,104 +851,46 @@ export const ARMIES = {
   },
 
   "Chaos Daemons": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Chaos Knights": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Chaos Space Marines": {
-
-      /*
-      Abaddon the Despoiler / 280
-      Accursed Cultists / 8-90 | 16-195
-      Chaos Bikers / 3-70 | 6-130
-      Chaos Land Raider / 240
-      Chaos Lord / 90
-      Chaos Lord in Terminator Armour / 95
-      Chaos Lord with Jump Pack / 80
-      Chaos Predator Annihilator / 135
-      Chaos Predator Destructor / 140
-      Chaos Rhino / 75
-      Chaos Spawn / 2-70
-      Chaos Terminator Squad / 5-180 | 10-360
-      Chaos Vindicator / 185
-      Chosen / 5-125 | 10-250
-      Cultist Firebrand / 1-45
-      Cultist Mob / 10-50 | 20-100
-      Cypher / 1-90
-      Dark Apostle / 3-65
-      Dark Commune / 5-80
-      Defiler / 190
-      Fabius Bile / 2-85
-      Fellgor Beastmen / 10-70
-      Forgefiend / 180
-      Haarken Worldclaimer / 1-90
-      Havocs / 5-125
-      Helbrute / 130
-      Heldrake / 205
-      Heretic Astartes Daemon Prince / 165
-      Heretic Astartes Daemon Prince with Wings / 180
-      Huron Blackheart / 80
-      Khorne Lord of Skulls / 450
-      Legionaries / 5-90 | 10-170
-      Lord Discordant on Helstalker / 160
-      Master of Executions / 80
-      Master of Possession / 60
-      Maulerfiend / 130
-      Nemesis Claw / 5-110 | 10-190
-      Noctilith Crown / 125
-      Obliterators / 2-160
-      Possessed / 5-120 | 10-240
-      Raptors / 5-90 | 10-170
-      Sorcerer / 60
-      Sorcerer in Terminator Armour / 80
-      Traitor Enforcer / 2-55
-      Traitor Guardsmen Squad / 10-70
-      Vashtorr the Arkifane / 175
-      Venomcrawler / 120
-      Warp Talons / 5-125 | 10-270
-      Warpsmith / 70
-      */
-    "characters": [
-      { name: "Abaddon the Despoiler", tags: ["epic"] },
-      { name: "Chaos Lord" },
-      { name: "Chaos Lord In Terminator Armour" },
-      { name: "Chaos Lord with Jump Pack" },
-      { name: "Cultist Firebrand" },
-      { name: "Cypher", tags: ["epic", "fallen"] },
-      { name: "Dark Apostle" },
-      { name: "Dark Commune" },
-      { name: "Fabius Bile", tags: ["epic"] },
-      { name: "Haarken Worldclaimer", tags: ["epic"] },
-      { name: "Heretic Astartes Daemon Prince" },
-      { name: "Heretic Astartes Daemon Prince With Wings" },
-      { name: "Huron Blackheart", tags: ["epic"] },
-      { name: "Lord Discordant On Helstalker" },
-      { name: "Master of Executions" },
-      { name: "Master of Possession" },
-      { name: "Sorcerer" },
-      { name: "Sorcerer In Terminator Armour" },
-      { name: "Traitor Enforcer" },
-      { name: "Vashtorr The Arkifane", tags: ["epic"] },
-      { name: "Warpsmith" },
-    ],
-    "battleline": [
-      { name: "Cultist Mob", unitOptions: { unitSize: [8, 16] } },
-      { name: "Legionaries", unitOptions: { unitSize: [5, 10] } },
-      { name: "Traitor Guardsmen Squad", unitOptions: { unitSize: [5, 10] } },
-      // { name: "Khorne Berzerkers", unitOptions: { unitSize: [5, 10] } },
-      // { name: "Plague Marines", unitOptions: { unitSize: [5, 10] } },
-      // { name: "Rubric Marines", unitOptions: { unitSize: [5, 10] } },
-    ],
-    "otherUnits": [
+    "units": [
+      /* characters */
+      { name: "Abaddon the Despoiler", tags: ["Character", "Epic Hero"] },
+      { name: "Chaos Lord", tags: ["Character"] },
+      { name: "Chaos Lord In Terminator Armour", tags: ["Character"] },
+      { name: "Chaos Lord with Jump Pack", tags: ["Character"] },
+      { name: "Cultist Firebrand", tags: ["Character"] },
+      { name: "Cypher", tags: ["Character", "Epic Hero", "Fallen"] },
+      { name: "Dark Apostle", tags: ["Character"] },
+      { name: "Dark Commune", tags: ["Character"] },
+      { name: "Fabius Bile", tags: ["Character", "Epic Hero"] },
+      { name: "Haarken Worldclaimer", tags: ["Character", "Epic Hero"] },
+      { name: "Heretic Astartes Daemon Prince", tags: ["Character"] },
+      { name: "Heretic Astartes Daemon Prince With Wings", tags: ["Character"] },
+      { name: "Huron Blackheart", tags: ["Character", "Epic Hero"] },
+      { name: "Lord Discordant On Helstalker", tags: ["Character"] },
+      { name: "Master of Executions", tags: ["Character"] },
+      { name: "Master of Possession", tags: ["Character"] },
+      { name: "Sorcerer", tags: ["Character"] },
+      { name: "Sorcerer In Terminator Armour", tags: ["Character"] },
+      { name: "Traitor Enforcer", tags: ["Character"] },
+      { name: "Vashtorr The Arkifane", tags: ["Character", "Epic Hero"] },
+      { name: "Warpsmith", tags: ["Character"] },
+      /* battleline */
+      { name: "Cultist Mob", tags: ["Battleline"], unitOptions: { unitSize: [8, 16] } },
+      { name: "Legionaries", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Traitor Guardsmen Squad", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      // { name: "Khorne Berzerkers", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      // { name: "Plague Marines", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      // { name: "Rubric Marines", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
       { name: "Accursed Cultists", unitOptions: { unitSize: [8, 16] } },
       { name: "Chaos Bikers", unitOptions: { unitSize: [3, 6] } },
       { name: "Chaos Land Raider" },
@@ -841,17 +918,66 @@ export const ARMIES = {
       // { name: "Noise Marines", unitOptions: { unitSize: [5, 10] } },
     ],
     "enhancements": {
-      "Disciples of the Dark Gods": {
-        "Dark Pact": 15,
-        "Infernal Tactics": 20,
-        "Rites of Chaos": 25
-      },
-      "Legion Traits": {
-        "Black Legion": 15,
-        "World Eaters": 20,
-        "Death Guard": 25,
-        "Thousand Sons": 25
-      },
+      "Cabal of Chaos": [
+        { name: "Eye of Z’desh" },
+        { name: "Infernal Avatar" },
+        { name: "Mind Blade" },
+        { name: "Touched by the Warp" },
+      ],
+      "Chaos Cult": [
+        { name: "Amulet of Tainted Vigour" },
+        { name: "Cultist’s Brand" },
+        { name: "Incendiary Goad" },
+        { name: "Warped Foresight" },
+      ],
+      "Creations of Bile": [
+        { name: "Helm of All-seeing" },
+        { name: "Living Carapace" },
+        { name: "Prime Test Subject" },
+        { name: "Surgical Precision" },
+      ],
+      "Deceptors": [
+        { name: "Cursed Fang" },
+        { name: "Falsehood" },
+        { name: "Shroud of Obfuscation" },
+        { name: "Soul Link" },
+      ],
+      "Dread Talons": [
+        { name: "Eater of Dread" },
+        { name: "Night’s Shroud" },
+        { name: "Warp-fuelled Thrusters" },
+        { name: "Willbreaker" },
+      ],
+      "Fellhammer Siege-host": [
+        { name: "Bastion Plate" },
+        { name: "Iron Artifice" },
+        { name: "Ironbound Enmity" },
+        { name: "Warp Tracer" },
+      ],
+      "Pactbound Zealots": [
+        { name: "Eye of Tzeentch" },
+        { name: "Intoxicating Elixir" },
+        { name: "Orbs of Unlife" },
+        { name: "Talisman of Burning Blood" },
+      ],
+      "Renegade Raiders": [
+        { name: "Despot’s Claim" },
+        { name: "Dread Reaver" },
+        { name: "Mark of the Hound" },
+        { name: "Tyrant’s Lash" },
+      ],
+      "Soulforged Warpack": [
+        { name: "Forge’s Blessing" },
+        { name: "Invigorated Mechatendrils" },
+        { name: "Tempting Addendum" },
+        { name: "Soul Harvester" },
+      ],
+      "Veterans of the Long War": [
+        { name: "Eager for Vengeance" },
+        { name: "Eye of Abaddon" },
+        { name: "Mark of Legend" },
+        { name: "Warmaster’s Gift" },
+      ],
     }
   },
 
@@ -859,9 +985,7 @@ export const ARMIES = {
     "chapterInfo": {
       parentFaction: "Space Marines",
     },
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
@@ -869,9 +993,7 @@ export const ARMIES = {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
@@ -882,16 +1004,12 @@ export const ARMIES = {
       If your army includes one or more DEATHWATCH units, it cannot include any of the following units: DEVASTATOR SQUAD; SCOUT SQUAD; TACTICAL SQUAD.
       */
     },
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Drukhari": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
@@ -899,63 +1017,63 @@ export const ARMIES = {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Genestealer Cults": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Grey Knights": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Imperial Agents": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Imperial Knights": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Leagues of Votann": {
-    "characters": [
-      { name: "Arkanyst Evaluator", points: 75 },
-      { name: "Brôkhyr Iron-master", points: 75 },
-      { name: "Buri Aegnirssen", points: 110, tags: ["epic"] },
-      { name: "Einhyr Champion", points: 70 },
-      { name: "Grimnyr", points: 65 },
-      { name: "Kâhl", points: 70 },
-      { name: "Memnyr Strategist", points: 45 },
-      { name: "Ûthar the Destined", points: 95, tags: ["epic"] }
-    ],
-    "battleline": [
+    "units": [
+      /* characters */
+      { name: "Arkanyst Evaluator", tags: ["Character", "Infantry", "Arkanyst Evaluator"] },
+      { name: "Brôkhyr Iron-master", tags: ["Character", "Infantry", "Brôkhyr", "Brôkhyr Iron-master"] },
+      { name: "Buri Aegnirssen", points: 110, tags: ["Character", "Infantry", "Epic Hero"] },
+      { name: "Einhyr Champion", points: 70, tags: ["Character", "Infantry", "Exoarmor"] },
+      { name: "Grimnyr", tags: ["Character", "Infantry", "Psyker", "Grimnyr"] },
+      { name: "Kâhl", tags: ["Character", "Infantry", "Kâhl"] },
+      { name: "Memnyr Strategist", tags: ["Character", "Infantry", "Memnyr Strategist"] },
+      { name: "Ûthar the Destined", points: 95, tags: ["Character", "Infantry", "Kâhl", "Epic Hero"] },
+      /* battleline */
       {
         name: "Hearthkyn Warriors",
         modelCount: 10,
-        points: 100
+        points: 100,
+        tags: ["Battleline", "Infantry", "Grenades", "Hearthkyn Warriors"]
       },
-    ],
-    "otherUnits": [
+
+      /* dedicated transports */
+      {
+        name: "Kapricus Carrier",
+        tags: ["Vehicle", "Fly", "Transport", "Dedicated Transport", "Hernkyn", "Kapricus"],
+      },
+      {
+        name: "Sagitaur",
+        tags: ["Vehicle", "Transport", "Dedicated Transport"],
+      },
+
       {
         name: "Brôkhyr Thunderkyn",
         modelCount: [3, 6],
-        points: [80, 160],
+        tags: ["Infantry", "Exoframe", "Brôkhyr", "Thunderkyn"],
         unitOptions: {
           unitSize: [3, 6],
         }
@@ -963,45 +1081,45 @@ export const ARMIES = {
       {
         name: "Cthonian Beserks",
         modelCount: [5, 10],
-        points: [100, 200],
+        tags: ["Infantry", "Cthonian", "Beserks"],
         unitOptions: {
           unitSize: [5, 10],
         }
       },
       {
         name: "Cthonian Earthshakers",
-        points: 110,
+        tags: ["Infantry", "Artillery", "Cthonian", "Earthshakers"],
         modelCount: 2
       },
       {
         name: "Einhyr Hearthguard",
         modelCount: [5, 10],
-        points: [135, 270],
+        tags: ["Infantry", "Exoarmor", "Einhyr Hearthguard"],
         unitOptions: {
           unitSize: [5, 10],
         }
       },
       {
         name: "Hekaton Land Fortress",
-        points: 240,
+        tags: ["Vehicle", "Transport"],
       },
       {
         name: "Hernkyn Pioneers",
         modelCount: [3, 6],
-        points: [80, 160],
+        tags: ["Mounted", "Grenades", "Fly", "Hernkyn", "Pioneers"],
         unitOptions: {
           unitSize: [3, 6],
         }
       },
       {
         name: "Hernkyn Yaegirs",
-        points: 90,
-        modelCount: 10
+        modelCount: 10,
+        tags: ["Infantry", "Grenades", "Hernkyn", "Yaegirs"]
       },
       {
         name: "Ironkin Steeljacks w/ Melee Weapons",
         modelCount: [3, 6],
-        points: [90, 180],
+        tags: ["Infantry", "Ironkin Steeljacks", "Ironkin Steeljacks with Melee Weapons"],
         unitOptions: {
           unitSize: [3, 6],
         }
@@ -1009,335 +1127,212 @@ export const ARMIES = {
       {
         name: "Ironkin Steeljacks w/ Volkanite Disintegrators",
         modelCount: [3, 6],
-        points: [90, 180],
+        tags: ["Infantry", "Ironkin Steeljacks", "Ironkin Steeljacks with Volkanite Disintegrators"],
         unitOptions: {
           unitSize: [3, 6],
         }
       },
       {
-        name: "Kapricus Carrier",
-        points: 75,
-      },
-      {
         name: "Kapricus Defender",
         modelCount: [1, 2],
-        points: [70, 140],
+        tags: ["Vehicle", "Fly", "Hernkyn", "Kapricus", "Defenders"],
         unitOptions: {
           unitSize: [1, 2],
         }
       },
-      {
-        name: "Sagitaur",
-        points: 95,
-      },
     ],
     "enhancements": {
       "Brandfast Oathband": [
-        {
-          name: "Precursive Judgement",
-          points: 15,
-        },
-        {
-          name: "Signature Restoration",
-          points: 5,
-        },
-        {
-          name: "Tactical Alchemy",
-          points: 10,
-        },
-        {
-          name: "Trivärg Cyber Implant",
-          points: 30,
-        },
+        { name: "Precursive Judgement" },
+        { name: "Signature Restoration" },
+        { name: "Tactical Alchemy" },
+        { name: "Trivärg Cyber Implant" },
       ],
       "Dêlve Assault Shift": [
-        {
-          name: "Dêlvwerke Navigator",
-          points: 25,
-        },
-        {
-          name: "Multiwave System Jammer",
-          points: 10,
-        },
-        {
-          name: "Piledriver",
-          points: 15,
-        },
-        {
-          name: "Quake Supervisor",
-          points: 20,
-        },
+        { name: "Dêlvwerke Navigator" },
+        { name: "Multiwave System Jammer" },
+        { name: "Piledriver" },
+        { name: "Quake Supervisor" },
       ],
       "Hearthband": [
-        {
-          name: "Bastion Shield",
-          points: 25,
-        },
-        {
-          name: "High Kâhl",
-          points: 30,
-          tags: ["Kâhl"],
-        },
-        {
-          name: "Ironskein",
-          points: 10,
-        },
-        {
-          name: "Quake Multigenerator",
-          points: 15,
-          tags: ["Kâhl"],
-        },
+        { name: "Bastion Shield" },
+        { name: "High Kâhl", tags: ["Kâhl"] },
+        { name: "Ironskein" },
+        { name: "Quake Multigenerator", tags: ["Kâhl"] },
       ],
       "Hearthfyre Arsenal": [
-        {
-          name: "Calculated Tenacity",
-          points: 15,
-          tags: ["Brôkhyr Iron-master", "Memnyr Strategist"],
-        },
-        {
-          name: "Fârstrydr Node",
-          points: 20,
-          tags: ["Brôkhyr Iron-master", "Memnyr Strategist"],
-        },
-        {
-          name: "Graviton Vault",
-          points: 5,
-          tags: ["Brôkhyr Iron-master"],
-        },
-        {
-          name: "Mantle of Elders",
-          points: 10,
-          tags: ["Memnyr Strategist"],
-        },
+        { name: "Calculated Tenacity", tags: ["Brôkhyr Iron-master", "Memnyr Strategist"] },
+        { name: "Fârstrydr Node", tags: ["Brôkhyr Iron-master", "Memnyr Strategist"] },
+        { name: "Graviton Vault", tags: ["Brôkhyr Iron-master"] },
+        { name: "Mantle of Elders", tags: ["Memnyr Strategist"] },
       ],
       "Needgaârd Oathband": [
-        {
-          name: "Ancestral Crest",
-          points: 15,
-        },
-        {
-          name: "Dead Reckoning",
-          points: 10,
-        },
-        {
-          name: "Iron Ambassador",
-          points: 5,
-        },
-        {
-          name: "Oathbound Speculator",
-          points: 30,
-        },
+        { name: "Ancestral Crest" },
+        { name: "Dead Reckoning" },
+        { name: "Iron Ambassador" },
+        { name: "Oathbound Speculator" },
       ],
       "Persecution Prospect": [
-        {
-          name: "Eye for Weakness",
-          points: 25,
-        },
-        {
-          name: "Nomad Strategist",
-          points: 20,
-        },
-        {
-          name: "Surgical Saboteur",
-          points: 10,
-        },
-        {
-          name: "Writ of Acquisition",
-          points: 10,
-        },
+        { name: "Eye for Weakness" },
+        { name: "Nomad Strategist" },
+        { name: "Surgical Saboteur" },
+        { name: "Writ of Acquisition" },
       ],
     }
   },
 
   "Necrons": {
-    "models": {
-      "Annihilation Barge": 105,
-      "C'tan Shard of the Deceiver": 265,
-      "C'tan Shard of the Nightbringer": 305,
-      "C'tan Shard of the Void Dragon": 300,
-      "Canoptek Doomstalker": 145,
-      "Canoptek Reanimator": 75,
-      "Canoptek Scarab Swarms": {
-        "3x": 40,
-        "6x": 80
-      },
-      "Canoptek Spyders": {
-        "1 model": 75,
-        "2x": 150
-      },
-      "Catacomb Command Barge": 120,
-      "Chronomancer": 65,
-      "Cryptothralls": {
-        "2x": 60
-      },
-      "Deathmarks": {
-        "5x": 65,
-        "10x": 130
-      },
-      "Doom Scythe": 230,
-      "Doomsday Ark": 200,
-      "Flayed Ones": {
-        "5x": 60,
-        "10x": 120
-      },
-      "Ghost Ark": 115,
-      "Hexmark Destroyer": 75,
-      "Illuminor Szeras": 175,
-      "Immortals": {
-        "5x": 70,
-        "10x": 150
-      },
-      "Imotekh the Stormlord": 100,
-      "Lokhust Destroyers": {
-        "1 model": 35,
-        "2x": 60,
-        "3x": 90,
-        "6x": 180
-      },
-      "Lokhust Heavy Destroyers": {
-        "1 model": 55,
-        "2x": 110,
-        "3x": 165
-      },
-      "Lokhust Lord": 80,
-      "Lychguard": {
-        "5x": 85,
-        "10x": 170
-      },
-      "Monolith": 400,
-      "Necron Warriors": {
-        "10x": 90,
-        "20x": 200
-      },
-      "Night Scythe": 145,
-      "Obelisk": 300,
-      "Ophydian Destroyers": {
-        "3x": 80,
-        "6x": 160
-      },
-      "Orikan the Diviner": 80,
-      "Overlord": 85,
-      "Overlord with Translocation Shroud": 85,
-      "Plasmancer": 60,
-      "Psychomancer": 55,
-      "Royal Warden": 50,
-      "Skorpekh Destroyers": {
-        "3x": 90,
-        "6x": 180
-      },
-      "Skorpekh Lord": 80,
-      "Technomancer": 85,
-      "Tesseract Vault": 425,
-      "The Silent King": {
-        "3x": 420
-      },
-      "Tomb Blades": {
-        "3x": 75,
-        "6x": 150
-      },
-      "Transcendent C'tan": 295,
-      "Trazyn the Infinite": 75,
-      "Triarch Praetorians": {
-        "5x": 100,
-        "10x": 200
-      },
-      "Triarch Stalker": 110
-    },
+    "units": [
+      /* characters */
+      { name: "C'tan Shard of the Deceiver", tags: ["Character", "Monster", "Fly", "Epic Hero", "C'tan Shard of the Deceiver"] },
+      { name: "C'tan Shard of the Nightbringer", tags: ["Character", "Monster", "Fly", "Epic Hero", "C'tan Shard of the Nightbringer"] },
+      { name: "C'tan Shard of the Void Dragon", tags: ["Character", "Monster", "Fly", "Epic Hero", "C'tan Shard of the Void Dragon"] },
+      { name: "Catacomb Command Barge", tags: ["Character", "Vehicle", "Fly", "Catacomb Command Barge"] },
+      { name: "Chronomancer", tags: ["Character", "Infantry", "Cryptek", "Chronomancer"] },
+      { name: "Geomancer", tags: ["Character", "Infantry", "Cryptek", "Geomancer"] },
+      { name: "Hexmark Destroyer", tags: ["Character", "Infantry", "Destroyer Cult", "Hexmark Destroyer"] },
+      { name: "Illuminor Szeras", tags: ["Character", "Epic Hero", "Infantry", "Cryptek", "Illuminor Szeras"] },
+      { name: "Imotekh the Stormlord", tags: ["Character", "Epic Hero", "Infantry", "Noble", "Imotekh the Stormlord"] },
+      { name: "Lokhust Lord", tags: ["Character", "Mounted", "Fly", "Destroyer Cult", "Lokhust Lord"] },
+      { name: "Orikan the Diviner", tags: ["Character", "Epic Hero", "Infantry", "Cryptek", "Chronomancer", "Orikan the Diviner"] },
+      { name: "Overlord", tags: ["Character", "Infantry", "Noble", "Overlord"] },
+      { name: "Overlord with Translocation Shroud", tags: ["Character", "Infantry", "Noble", "Overlord", "Overlord with Translocation Shroud"] },
+      { name: "Plasmancer", tags: ["Character", "Infantry", "Cryptek", "Plasmancer"] },
+      { name: "Psychomancer", tags: ["Character", "Infantry", "Cryptek", "Psychomancer"] },
+      { name: "Royal Warden", tags: ["Character", "Infantry", "Royal Warden"] },
+      { name: "Skorpekh Lord", tags: ["Character", "Infantry", "Destroyer Cult", "Skorpekh Lord"] },
+      { name: "Technomancer", tags: ["Character", "Infantry", "Cryptek", "Fly", "Technomancer"] },
+      { name: "The Silent King", modelCount: 3, tags: ["Character", "Epic Hero", "Vehicle", "Triarch", "The Silent King"] },
+      { name: "Transcendent C'tan", tags: ["Character", "Monster", "Fly", "Transcendent C'tan"] },
+      { name: "Trazyn the Infinite", tags: ["Character", "Epic Hero", "Infantry", "Noble", "Trazyn the Infinite"] },
+
+      /* battleline */
+      { name: "Immortals", modelCount: [5, 10], tags: ["Battleline", "Infantry", "Immortals"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Necron Warriors", modelCount: [10, 20], tags: ["Battleline", "Infantry", "Necron Warriors"], unitOptions: { unitSize: [10, 20] } },
+
+      /* dedicated transports */
+      { name: "Ghost Ark", tags: ["Vehicle", "Fly", "Transport", "Dedicated Transport"] },
+
+      /* Fortifications */
+      { name: "Convergence Of Dominion", tags: ["Fortification", "Vehicle", "Convergence Of Dominion"], unitOptions: { unitSize: [1, 2, 3] } },
+
+      { name: "Annihilation Barge", tags: ["Vehicle", "Fly"] },
+      { name: "Canoptek Doomstalker", tags: ["Vehicle", "Walker", "Canoptek", "Doomstalker"] },
+      { name: "Canoptek Macrocytes", tags: ["Beasts", "Fly", "Canoptek", "Macrocytes"], modelCount: 5 },
+      { name: "Canoptek Reanimator", tags: ["Vehicle", "Walker", "Canoptek", "Reanimator"] },
+      { name: "Canoptek Scarab Swarms", tags: ["Swarm", "Fly", "Canoptek", "Scarab Swarms"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Canoptek Spyders", tags: ["Vehicle", "Fly", "Canoptek", "Spyders"], unitOptions: { unitSize: [1, 2] } },
+      { name: "Canoptek Tomb Crawlers", tags: ["Beasts", "Canoptek", "Tomb Crawlers"], modelCount: 2 },
+      { name: "Canoptek Wraiths", tags: ["Beasts", "Fly", "Canoptek", "Wraiths"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Cryptothralls", tags: ["Infantry", "Cryptothralls"], modelCount: 2 },
+      { name: "Deathmarks", tags: ["Infantry", "Deathmarks"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Doom Scythe", tags: ["Vehicle", "Aircraft", "Fly", "Doom Scythe"] },
+      { name: "Doomsday Ark", tags: ["Vehicle", "Fly", "Doomsday Ark"] },
+      { name: "Flayed Ones", tags: ["Infantry", "Flayed Ones"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Lokhust Destroyers", tags: ["Mounted", "Fly", "Destroyer Cult", "Lokhust Destroyers"], unitOptions: { unitSize: [1, 2, 3, 6] } },
+      { name: "Lokhust Heavy Destroyers", tags: ["Mounted", "Fly", "Destroyer Cult", "Lokhust Heavy Destroyers"], unitOptions: { unitSize: [1, 2, 3] } },
+      { name: "Lychguard", tags: ["Infantry", "Lychguard"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Monolith", tags: ["Vehicle", "Titanic", "Fly", "Towering", "Monolith"] },
+      { name: "Night Scythe", tags: ["Vehicle", "Aircraft", "Fly", "Transport", "Night Scythe"] },
+      { name: "Obelisk", tags: ["Vehicle", "Titanic", "Fly", "Towering", "Obelisk"] },
+      { name: "Ophydian Destroyers", tags: ["Infantry", "Destroyer Cult", "Ophydian Destroyers"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Skorpekh Destroyers", tags: ["Infantry", "Destroyer Cult", "Skorpekh Destroyers"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Tesseract Vault", tags: ["Vehicle", "Titanic", "Fly", "Towering", "Tesseract Vault"] },
+      { name: "Tomb Blades", tags: ["Mounted", "Fly", "Tomb Blades"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Triarch Praetorians", tags: ["Infantry", "Fly", "Triarch", "Praetorians"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Triarch Stalker", tags: ["Vehicle", "Walker", "Fly", "Triarch", "Stalker"] },
+      /* forge world models */
+      { name: "Seraptek Heavy Construct", tags: ["Vehicle", "Walker", "Titanic", "Towering", "Seraptek Heavy Construct"] },
+    ],
     "enhancements": {
-      "Annihilation Legion": {
-        "Eldritch Nightmare": 15,
-        "Eternal Madness": 25,
-        "Ingrained Superiority": 10,
-        "Soulless Reaper": 20
-      },
-      "Awakened Dynasty": {
-        "Enaegic Dermal Bond": 15,
-        "Nether-realm Casket": 20,
-        "Phasal Subjugator": 35,
-        "Veil of Darkness": 20
-      },
-      "Canoptek Court": {
-        "Autodivinator": 15,
-        "Dimensional Sanctum": 20,
-        "Hyperphasic Fulcrum": 15,
-        "Metalodermal Tesla Weave": 10
-      },
-      "Hypercrypt Legion": {
-        "Arisen Tyrant": 25,
-        "Dimensional Overseer": 25,
-        "Hyperspatial Transfer Node": 15,
-        "Osteoclave Fulcrum": 20
-      },
-      "Obeisance Phalanx": {
-        "Eternal Conqueror": 25,
-        "Honourable Combatant": 10,
-        "Unflinching Will": 20,
-        "Warrior Noble": 15
-      },
-      "Starshatter Arsenal": {
-        "Chrono-impedance Fields": 25,
-        "Demanding Leader": 10,
-        "Dread Majesty": 30,
-        "Miniaturised Nebuloscope": 15
-      }
+      "Annihilation Legion": [
+        { name: "Eldritch Nightmare", tags: ["Destroyer Cult"] },
+        { name: "Eternal Madness" },
+        { name: "Ingrained Superiority" },
+        { name: "Soulless Reaper", tags: ["Destroyer Cult"] },
+      ],
+      "Awakened Dynasty": [
+        { name: "Enaegic Dermal Bond" },
+        { name: "Nether-realm Casket" },
+        { name: "Phasal Subjugator" },
+        { name: "Veil of Darkness" },
+      ],
+      "Canoptek Court": [
+        { name: "Autodivinator", tags: ["Cryptek"] },
+        { name: "Dimensional Sanctum", tags: ["Cryptek"] },
+        { name: "Hyperphasic Fulcrum", tags: ["Cryptek"] },
+        { name: "Metalodermal Tesla Weave", tags: ["Cryptek"] },
+      ],
+      "Hypercrypt Legion": [
+        { name: "Arisen Tyrant" },
+        { name: "Dimensional Overseer" },
+        { name: "Hyperspatial Transfer Node" },
+        { name: "Osteoclave Fulcrum" },
+      ],
+      "Obeisance Phalanx": [
+        { name: "Eternal Conqueror", tags: ["Overlord"] },
+        { name: "Honourable Combatant", tags: ["Overlord"] },
+        { name: "Unflinching Will", tags: ["Overlord"] },
+        { name: "Warrior Noble", tags: ["Overlord"] },
+      ],
+      "Starshatter Arsenal": [
+        { name: "Chrono-impedance Fields" },
+        { name: "Demanding Leader" },
+        { name: "Dread Majesty", tags: ["Overlord", "Catacomb Command Barge"] },
+        { name: "Miniaturised Nebuloscope" },
+      ],
     }
   },
 
   "Orks": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Space Marines": {
-    "characters": [
-      { name: "Adrax Agatone", tags: ["epic"] },
-      { name: "Aethon Shaan", tags: ["epic"] },
-      { name: "Ancient" },
-      { name: "Ancient in Terminator Armour" },
-      { name: "Apothecary" },
-      { name: "Apothecary Biologis" },
-      { name: "Bladeguard Ancient" },
-      { name: "Captain" },
-      { name: "Captain in Gravis Armour" },
-      { name: "Captain in Phobos Armour" },
-      { name: "Captain in Terminator Armour" },
-      { name: "Captain Sicarius", tags: ["epic"] },
-      { name: "Captain with Jump Pack" },
-      { name: "Chaplain" },
-      { name: "Chaplain in Terminator Armour" },
-      { name: "Chaplain on Bike" },
-      { name: "Chaplain with Jump Pack" },
-      { name: "Chief Librarian Tigurius", tags: ["epic"] },
-      { name: "Darnath Lysander", tags: ["epic"] },
-      { name: "Iron Father Feirros", tags: ["epic"] },
-      { name: "Judiciar" },
-      { name: "Kayvan Shrike", tags: ["epic"] },
-      { name: "Kor'Sarro Khan", tags: ["epic"] },
-      { name: "Librarian" },
-      { name: "Librarian in Phobos Armour" },
-      { name: "Librarian in Terminator Armour" },
-      { name: "Lieutenant" },
-      { name: "Lieutenant in Phobos Armour" },
-      { name: "Lieutenant in Reiver Armour" },
-      { name: "Lieutenant with Combi-weapon" },
-      { name: "Lieutenant Titus", tags: ["epic"] },
-      { name: "Marneus Calgar", tags: ["epic"] },
-      { name: "Pedro Kantor", tags: ["epic"] },
-      { name: "Roboute Guilliman", tags: ["epic"] },
-      { name: "Techmarine" },
-      { name: "Tor Garadon", tags: ["epic"] },
-      { name: "Uriel Ventris", tags: ["epic"] },
-      { name: "Vulkan He'stan", tags: ["epic"] },
-    ],
-    "battleline": [
-      { name: "Assault Intercessor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Heavy Intercessor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Intercessor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Tactical Squad", modelCount: 10 },
-    ],
-    "otherUnits": [
+    "units": [
+      { name: "Adrax Agatone", tags: ["Character", "Epic Hero"] },
+      { name: "Aethon Shaan", tags: ["Character", "Epic Hero"] },
+      { name: "Ancient", tags: ["Character"] },
+      { name: "Ancient in Terminator Armour", tags: ["Character"] },
+      { name: "Apothecary", tags: ["Character"] },
+      { name: "Apothecary Biologis", tags: ["Character"] },
+      { name: "Bladeguard Ancient", tags: ["Character"] },
+      { name: "Captain", tags: ["Character"] },
+      { name: "Captain in Gravis Armour", tags: ["Character"] },
+      { name: "Captain in Phobos Armour", tags: ["Character"] },
+      { name: "Captain in Terminator Armour", tags: ["Character"] },
+      { name: "Captain Sicarius", tags: ["Character", "Epic Hero"] },
+      { name: "Captain with Jump Pack", tags: ["Character"] },
+      { name: "Chaplain", tags: ["Character"] },
+      { name: "Chaplain in Terminator Armour", tags: ["Character"] },
+      { name: "Chaplain on Bike", tags: ["Character"] },
+      { name: "Chaplain with Jump Pack", tags: ["Character"] },
+      { name: "Chief Librarian Tigurius", tags: ["Character", "Epic Hero"] },
+      { name: "Darnath Lysander", tags: ["Character", "Epic Hero"] },
+      { name: "Iron Father Feirros", tags: ["Character", "Epic Hero"] },
+      { name: "Judiciar", tags: ["Character"] },
+      { name: "Kayvan Shrike", tags: ["Character", "Epic Hero"] },
+      { name: "Kor'Sarro Khan", tags: ["Character", "Epic Hero"] },
+      { name: "Librarian", tags: ["Character"] },
+      { name: "Librarian in Phobos Armour", tags: ["Character"] },
+      { name: "Librarian in Terminator Armour", tags: ["Character"] },
+      { name: "Lieutenant", tags: ["Character"] },
+      { name: "Lieutenant in Phobos Armour", tags: ["Character"] },
+      { name: "Lieutenant in Reiver Armour", tags: ["Character"] },
+      { name: "Lieutenant with Combi-weapon", tags: ["Character"] },
+      { name: "Lieutenant Titus", tags: ["Character", "Epic Hero"] },
+      { name: "Marneus Calgar", tags: ["Character", "Epic Hero"] },
+      { name: "Pedro Kantor", tags: ["Character", "Epic Hero"] },
+      { name: "Roboute Guilliman", tags: ["Character", "Epic Hero"] },
+      { name: "Techmarine", tags: ["Character"] },
+      { name: "Tor Garadon", tags: ["Character", "Epic Hero"] },
+      { name: "Uriel Ventris", tags: ["Character", "Epic Hero"] },
+      { name: "Vulkan He'stan", tags: ["Character", "Epic Hero"] },
+      { name: "Assault Intercessor Squad", modelCount: [5, 10], tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Heavy Intercessor Squad", modelCount: [5, 10], tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Intercessor Squad", modelCount: [5, 10], tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Tactical Squad", modelCount: 10, tags: ["Battleline"] },
       { name: "Aggressor Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
       { name: "Assault Intercessors with Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Ballistus Dreadnought", modelCount: 140 },
@@ -1474,23 +1469,19 @@ export const ARMIES = {
         "Tactical Squad"
       ],
     },
-    "characters": [
-      { name: "Arjac Rockfist", tags: ["epic"] },
-      { name: "Bjorn the Fell-Handed", tags: ["epic"] },
-      { name: "Iron Priest" },
-      { name: "Logan Grimnar", tags: ["epic"] },
-      { name: "Murderfang", tags: ["epic"] },
-      { name: "Njal Stormcaller", tags: ["epic"] },
-      { name: "Ragnar Blackmane", tags: ["epic"] },
-      { name: "Ulrik the Slayer", tags: ["epic"] },
-      { name: "Wolf Guard Battle Leader" },
-      { name: "Wolf Priest" },
-    ],
-    "battleline": [
-      { name: "Blood Claws", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
-      { name: "Grey Hunters", modelCount: 10 },
-    ],
-    "otherUnits": [
+    "units": [
+      { name: "Arjac Rockfist", tags: ["Character", "Epic Hero"] },
+      { name: "Bjorn the Fell-Handed", tags: ["Character", "Epic Hero"] },
+      { name: "Iron Priest", tags: ["Character"] },
+      { name: "Logan Grimnar", tags: ["Character", "Epic Hero"] },
+      { name: "Murderfang", tags: ["Character", "Epic Hero"] },
+      { name: "Njal Stormcaller", tags: ["Character", "Epic Hero"] },
+      { name: "Ragnar Blackmane", tags: ["Character", "Epic Hero"] },
+      { name: "Ulrik the Slayer", tags: ["Character", "Epic Hero"] },
+      { name: "Wolf Guard Battle Leader", tags: ["Character"] },
+      { name: "Wolf Priest", tags: ["Character"] },
+      { name: "Blood Claws", modelCount: [10, 20], tags: ["Battleline"], unitOptions: { unitSize: [10, 20] } },
+      { name: "Grey Hunters", modelCount: 10, tags: ["Battleline"] },
       {
         name: "Fenrisian Wolves",
         modelCount: [5, 10],
@@ -1536,9 +1527,7 @@ export const ARMIES = {
   },
 
   "T'au Empire": {
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
@@ -1546,32 +1535,26 @@ export const ARMIES = {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
-    "characters": [],
-    "battleline": [],
-    "otherUnits": [],
+    "units": [],
     "enhancements": {},
   },
 
   "Tyranids": {
-    "characters": [
-      { name: "Broodlord", tags: ["Vanguard Invader", "Psyker", "Synapse"] },
-      { name: "Deathleaper", tags: ["epic", "Vanguard Invader"] },
-      { name: "Hive Tyrant", tags: ["Monster", "Psyker", "Synapse"] },
-      { name: "Hyperadapted Raveners", tags: ["Vanguard Invader", "Synapse"] },
-      { name: "Neurotyrant", tags: ["Monster", "Psyker", "Synapse"] },
-      { name: "Old One Eye", tags: ["epic", "Monster"] },
-      { name: "Parasite of Mortrex", tags: ["Vanguard Invader", "Synapse"] },
-      { name: "Tervigon", tags: ["Monster", "Psyker", "Synapse"] },
-      { name: "The Swarmlord", tags: ["epic", "Monster", "Psyker", "Synapse"] },
-      { name: "Winged Hive Tyrant", tags: ["Monster", "Vanguard Invader", "Psyker", "Synapse"] },
-      { name: "Winged Tyranid Prime", tags: ["Vanguard Invader", "Synapse"] },
-    ],
-    "battleline": [
-      { name: "Gargoyles", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] }, tags: ["Vanguard Invader"] },
-      { name: "Hormagaunts", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
-      { name: "Termagants", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
-    ],
-    "otherUnits": [
+    "units": [
+      { name: "Broodlord", tags: ["Character", "Vanguard Invader", "Psyker", "Synapse"] },
+      { name: "Deathleaper", tags: ["Character", "Epic Hero", "Vanguard Invader"] },
+      { name: "Hive Tyrant", tags: ["Character", "Monster", "Psyker", "Synapse"] },
+      { name: "Hyperadapted Raveners", tags: ["Character", "Vanguard Invader", "Synapse"], modelCount: 5 },
+      { name: "Neurotyrant", tags: ["Character", "Monster", "Psyker", "Synapse"] },
+      { name: "Old One Eye", tags: ["Character", "Epic Hero", "Monster"] },
+      { name: "Parasite of Mortrex", tags: ["Character", "Vanguard Invader", "Synapse"] },
+      { name: "Tervigon", tags: ["Character", "Monster", "Psyker", "Synapse"] },
+      { name: "The Swarmlord", tags: ["Character", "Epic Hero", "Monster", "Psyker", "Synapse"] },
+      { name: "Winged Hive Tyrant", tags: ["Character", "Monster", "Vanguard Invader", "Psyker", "Synapse"] },
+      { name: "Winged Tyranid Prime", tags: ["Character", "Vanguard Invader", "Synapse"] },
+      { name: "Gargoyles", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] }, tags: ["Battleline", "Vanguard Invader"] },
+      { name: "Hormagaunts", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] }, tags: ["Battleline"] },
+      { name: "Termagants", modelCount: [10, 20], unitOptions: { unitSize: [10, 20] }, tags: ["Battleline"] },
       { name: "Barbgaunts", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Biovores", modelCount: [1, 2, 3], unitOptions: { unitSize: [1, 2, 3] } },
       { name: "Carnifexes", modelCount: [1, 2], unitOptions: { unitSize: [1, 2] }, tags: ["Monster"] },
@@ -1790,194 +1773,301 @@ const POINTS = {
       },
     }
   },
-  "Adeptus Custodes (to refactor)": {
-    "Aleya": 65,
-    "Blade Champion": 120,
-    "Knight-Centura": 55,
-    "Shield-Captain": 130,
-    "Shield-Captain in Allarus Terminator Armour": 130,
-    "Shield-Captain on Dawneagle Jetbike": 150,
-    "Trajann Valoris": 140,
-    "Valerian": 110,
-    "Custodian Guard (x4)": 170,
-    "Custodian Guard (x5)": 215,
-    "Agamatus Custodians (x3)": 225,
-    "Agamatus Custodians (x6)": 450,
-    "Allarus Custodians (x2)": 130,
-    "Allarus Custodians (x3)": 195,
-    "Allarus Custodians (x5)": 325,
-    "Allarus Custodians (x6)": 390,
-    "Anathema Psykana Rhino": 75,
-    "Aquilon Custodians (x3)": 195,
-    "Aquilon Custodians (x6)": 390,
-    "Ares Gunship": 580,
-    "Caladius Grav-tank": 215,
-    "Contemptor-Achillus Dreadnought": 155,
-    "Contemptor-Galatus Dreadnought": 165,
-    "Coronus Grav-carrier": 200,
-    "Custodian Guard with Adrasite and Pyrithite Spears": 250,
-    "Custodian Wardens (x4)": 210,
-    "Custodian Wardens (x5)": 260,
-    "Orion Assault Dropship": 690,
-    "Pallas Grav-attack": 105,
-    "Prosecutors (x4)": 40,
-    "Prosecutors (x5)": 50,
-    "Prosecutors (x9)": 90,
-    "Prosecutors (x10)": 100,
-    "Sagittarum Custodians": 225,
-    "Telemon Heavy Dreadnought": 225,
-    "Venerable Contemptor Dreadnought": 170,
-    "Venerable Land Raider": 240,
-    "Venatari Custodians (x3)": 165,
-    "Venatari Custodians (x6)": 330,
-    "Vertus Praetors (x2)": 150,
-    "Vertus Praetors (x3)": 225,
-    "Vigilators (x4)": 50,
-    "Vigilators (x5)": 65,
-    "Vigilators (x9)": 115,
-    "Vigilators (x10)": 125,
-    "Witchseekers (x4)": 50,
-    "Witchseekers (x5)": 65,
-    "Witchseekers (x9)": 115,
-    "Witchseekers (x10)": 125
+  "Adeptus Custodes": {
+    "units": {
+      "Aleya": 65,
+      "Blade Champion": 120,
+      "Knight-Centura": 55,
+      "Shield-Captain": 130,
+      "Shield-Captain in Allarus Terminator Armour": 130,
+      "Shield-Captain on Dawneagle Jetbike": 150,
+      "Trajann Valoris": 140,
+      "Valerian": 110,
+      "Custodian Guard (x4)": 170,
+      "Custodian Guard (x5)": 215,
+      "Agamatus Custodians (x3)": 225,
+      "Agamatus Custodians (x6)": 450,
+      "Allarus Custodians (x2)": 130,
+      "Allarus Custodians (x3)": 195,
+      "Allarus Custodians (x5)": 325,
+      "Allarus Custodians (x6)": 390,
+      "Anathema Psykana Rhino": 75,
+      "Aquilon Custodians (x3)": 195,
+      "Aquilon Custodians (x6)": 390,
+      "Ares Gunship": 580,
+      "Caladius Grav-tank": 215,
+      "Contemptor-Achillus Dreadnought": 155,
+      "Contemptor-Galatus Dreadnought": 165,
+      "Coronus Grav-carrier": 200,
+      "Custodian Guard with Adrasite and Pyrithite Spears": 250,
+      "Custodian Wardens (x4)": 210,
+      "Custodian Wardens (x5)": 260,
+      "Orion Assault Dropship": 690,
+      "Pallas Grav-attack": 105,
+      "Prosecutors (x4)": 40,
+      "Prosecutors (x5)": 50,
+      "Prosecutors (x9)": 90,
+      "Prosecutors (x10)": 100,
+      "Sagittarum Custodians": 225,
+      "Telemon Heavy Dreadnought": 225,
+      "Venerable Contemptor Dreadnought": 170,
+      "Venerable Land Raider": 240,
+      "Venatari Custodians (x3)": 165,
+      "Venatari Custodians (x6)": 330,
+      "Vertus Praetors (x2)": 150,
+      "Vertus Praetors (x3)": 225,
+      "Vigilators (x4)": 50,
+      "Vigilators (x5)": 65,
+      "Vigilators (x9)": 115,
+      "Vigilators (x10)": 125,
+      "Witchseekers (x4)": 50,
+      "Witchseekers (x5)": 65,
+      "Witchseekers (x9)": 115,
+      "Witchseekers (x10)": 125
+    },
+    "enhancements": {
+      "Auric Champions": {
+        "Blade Imperator": 25,
+        "Inspirational Exemplar": 10,
+        "Martial Philosopher": 30,
+        "Veiled Blade": 25,
+      },
+      "Lions of the Emperor": {
+        "Admonimortis": 10,
+        "Fierce Conqueror": 15,
+        "Praesidius": 25,
+        "Superior Creation": 25,
+      },
+      "Null Maiden Vigil": {
+        "Enhanced Voidsheen Cloak": 10,
+        "Huntress' Eye": 15,
+        "Oblivion Knigh": 25,
+        "Raptor Blade": 5,
+      },
+      "Shield Host": {
+        "Auric Mantle": 15,
+        "Castellan's Mark": 20,
+        "From the Hall of Armouries": 25,
+        "Panoptispex": 5,
+      },
+      "Solar Spearhead": {
+        "Adamantine Talisman": 25,
+        "Augury Uplink": 35,
+        "Honoured Fallen": 15,
+        "Veteran of the Kataphraktoi": 10,
+      },
+      "Talons of the Emperor": {
+        "Aegis Projector": 20,
+        "Champion of the Imperium": 25,
+        "Gift of Terran Artifice": 15,
+        "Radiant Mantle": 30,
+      },
+    }
   },
-  "Adeptus Mechanicus (refactor needed)": {
-    "Archaeopter Fusilave": 160,
-    "Archaeopter Stratoraptor": 185,
-    "Archaeopter Transvector": 150,
-    "Belisarius Cawl": 135,
-    "Corpuscarii Electro-Priests (5)": 65,
-    "Corpuscarii Electro-Priests (10)": 130,
-    "Cybernetica Datasmith": 35,
-    "Fulgurite Electro-Priests (5)": 70,
-    "Fulgurite Electro-Priests (10)": 140,
-    "Ironstrider Ballistarii (1)": 75,
-    "Ironstrider Ballistarii (2)": 150,
-    "Ironstrider Ballistarii (3)": 225,
-    "Kastelan Robots (2)": 180,
-    "Kastelan Robots (4)": 360,
-    "Kataphron Breachers (3)": 160,
-    "Kataphron Breachers (6)": 320,
-    "Kataphron Destroyers (3)": 105,
-    "Kataphron Destroyers (6)": 210,
-    "Onager Dunecrawler": 155,
-    "Pteraxii Skystalkers (5)": 70,
-    "Pteraxii Skystalkers (10)": 140,
-    "Pteraxii Sterylizors (5)": 80,
-    "Pteraxii Sterylizors (10)": 160,
-    "Serberys Raiders (3)": 60,
-    "Serberys Raiders (6)": 120,
-    "Serberys Sulphurhounds (3)": 55,
-    "Serberys Sulphurhounds (6)": 110,
-    "Sicarian Infiltrators (5)": 70,
-    "Sicarian Infiltrators (10)": 140,
-    "Sicarian Ruststalkers (5)": 75,
-    "Sicarian Ruststalkers (10)": 150,
-    "Skitarii Marshal": 35,
-    "Skitarii Rangers (10)": 85,
-    "Skitarii Vanguard (10)": 95,
-    "Skorpius Disintegrator": 175,
-    "Skorpius Dunerider": 85,
-    "Sydonian Dragoons with Radium Jezzails (1)": 55,
-    "Sydonian Dragoons with Radium Jezzails (2)": 100,
-    "Sydonian Dragoons with Radium Jezzails (3)": 150,
-    "Sydonian Dragoons with Taser Lances (1)": 70,
-    "Sydonian Dragoons with Taser Lances (2)": 140,
-    "Sydonian Dragoons with Taser Lances (3)": 210,
-    "Sydonian Skatros": 50,
-    "Tech-Priest Dominus": 65,
-    "Tech-Priest Enginseer": 55,
-    "Tech-Priest Manipulus": 60,
-    "Technoarcheologist": 45
+  "Adeptus Mechanicus": {
+    "units": {
+      "Archaeopter Fusilave": 160,
+      "Archaeopter Stratoraptor": 185,
+      "Archaeopter Transvector": 150,
+      "Belisarius Cawl": 175,
+      "Corpuscarii Electro-Priests": [65, 130],
+      "Cybernetica Datasmith": 35,
+      "Fulgurite Electro-Priests": [70, 140],
+      "Ironstrider Ballistarii": [75, 150, 225],
+      "Kastelan Robots": [180, 360],
+      "Kataphron Breachers": [160, 320],
+      "Kataphron Destroyers": [105, 210],
+      "Onager Dunecrawler": 155,
+      "Pteraxii Skystalkers": [70, 140],
+      "Pteraxii Sterylizors": [80, 160],
+      "Serberys Raiders": [60, 120],
+      "Serberys Sulphurhounds": [55, 110],
+      "Servitor Battleclade": 60,
+      "Sicarian Infiltrators": [70, 140],
+      "Sicarian Ruststalkers": [75, 150],
+      "Skitarii Marshal": 35,
+      "Skitarii Rangers": 85,
+      "Skitarii Vanguard": 95,
+      "Skorpius Disintegrator": 165,
+      "Skorpius Dunerider": 85,
+      "Sydonian Dragoons with Radium Jezzails": [55, 100, 150],
+      "Sydonian Dragoons with Taser Lances": [65, 130, 195],
+      "Sydonian Skatros": 50,
+      "Tech-Priest Dominus": 65,
+      "Tech-Priest Enginseer": 55,
+      "Tech-Priest Manipulus": 60,
+      "Technoarcheologist": 45
+    },
+    "enhancements": {
+      "Cohort Cybernetica": {
+        "Arch-negator": 10,
+        "Emotionless Clarity": 15,
+        "Lord of Machines": 20,
+        "Necromechanic": 25
+      },
+      "Data-psalm Conclave": {
+        "Data-blessed Autosermon": 20,
+        "Mantle of the Gnosticarch": 15,
+        "Mechanicus Locum": 10,
+        "Temporcopia": 25
+      },
+      "Explorator Maniple": {
+        "Artisan": 15,
+        "Genetor": 25,
+        "Logis": 20,
+        "Magos": 15
+      },
+      "Haloscreed Battle Clade": {
+        "Cognitive Reinforcement": 35,
+        "Inloaded Lethality": 15,
+        "Sanctified Ordnance": 10,
+        "Transoracular Dyad Wafers": 15
+      },
+      "Rad-zone Corps": {
+        "Autoclavic Denunciation": 15,
+        "Malphonic Susurrus": 20,
+        "Peerless Eradicator": 20,
+        "Radial Suffusion": 25
+      },
+      "Skitarii Hunter Cohort": {
+        "Battle-sphere Uplink": 30,
+        "Cantic Thrallnet": 25,
+        "Clandestine Infiltrator": 20,
+        "Veiled Hunter": 10
+      }
+    }
   },
-  "Aeldari (to refactor)": {
-    "Asurmen": 135,
-    "Autarch": 85,
-    "Autarch Wayleaper": 80,
-    "Avatar of Khaine": 300,
-    "Baharroth": 115,
-    "Death Jester": 90,
-    "Eldrad Ulthran": 110,
-    "Farseer": 70,
-    "Farseer Skyrunner": 80,
-    "Fuegan": 120,
-    "Jain Zar": 105,
-    "Lhykhis": 120,
-    "Maugan Ra": 100,
-    "Shadowseer": 60,
-    "Solitaire": 115,
-    "Spiritseer": 65,
-    "The Visarch": 90,
-    "The Yncarne": 260,
-    "Troupe Master": 75,
-    "Warlock": 45,
-    "Ynnari Archon": 85,
-    "Ynnari Succubus": 45,
-    "Yvraine": 100,
-    "Corsair Voidreavers (5)": 60,
-    "Corsair Voidreavers (10)": 120,
-    "Corsair Voidscarred (5)": 80,
-    "Corsair Voidscarred (10)": 160,
-    "Guardian Defenders (11)": 100,
-    "Storm Guardians (11)": 100,
-    "Ynnari Kabalite Warriors (10)": 110,
-    "Ynnari Wyches (10)": 90,
-    "Crimson Hunter": 160,
-    "D-cannon Platform": 125,
-    "Dark Reapers (5)": 90,
-    "Dark Reapers (10)": 195,
-    "Dire Avengers (5)": 80,
-    "Dire Avengers (10)": 160,
-    "Falcon": 130,
-    "Fire Dragons (5)": 120,
-    "Fire Dragons (10)": 220,
-    "Fire Prism": 150,
-    "Hemlock Wraithfighter": 155,
-    "Howling Banshees (5)": 95,
-    "Howling Banshees (10)": 190,
-    "Night Spinner": 190,
-    "Rangers (5)": 55,
-    "Rangers (10)": 110,
-    "Shadow Weaver Platform": 75,
-    "Shining Spears (3)": 110,
-    "Shining Spears (6)": 220,
-    "Shroud Runners (3)": 80,
-    "Shroud Runners (6)": 160,
-    "Skyweavers (2)": 95,
-    "Skyweavers (4)": 190,
-    "Starweaver": 80,
-    "Striking Scorpions (5)": 85,
-    "Striking Scorpions (10)": 150,
-    "Swooping Hawks (5)": 85,
-    "Swooping Hawks (10)": 170,
-    "Troupe (5)": 85,
-    "Troupe (6)": 100,
-    "Troupe (11)": 190,
-    "Troupe (12)": 205,
-    "Vibro Cannon Platform": 60,
-    "Voidweaver": 125,
-    "Vyper": 65,
-    "War Walker": 85,
-    "Warlock Conclave (2)": 55,
-    "Warlock Conclave (4)": 130,
-    "Warlock Skyrunners (1)": 45,
-    "Warlock Skyrunners (2)": 90,
-    "Warp Spiders (5)": 95,
-    "Warp Spiders (10)": 190,
-    "Wave Serpent": 125,
-    "Windriders (3)": 80,
-    "Windriders (6)": 160,
-    "Wraithblades (5)": 170,
-    "Wraithguard (5)": 170,
-    "Wraithknight": 435,
-    "Wraithknight with Ghostglaive": 420,
-    "Wraithlord": 140,
-    "Ynnari Incubi (5)": 85,
-    "Ynnari Incubi (10)": 170,
-    "Ynnari Raider": 80,
-    "Ynnari Reavers (3)": 65,
-    "Ynnari Reavers (6)": 120,
-    "Ynnari Venom": 70
+  "Aeldari": {
+    "units": {
+      "Asurmen": 125,
+      "Autarch": 85,
+      "Autarch Wayleaper": 80,
+      "Avatar of Khaine": 280,
+      "Baharroth": 115,
+      "Corsair Voidreavers": [65, 110],
+      "Corsair Voidscarred": [80, 160],
+      "Crimson Hunter": 160,
+      "D-cannon Platform": 125,
+      "Dark Reapers": [90, 195],
+      "Death Jester": 90,
+      "Dire Avengers": [75, 150],
+      "Eldrad Ulthran": 110,
+      "Falcon": 130,
+      "Farseer": 70,
+      "Farseer Skyrunner": 80,
+      "Fire Dragons": [120, 220],
+      "Fire Prism": 150,
+      "Fuegan": 120,
+      "Guardian Defenders": 100,
+      "Hemlock Wraithfighter": 155,
+      "Howling Banshees": [95, 190],
+      "Jain Zar": 105,
+      "Lhykhis": 120,
+      "Maugan Ra": 100,
+      "Night Spinner": 190,
+      "Rangers": [55, 110],
+      "Shadow Weaver Platform": 75,
+      "Shadowseer": 60,
+      "Shining Spears": [110, 220],
+      "Shroud Runners": [80, 160],
+      "Skyweavers": [95, 190],
+      "Solitaire": 115,
+      "Spiritseer": 65,
+      "Starweaver": 80,
+      "Storm Guardians": 100,
+      "Striking Scorpions": [85, 150],
+      "Swooping Hawks": [85, 190],
+      "Troupe": [85, 100, 190, 205],
+      "Troupe Master": 75,
+      "Vibro Cannon Platform": 60,
+      "Voidweaver": 125,
+      "Vyper": [65, 130],
+      "War Walker": [85, 170],
+      "Warlock": 45,
+      "Warlock Conclave": [55, 130],
+      "Warlock Skyrunners": [45, 90],
+      "Warp Spiders": [95, 190],
+      "Wave Serpent": 125,
+      "Windriders": [80, 160],
+      "Wraithblades": 160,
+      "Wraithguard": 170,
+      "Wraithknight": 435,
+      "Wraithknight with Ghostglaive": 420,
+      "Wraithlord": 140,
+
+      /* Ynnari are separate in the Munitorium docs */
+      "The Visarch": 90,
+      "The Yncarne": 260,
+      "Ynnari Archon": 85,
+      "Ynnari Incubi": [85, 170],
+      "Ynnari Kabalite Warriors": 110,
+      "Ynnari Raider": 80,
+      "Ynnari Reavers": [65, 120],
+      "Ynnari Succubus": 45,
+      "Ynnari Venom": 70,
+      "Ynnari Wyches": 90,
+      "Yvraine": 100,
+
+      /* forge world models */
+      "Phantom Titan": 2100,
+      "Revenant Titan": 1100,
+    },
+    "enhancements": {
+      "Armored Warhost": {
+        "Guiding Presence": 25,
+        "Guileful Strategist": 15,
+        "Harmonisation Matrix": 30,
+        "Spirit Stone of Raelyth": 20,
+      },
+      "Aspect Host": {
+        "Aspect of Murder": 25,
+        "Mantle of Wisdom": 30,
+        "Shimmerstone": 15,
+        "Strategic Savant": 15,
+      },
+      "Devoted of Ynnead": {
+        "Borrowed Vigour": 10,
+        "Gaze of Ynnead": 15,
+        "Morbid Might": 15,
+        "Storm of Whispers": 10,
+      },
+      "Ghosts of the Webway": {
+        "Cegorach’s Coil": 25,
+        "Mask of Secrets": 15,
+        "Mistweave": 30,
+        "Murder’s Jest": 20,
+      },
+      "Guardian Battlehost": {
+        "Breath of Vaul": 10,
+        "Craftworld’s Champion": 25,
+        "Ethereal Pathway": 30,
+        "Protector of the Paths": 20,
+      },
+      "Seer Council": {
+        "Lucid Eye": 30,
+        "Runes of Warding": 25,
+        "Stone of Eldritch Fury": 15,
+        "Torc of Morai-Heg": 20,
+      },
+      "Spirit Conclave": {
+        "Higher Duty": 25,
+        "Light of Clarity": 30,
+        "Rune of Mists": 10,
+        "Stave of Kurnous": 15,
+      },
+      "Warhost": {
+        "Gift of Foresight": 15,
+        "Phoenix Gem": 35,
+        "Psychic Destroyer": 30,
+        "Timeless Strategist": 15,
+      },
+      "Windrider Host": {
+        "Echoes of Ulthanesh": 20,
+        "Firstdrawn Blade": 10,
+        "Mirage Field": 25,
+        "Seersight Strike": 15,
+      },
+    }
   },
   "Astra Militarum (TODO)": {
     "units": {
@@ -2050,10 +2140,10 @@ const POINTS = {
   },
   "Chaos Space Marines": {
     "units": {
-      "Abaddon the Despoiler": 280,
+      "Abaddon the Despoiler": 270,
       "Accursed Cultists": [90, 195],
       "Chaos Bikers": [70, 130],
-      "Chaos Land Raider": 240,
+      "Chaos Land Raider": 220,
       "Chaos Lord": 90,
       "Chaos Lord in Terminator Armour": 95,
       "Chaos Lord with Jump Pack": 80,
@@ -2068,7 +2158,7 @@ const POINTS = {
       "Cultist Mob": [50, 100],
       "Cypher": 90,
       "Dark Apostle": 65,
-      "Dark Commune": 80,
+      "Dark Commune": 90,
       "Defiler": 190,
       "Fabius Bile": 85,
       "Fellgor Beastmen": 70,
@@ -2096,7 +2186,7 @@ const POINTS = {
       "Traitor Enforcer": 55,
       "Traitor Guardsmen Squad": 70,
       "Vashtorr the Arkifane": 175,
-      "Venomcrawler": 120,
+      "Venomcrawler": 110,
       "Warp Talons": [125, 270],
       "Warpsmith": 70,
     },
@@ -2128,10 +2218,10 @@ const POINTS = {
       "Dread Talons": {
         "Eater of Dread": 15,
         "Night’s Shroud": 20,
-        "Warp‑fuelled Thrusters": 20,
+        "Warp-fuelled Thrusters": 20,
         "Willbreaker": 10,
       },
-      "Fellhammer Siege‑host": {
+      "Fellhammer Siege-host": {
         "Bastion Plate": 10,
         "Iron Artifice": 10,
         "Ironbound Enmity": 15,
@@ -2280,68 +2370,98 @@ const POINTS = {
       },
     }
   },
-  "Necrons (refactor)": {
-    "Annihilation Barge": 105,
-    "C'tan Shard of the Deceiver": 265,
-    "C'tan Shard of the Nightbringer": 305,
-    "C'tan Shard of the Void Dragon": 300,
-    "Canoptek Doomstalker": 145,
-    "Canoptek Reanimator": 75,
-    "Canoptek Scarab Swarms (3)": 40,
-    "Canoptek Scarab Swarms (6)": 80,
-    "Canoptek Spyders (1)": 75,
-    "Canoptek Spyders (2)": 150,
-    "Catacomb Command Barge": 120,
-    "Chronomancer": 65,
-    "Cryptothralls (2)": 60,
-    "Deathmarks (5)": 65,
-    "Deathmarks (10)": 130,
-    "Doom Scythe": 230,
-    "Doomsday Ark": 200,
-    "Flayed Ones (5)": 60,
-    "Flayed Ones (10)": 120,
-    "Ghost Ark": 115,
-    "Hexmark Destroyer": 75,
-    "Illuminor Szeras": 175,
-    "Immortals (5)": 70,
-    "Immortals (10)": 150,
-    "Imotekh the Stormlord": 100,
-    "Lokhust Destroyers (1)": 35,
-    "Lokhust Destroyers (2)": 60,
-    "Lokhust Destroyers (3)": 90,
-    "Lokhust Destroyers (6)": 180,
-    "Lokhust Heavy Destroyers (1)": 55,
-    "Lokhust Heavy Destroyers (2)": 110,
-    "Lokhust Heavy Destroyers (3)": 165,
-    "Lokhust Lord": 80,
-    "Lychguard (5)": 85,
-    "Lychguard (10)": 170,
-    "Monolith": 400,
-    "Necron Warriors (10)": 90,
-    "Necron Warriors (20)": 200,
-    "Night Scythe": 145,
-    "Obelisk": 300,
-    "Ophydian Destroyers (3)": 80,
-    "Ophydian Destroyers (6)": 160,
-    "Orikan the Diviner": 80,
-    "Overlord": 85,
-    "Overlord with Translocation Shroud": 85,
-    "Plasmancer": 60,
-    "Psychomancer": 55,
-    "Royal Warden": 50,
-    "Skorpekh Destroyers (3)": 90,
-    "Skorpekh Destroyers (6)": 180,
-    "Skorpekh Lord": 80,
-    "Technomancer": 85,
-    "Tesseract Vault": 425,
-    "The Silent King (3)": 420,
-    "Tomb Blades (3)": 75,
-    "Tomb Blades (6)": 150,
-    "Transcendent C'tan": 295,
-    "Trazyn the Infinite": 75,
-    "Triarch Praetorians (5)": 100,
-    "Triarch Praetorians (10)": 200,
-    "Triarch Stalker": 110
+  "Necrons": {
+    "units": {
+      "Annihilation Barge": 105,
+      "C'tan Shard of the Deceiver": 265,
+      "C'tan Shard of the Nightbringer": 305,
+      "C'tan Shard of the Void Dragon": 300,
+      "Canoptek Doomstalker": 140,
+      "Canoptek Macrocytes": 85,
+      "Canoptek Reanimator": 75,
+      "Canoptek Scarab Swarms": [40, 80],
+      "Canoptek Spyders": [75, 150],
+      "Canoptek Tomb Crawlers": 50,
+      "Canoptek Wraiths": [110, 220],
+      "Catacomb Command Barge": 120,
+      "Chronomancer": 65,
+      "Convergence Of Dominion": [60, 120, 180],
+      "Cryptothralls": 60,
+      "Deathmarks": [60, 120],
+      "Doom Scythe": 230,
+      "Doomsday Ark": 200,
+      "Flayed Ones": [60, 120],
+      "Geomancer": 75,
+      "Ghost Ark": 115,
+      "Hexmark Destroyer": 75,
+      "Illuminor Szeras": 165,
+      "Immortals": [70, 150],
+      "Imotekh the Stormlord": 100,
+      "Lokhust Destroyers": [40, 60, 90, 180],
+      "Lokhust Heavy Destroyers": [55, 110, 165],
+      "Lokhust Lord": 80,
+      "Lychguard": [85, 170],
+      "Monolith": 400,
+      "Necron Warriors": [90, 200],
+      "Night Scythe": 145,
+      "Obelisk": 300,
+      "Ophydian Destroyers": [80, 160],
+      "Orikan the Diviner": 80,
+      "Overlord": 85,
+      "Overlord with Translocation Shroud": 85,
+      "Plasmancer": 55,
+      "Psychomancer": 55,
+      "Royal Warden": 50,
+      "Skorpekh Destroyers": [90, 180],
+      "Skorpekh Lord": 90,
+      "Technomancer": 80,
+      "Tesseract Vault": 425,
+      "The Silent King": 400,
+      "Tomb Blades": [75, 150],
+      "Transcendent C'tan": 295,
+      "Trazyn the Infinite": 75,
+      "Triarch Praetorians": [90, 180],
+      "Triarch Stalker": 110,
+      "Seraptek Heavy Construct": 540,
+    },
+    "enhancements": {
+      "Annihilation Legion": {
+        "Eldritch Nightmare": 15,
+        "Eternal Madness": 25,
+        "Ingrained Superiority": 10,
+        "Soulless Reaper": 20,
+      },
+      "Awakened Dynasty": {
+        "Enaegic Dermal Bond": 30,
+        "Nether-realm Casket": 20,
+        "Phasal Subjugator": 35,
+        "Veil of Darkness": 20,
+      },
+      "Canoptek Court": {
+        "Autodivinator": 15,
+        "Dimensional Sanctum": 20,
+        "Hyperphasic Fulcrum": 15,
+        "Metalodermal Tesla Weave": 10,
+      },
+      "Hypercrypt Legion": {
+        "Arisen Tyrant": 25,
+        "Dimensional Overseer": 25,
+        "Hyperspatial Transfer Node": 15,
+        "Osteoclave Fulcrum": 20,
+      },
+      "Obeisance Phalanx": {
+        "Eternal Conqueror": 25,
+        "Honourable Combatant": 10,
+        "Unflinching Will": 20,
+        "Warrior Noble": 15,
+      },
+      "Starshatter Arsenal": {
+        "Chrono-impedance Fields": 25,
+        "Demanding Leader": 10,
+        "Dread Majesty": 30,
+        "Miniaturised Nebuloscope": 15,
+      },
+    }
   },
   "Orks": {
     "units": {
@@ -2598,6 +2718,7 @@ const POINTS = {
       "Hive Crone": 200,
       "Hive Guard": [90, 180],
       "Hive Tyrant": 225,
+      "Hyperadapted Raveners": 165,
       "Hormagaunts": [65, 130],
       "Lictor": 60,
       "Maleceptor": 170,
@@ -2729,10 +2850,13 @@ export const get40kArmyData = (faction) => {
       const parentFaction = ARMIES[rawFactionData.chapterInfo.parentFaction];
       const parentPoints = POINTS[rawFactionData.chapterInfo.parentFaction];
       if (parentFaction && parentPoints) {
-        rawFactionData.characters.push(...parentFaction.characters); rawFactionData.characters.sort(sortByName);
-        rawFactionData.battleline.push(...parentFaction.battleline); rawFactionData.battleline.sort(sortByName);
-        rawFactionData.otherUnits.push(...parentFaction.otherUnits); rawFactionData.otherUnits.sort(sortByName);
-        
+        // Merge units arrays
+        if (!rawFactionData.units) {
+          rawFactionData.units = [];
+        }
+        rawFactionData.units.push(...parentFaction.units);
+        rawFactionData.units.sort(sortByName);
+
         rawFactionData.enhancements = { ...rawFactionData.enhancements, ...parentFaction.enhancements };
         points.units = { ...points.units, ...parentPoints.units };
         points.enhancements = { ...points.enhancements, ...parentPoints.enhancements };
@@ -2740,9 +2864,7 @@ export const get40kArmyData = (faction) => {
     }
 
     const dataWithPoints = {
-      characters: rawFactionData.characters.map(u => getPointsForUnit(u, points.units)),
-      battleline: rawFactionData.battleline.map(u => getPointsForUnit(u, points.units)),
-      otherUnits: rawFactionData.otherUnits.map(u => getPointsForUnit(u, points.units)),
+      units: rawFactionData.units.map(u => getPointsForUnit(u, points.units)),
       enhancements: getPointsForEnhancements(rawFactionData.enhancements, points.enhancements),
     };
     cachedArmyData[faction] = dataWithPoints;
@@ -2773,7 +2895,7 @@ const getPointsForUnit = (unit, points) => {
     ...
   }
   */
-  
+
   const pointsForUnit = points[unit.name] ?? 0;
   return {
     ...unit,
@@ -2789,6 +2911,6 @@ const getPointsForEnhancements = (enhancementData, pointsData) => {
       ...enhData,
       points: pointsForDetachment[enhData.name] ?? 0,
     }));
-  }); 
+  });
   return enhancementsWithPoints;
 };

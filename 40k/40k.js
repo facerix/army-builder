@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
   factionSelector.querySelectorAll("option").forEach(option => {
     const faction = FACTION_NAMES[option.value];
     if (faction) {
-      if (!ARMIES[faction] || !ARMIES[faction]?.characters?.length || !ARMIES[faction]?.otherUnits?.length) {
+      if (!ARMIES[faction] || !ARMIES[faction]?.units?.length) {
         console.log(`faction '${faction}' is missing battle profile data`);
         option.disabled = true;
       }

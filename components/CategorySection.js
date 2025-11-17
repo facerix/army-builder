@@ -25,7 +25,7 @@ const UnitRow = (unit, options = null) => {
   if (options?.unitSize) {
     optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${options.unitSize}` }));
   }
-  if (unit.tags?.includes("epic")) {
+  if (unit.tags?.includes("Epic Hero")) {
     tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
   }
   // model count for units without a unit size option
@@ -156,7 +156,7 @@ const TEMPLATE = `
 
 const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   const availableOptions = {};
-  if (!unit.tags?.includes("epic") && includeEnhancements) {
+  if (!unit.tags?.includes("Epic Hero") && includeEnhancements) {
     // filter enhancements to either match unit name or tags (e.g. "exo-armor")
     availableOptions.enhancements = categoryOptions.enhancements?.filter(o => {
       return !o.tags || o.tags.includes(unit.name) || o.tags.some(t => unit.tags.includes(t));
