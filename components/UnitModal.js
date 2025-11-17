@@ -125,7 +125,8 @@ const CSS = `
     }
 
     #unitList {
-      height: -webkit-fill-available;
+      height: fit-content;
+      max-height: 80dvh;
       overflow-y: scroll;
     }
   }

@@ -91,7 +91,7 @@ const CSS = `
   dialog {
     padding: 0.5rem;
     min-width: 300px;
-    max-height: 90vh;
+    max-height: 80dvh;
     flex-direction: column;
     
     &:open {
@@ -99,14 +99,24 @@ const CSS = `
     }
 
     .options-list {
-      height: -webkit-fill-available;
+      height: fit-content;
+      max-height: 70dvh;
       overflow-y: scroll;
     }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    height: -webkit-fill-available;
+    max-height: 80dvh;
+    overflow-y: scroll;
   }
 
   fieldset {
     border: none;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.5em;
     margin: 0.5em 0;
