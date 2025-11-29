@@ -94,7 +94,18 @@ const printUnit = (unit) => {
           // skip these since we already noted them above
           break;
         case "wargear":
-          lines.push(`  ◦ ${value}`);
+        case "weapons":
+          if (value?.length) {
+            value.forEach(w => {
+              if (w.selected && w.selected !== "off") {
+                // TODO: handle "replaces" logic for weapon options with a max
+                // const count = w.max ? w.max : modelCount;
+                // const countStr = count > 1 || count < modelCount ? `${count}x ` : "";
+                // lines.push(`  ◦ ${countStr}${w.name}`);
+                lines.push(`  ◦ ${w.name}`);
+              }
+            });
+          }
           break;
         default:
           lines.push(`  ◦ ${key}: ${value}`);
