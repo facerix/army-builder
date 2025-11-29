@@ -2,38 +2,39 @@ import './UnitModal.js';
 import './OptionsModal.js';
 import { h } from '../src/domUtils.js';
 
-const getWeaponOptionSummaries = (defaultWeapons, weaponOptions, unitSize) => {
-  const actualWeapons = [ ...defaultWeapons ].map(w => ({ ...w, count: w.count || unitSize }));
-  weaponOptions.forEach(opt => {
+const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
+  const actualItems = [ ...defaultItems ].map(w => ({ ...w, count: w.count || unitSize }));
+  itemOptions?.forEach(opt => {
     if (opt.selected && opt.selected !== "off") {
       let upgrade = { ...opt, count: opt.max || unitSize };
       if (opt.replaces) {
-        const originalWeapon = actualWeapons.find(w => {
+        const originalItem = actualItems.find(w => {
           if (Array.isArray(opt.replaces)) {
             return opt.replaces.includes(w.name);
           }
           return w.name === opt.replaces
         });
-        if (opt.max && opt.max < originalWeapon?.count) {
-          originalWeapon.count -= opt.max;
-          actualWeapons.push(upgrade);
+        if (opt.max && opt.max < originalItem?.count) {
+          originalItem.count -= opt.max;
+          actualItems.push(upgrade);
         } else {
-          actualWeapons.splice(actualWeapons.indexOf(originalWeapon), 1, {
+          actualItems.splice(actualItems.indexOf(originalItem), 1, {
             ...upgrade,
-            count: originalWeapon?.count || unitSize
+            count: originalItem?.count || unitSize
           });
         }
       } else {
-        actualWeapons.push(upgrade);
+        actualItems.push(upgrade);
       }
     }
   });
 
-  const summaries = actualWeapons.map(weapon => {
-    const count = weapon.count || unitSize;
-    // if weapon.name is an array, the "selected" value is the name of the selected option
-    const weaponName = (Array.isArray(weapon.name) && weapon.selected) ? weapon.selected : weapon.name;
-    return `${count}x ${weaponName}`;
+  const summaries = actualItems.map(item => {
+    const count = item.count || unitSize;
+    const countStr = count > 1 ? `${count}x ` : "";
+    // if item.name is an array, the "selected" value is the name of the selected option
+    const itemName = (Array.isArray(item.name) && item.selected) ? item.selected : item.name;
+    return `${countStr}${itemName}`;
   });
   return summaries;
 }
@@ -53,18 +54,25 @@ const UnitRow = (unit, options = null) => {
   // options
   const optionsList = [];
   if (options?.enhancement) {
-    optionsList.push(h("span", { className: "unit-option", innerText: `Enhancement: ${options.enhancement}` }));
+    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Enhancement</em>: ${options.enhancement}` }));
   }
 
   // if there are weapon options, show e.g. "5x Plasma Axe" or whatever; otherwise just show "unit size N"
   let weaponProfiles = [];
-  if (options?.weapons) {
-    weaponProfiles = getWeaponOptionSummaries(unit.weapons, options.weapons, options.unitSize || unit.modelCount);
-  }
+  weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount);
   if (weaponProfiles.length > 0) {
-    optionsList.push(h("span", { className: "unit-option", innerText: weaponProfiles.join(", ") }));
-  } else if (options?.unitSize) {
-    optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${options.unitSize}` }));
+    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Weapons</em>: ${weaponProfiles.join(", ")}` }));
+  }
+
+  // if there are wargear options, show e.g. "5x Preymark crest" or whatever
+  let wargearProfiles = [];
+  wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount);
+  if (wargearProfiles.length > 0) {
+    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Wargear</em>: ${wargearProfiles.join(", ")}` }));
+  }
+
+  if (weaponProfiles.length === 0 && wargearProfiles.length === 0 && options?.unitSize) {
+    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Unit Size</em>: ${options.unitSize}` }));
   }
 
   // tags
@@ -76,12 +84,15 @@ const UnitRow = (unit, options = null) => {
     tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
   }
 
+  const unitNamePlusCount = unit.options?.unitSize ? `${unit.options.unitSize}x ${unit.name}` : unit.name;
   const row = h("div", { className: "unit-summary" }, [
     h("div", { className: "unit-details" }, [
-      h("span", { className: "unit-name", innerText: unit.name }),
+      h("span", { className: "unit-name-line" }, [
+        h("span", { className: "unit-name", innerText: unitNamePlusCount }),
+        ...tags
+      ]),
       h("span", { className: "unit-options" }, [ ...optionsList ]),
     ]),
-    ...tags,
     h("span", { className: "unit-pts points", innerText: `${unit.points} Points` }),
     ...buttons,
   ]);
@@ -153,6 +164,10 @@ const CSS = `
       align-items: flex-start;
       max-width: 70%;
 
+      .unit-name-line {
+        display: inline-flex;
+      }
+
       .points {
         margin: 0;
       }
@@ -161,6 +176,8 @@ const CSS = `
     .unit-options {
       font-size: small;
       color: #666;
+      display: flex;
+      flex-direction: column;
     }
   }
 
@@ -217,13 +234,35 @@ const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
 
     // weapons
     if (unit.unitOptions.weapons) {
-      availableOptions.weapons = unit.unitOptions.weapons.map(opt => ({
-        ...opt,
-        selected: opt.name === unit.options?.weapons,
-      }));
+      availableOptions.weapons = unit.unitOptions.weapons.map(opt => {
+        const savedOption = unit.options?.weapons?.find(w => {
+          if (Array.isArray(opt.name)) {
+            return opt.name.includes(w.name);
+          }
+          return w.name === opt.name;
+        });
+        return {
+          ...opt,
+          selected: savedOption?.selected || false,
+        };
+      });
     }
 
-    // wargear TBD
+    // wargear
+    if (unit.unitOptions.wargear) {
+      availableOptions.wargear = unit.unitOptions.wargear.map(opt => {
+        const savedOption = unit.options?.wargear?.find(w => {
+          if (Array.isArray(opt.name)) {
+            return opt.name.includes(w.name);
+          }
+          return w.name === opt.name;
+        });
+        return {
+          ...opt,
+          selected: savedOption?.selected || false,
+        };
+      });
+    }
   }
   return availableOptions;
 }
