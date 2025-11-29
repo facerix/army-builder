@@ -42,6 +42,12 @@ header {
     max-height: 40px;
     margin-right: 0.5em;
   }
+
+  h1 {
+    flex: 1;
+    margin-right: 50px;
+    text-align: center;
+  }
 }
 
 header#main-head {
@@ -245,6 +251,36 @@ a:focus-visible {
   height: -webkit-fill-available;
   height: 100%;
   flex: 1;
+}
+
+/* responsive design tweaks (breakpoints adopted from Bootstrap) */
+
+/* Small devices (e.g. phones, 575px and under) */
+@media (max-width: 575px) {
+  header > img {
+    display: none;
+  }
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  header > img {
+    display: none;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  header > img {
+    display: block;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  header > img {
+    display: block;
+  }
 }
 
 

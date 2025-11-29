@@ -49,9 +49,11 @@
         display: flex;
         flex: 1 1 auto;
         flex-wrap: wrap;
-        gap: 0.25rem;
-        align-content: flex-start;
-        justify-content: center;
+        gap: 0.5rem;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
       }
 
       .list-slug {
@@ -92,6 +94,12 @@
         transition: opacity 250ms allow-discrete;
       }
     }
+
+    @media (min-width: 768px) {
+      header > h1 {
+        margin-right: 90px;
+      }
+    }
   </style>
 </head>
 
@@ -101,7 +109,7 @@
       <img src="/images/back.svg" alt="back arrow" />
     </a>
     <img src="/images/warhammer.svg" alt="Warhammer" />
-    <h1>Personnel: Age of Sigmar</h1>
+    <h1>AoS Lists</h1>
   </header>
   <main class="u-center loading">
     <div class="faction-selector">
