@@ -124,6 +124,34 @@ const CSS = `
     label {
       margin-right: auto;
     }
+
+    &.weapon-options {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .weapon-option-item {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        flex-align: start;
+        justify-content: space-between;
+        width: 100%;
+
+        label {
+          font-size: small;
+        }
+
+        .option-legend-max,
+        .option-legend-replaces {
+          font-size: small;
+          color: #666;
+        }
+
+        .option-legend-replaces {
+          margin-left: 0.5em;
+        }
+      }
+    }
   }
 
   .unit-size-option {
@@ -170,6 +198,59 @@ const UnitSizeOption = (unitSizes, currentUnitSize) => {
   return h("fieldset", { className: "unit-size-option" }, [
     h("label", { innerText: "Unit Size:", className: "option-name" }),
     ...unitSizeOptions,
+  ]);
+};
+
+const weaponOptionFieldsetName = (weapon) => {
+  return (Array.isArray(weapon.name) ? weapon.name.join("-") : weapon.name).replace(/ /g, "_");
+};
+
+const WeaponOption = (weaponOptions, currentOptions) => {
+  const optionsList = weaponOptions.map(weapon => {
+    // two kinds of weapon options:
+    // if it has a "replaces" and no "max", then it's a weapon choice for the whole unit: show both with radio buttons
+    // if it has a "max", then it doesn't matter if it has a "replaces": it should be a checkbox per max value
+    // if "name" is an array instead of a single string, there are multiple upgrade options: show radio buttons for each
+    // huh -- what would no-"max" and no-"replaces" mean? does that even make sense?
+    const currentWeaponOption = currentOptions.weapons.find(w => {
+      if (Array.isArray(weapon.name)) {
+        return weapon.name.includes(w.selected);
+      }
+      return w.name === weapon.name;
+    });
+
+    const fieldsetName = weaponOptionFieldsetName(weapon);
+    if (weapon.replaces && !weapon.max) {
+      const upgradeOptions = Array.isArray(weapon.name) ? weapon.name : [weapon.name];
+      const isInactive = !currentWeaponOption?.selected || currentWeaponOption?.selected === "off"; 
+      return h("div", { className: "weapon-option-item" }, [
+        h("div", { className: "option-value" }, [
+          h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
+          h("label", { innerText: weapon.replaces, className: "option-value" }),
+        ]),
+        ...upgradeOptions.map(upgradeName => {
+          return h("div", { className: "option-value" }, [
+            h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: currentWeaponOption?.selected === upgradeName }),
+            h("label", { innerText: upgradeName, className: "option-value" }),
+          ]);
+        }),
+      ]);
+    }
+
+    if (weapon.max) {
+      return h("div", { className: "weapon-option-item" }, [
+        h("label", { innerText: weapon.name, className: "option-value" }),
+        h("input", { type: "checkbox", id: fieldsetName, name: fieldsetName, checked: currentWeaponOption?.selected }),
+      ]);
+    }
+
+    // return empty fragment for now until I know if this is a thing (no "max" and no "replaces")
+    return document.createDocumentFragment();
+  });
+
+  return h("fieldset", { className: "weapon-options" }, [
+    h("label", { innerText: 'Weapon options:', className: "option-name" }),
+    ...optionsList
   ]);
 };
 
@@ -252,11 +333,25 @@ class OptionsModal extends HTMLElement {
     const formData = new FormData(this.form);
     const options = Object.fromEntries(formData);
     const { warlord, enhancement, unitSize, ...rest } = options;
+    const { weapons = [] } = this.#options;
+
+    // interpret weapons form data back into the unit options format
+    weapons?.forEach(weaponOption => {
+      const fieldsetName = weaponOptionFieldsetName(weaponOption);
+      if (fieldsetName in rest) {
+        // weapon option radio buttons all have a value equal to their name, except the default / "replaces" weapon, which has a value of "off",
+        // rest[fieldsetName] will reflect both states
+        weaponOption.selected = rest[fieldsetName];
+      } else {
+        weaponOption.selected = false;
+      }
+    });
+
     this.options = {
       ...(warlord ? { warlord: warlord === "on" } : {}),
       ...(enhancement ? { enhancement } : {}),
       ...(unitSize ? { unitSize: parseInt(unitSize, 10) } : {}),
-      ...rest,
+      ...(weapons ? { weapons } : {}),
     };
 
     this.dispatchEvent(new CustomEvent("optionsSaved", {
@@ -280,6 +375,9 @@ class OptionsModal extends HTMLElement {
       }
       if (this.#availableOptions.unitSize) {
         this.optionsList.append(UnitSizeOption(this.#availableOptions.unitSize, this.#options.unitSize));
+      }
+      if (this.#availableOptions.weapons) {
+        this.optionsList.append(WeaponOption(this.#availableOptions.weapons, this.#options));
       }
     }
   }

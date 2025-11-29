@@ -191,14 +191,15 @@ class UnitModal extends HTMLElement {
           const { unitName: name, defaultModelCount } = unitSummary.dataset;
           // Unit definition :> name: string, points: number, tags?: string[], modelCount?: number | number[], unitOptions?: object
           const unitDef = this.#options.find(u => u.name === name);
-          const { points, tags = [], unitOptions = undefined } = unitDef;
+          const { points, tags = [], unitOptions = undefined, weapons = [] } = unitDef;
           const modelCount = parseInt(defaultModelCount, 10);
           const unitToAdd = {
             id: v4WithTimestamp(),
             name,
             points,
             modelCount,
-            tags
+            tags,
+            weapons,
           };
           if (unitOptions) {
             // populate options object for unit's defaults
@@ -217,6 +218,23 @@ class UnitModal extends HTMLElement {
                     points: points[idx]
                   }));
 
+                  break;
+                case "weapons":
+                  const weaponOptions = [ ...unitOptions.weapons ];
+                  unitToAdd.options.weapons = weaponOptions.map(weapon => {
+                    const max = weapon.max;
+                    const replaces = weapon.replaces;
+                    return {
+                      name: weapon.name,
+                      selected: false,
+                      ...(max ? { max } : {}),
+                      ...(replaces ? { replaces } : {}),
+                    };
+                  });
+                  unitToAdd.unitOptions.weapons = weaponOptions.map(weapon => ({
+                    ...weapon,
+                    selected: false,
+                  }));
                   break;
                 default:
                   unitToAdd.options[option] = unitOptions[option];

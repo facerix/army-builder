@@ -2,6 +2,42 @@ import './UnitModal.js';
 import './OptionsModal.js';
 import { h } from '../src/domUtils.js';
 
+const getWeaponOptionSummaries = (defaultWeapons, weaponOptions, unitSize) => {
+  const actualWeapons = [ ...defaultWeapons ].map(w => ({ ...w, count: w.count || unitSize }));
+  weaponOptions.forEach(opt => {
+    if (opt.selected && opt.selected !== "off") {
+      let upgrade = { ...opt, count: opt.max || unitSize };
+      if (opt.replaces) {
+        const originalWeapon = actualWeapons.find(w => {
+          if (Array.isArray(opt.replaces)) {
+            return opt.replaces.includes(w.name);
+          }
+          return w.name === opt.replaces
+        });
+        if (opt.max && opt.max < originalWeapon?.count) {
+          originalWeapon.count -= opt.max;
+          actualWeapons.push(upgrade);
+        } else {
+          actualWeapons.splice(actualWeapons.indexOf(originalWeapon), 1, {
+            ...upgrade,
+            count: originalWeapon?.count || unitSize
+          });
+        }
+      } else {
+        actualWeapons.push(upgrade);
+      }
+    }
+  });
+
+  const summaries = actualWeapons.map(weapon => {
+    const count = weapon.count || unitSize;
+    // if weapon.name is an array, the "selected" value is the name of the selected option
+    const weaponName = (Array.isArray(weapon.name) && weapon.selected) ? weapon.selected : weapon.name;
+    return `${count}x ${weaponName}`;
+  });
+  return summaries;
+}
+
 const UnitRow = (unit, options = null) => {
   const buttons = [
     h("button", { className: "remove-unit", title: "remove unit" }, [
@@ -14,23 +50,30 @@ const UnitRow = (unit, options = null) => {
     ]));
   }
 
-  const tags = [];
+  // options
   const optionsList = [];
-  if (options?.warlord) {
-    tags.push(h("span", { className: "unit-tag", innerText: "Warlord" }));
-  }
   if (options?.enhancement) {
     optionsList.push(h("span", { className: "unit-option", innerText: `Enhancement: ${options.enhancement}` }));
   }
-  if (options?.unitSize) {
+
+  // if there are weapon options, show e.g. "5x Plasma Axe" or whatever; otherwise just show "unit size N"
+  let weaponProfiles = [];
+  if (options?.weapons) {
+    weaponProfiles = getWeaponOptionSummaries(unit.weapons, options.weapons, options.unitSize || unit.modelCount);
+  }
+  if (weaponProfiles.length > 0) {
+    optionsList.push(h("span", { className: "unit-option", innerText: weaponProfiles.join(", ") }));
+  } else if (options?.unitSize) {
     optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${options.unitSize}` }));
+  }
+
+  // tags
+  const tags = [];
+  if (options?.warlord) {
+    tags.push(h("span", { className: "unit-tag", innerText: "Warlord" }));
   }
   if (unit.tags?.includes("Epic Hero")) {
     tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
-  }
-  // model count for units without a unit size option
-  if (!options?.unitSize && unit.modelCount > 1) {
-    optionsList.push(h("span", { className: "unit-option", innerText: `Unit Size: ${unit.modelCount}` }));
   }
 
   const row = h("div", { className: "unit-summary" }, [
@@ -108,6 +151,7 @@ const CSS = `
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      max-width: 70%;
 
       .points {
         margin: 0;
@@ -133,7 +177,6 @@ const CSS = `
     font-size: small;
     margin: 0 0.75rem 0 auto;
   }
-
 
 }
 `;
@@ -165,10 +208,20 @@ const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   // other options
   if (unit.unitOptions) {
     // unitSize
-    availableOptions.unitSize = unit.unitOptions.unitSize.map(opt => ({
-      ...opt,
-      selected: opt.modelCount === unit.options?.unitSize,
-    }));
+    if (unit.unitOptions.unitSize) {
+      availableOptions.unitSize = unit.unitOptions.unitSize.map(opt => ({
+        ...opt,
+        selected: opt.modelCount === (unit.options?.unitSize || unit.modelCount),
+      }));
+    }
+
+    // weapons
+    if (unit.unitOptions.weapons) {
+      availableOptions.weapons = unit.unitOptions.weapons.map(opt => ({
+        ...opt,
+        selected: opt.name === unit.options?.weapons,
+      }));
+    }
 
     // wargear TBD
   }
