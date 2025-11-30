@@ -1,6 +1,21 @@
 import { serviceWorkerManager } from './src/ServiceWorkerManager.js';
+import '/components/UpdateNotification.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
+const whenLoaded = Promise.all([
+  customElements.whenDefined("update-notification"),
+]);
+
+whenLoaded.then(async () => {
+  // Set up update notification
+  const updateNotification = document.querySelector('update-notification');
+
+  // Listen for service worker updates
+  window.addEventListener('sw-update-available', (event) => {
+    console.log('Service worker update available, showing notification');
+    updateNotification.show(event.detail.pendingWorker);
+  });
+
+  // Initialize service worker
   await serviceWorkerManager.register();
 
   const version = document.getElementById('version');
@@ -15,6 +30,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   btnUpdate.addEventListener('click', () => {
-    serviceWorkerManager.handleUpdateNow();
+    const pendingWorker = updateNotification.pendingWorkerInstance || serviceWorkerManager.getRegistration()?.waiting;
+    if (pendingWorker) {
+      serviceWorkerManager.handleUpdateNow(pendingWorker);
+    } else {
+      serviceWorkerManager.checkForUpdates();
+    }
   });
 });

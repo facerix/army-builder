@@ -78,18 +78,41 @@ export class ServiceWorkerManager {
   #setupUpdateListeners() {
     if (!this.#registration || this.#listenersSetup) return;
 
+    // Check if there's already a waiting service worker (update from previous session)
+    // Use setTimeout to ensure event listeners are set up first
+    setTimeout(() => {
+      if (this.#registration.waiting && navigator.serviceWorker.controller) {
+        console.log(`[Personnel] Found waiting service worker from previous session`);
+        this.#dispatchUpdateEvent(this.#registration.waiting);
+      }
+    }, 0);
+
     // Listen for updates to the service worker
     this.#registration.addEventListener('updatefound', () => {
       const newWorker = this.#registration.installing;
+      if (!newWorker) return;
+      
       console.log(`[Personnel] New service worker installing...`);
 
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+      // Handle state changes
+      const handleStateChange = () => {
+        console.log(`[Personnel] Service worker state changed to: ${newWorker.state}`);
+        
+        // When the worker reaches "installed" or "waiting" state and there's an active controller,
+        // that means an update is available
+        if ((newWorker.state === 'installed' || newWorker.state === 'waiting') && navigator.serviceWorker.controller) {
           console.log(`[Personnel] New service worker available. Consider refreshing the page.`);
           // Dispatch event with the actual new worker
           this.#dispatchUpdateEvent(newWorker);
+          // Remove the listener since we've handled the update
+          newWorker.removeEventListener('statechange', handleStateChange);
         }
-      });
+      };
+
+      newWorker.addEventListener('statechange', handleStateChange);
+      
+      // Also check the current state in case it's already installed/waiting
+      handleStateChange();
     });
     
     this.#listenersSetup = true;
@@ -107,6 +130,33 @@ export class ServiceWorkerManager {
       }
     });
     window.dispatchEvent(event);
+  }
+
+  /**
+   * Manually check for service worker updates
+   * @returns {Promise<void>}
+   */
+  async checkForUpdates() {
+    if (!this.#registration) {
+      console.warn(`[Personnel] Cannot check for updates: no registration`);
+      return;
+    }
+
+    try {
+      console.log(`[Personnel] Manually checking for service worker updates...`);
+      await this.#registration.update();
+      
+      // After update() completes, check if there's a waiting worker
+      // Use a small delay to allow the updatefound event to fire if there's an update
+      setTimeout(() => {
+        if (this.#registration.waiting && navigator.serviceWorker.controller) {
+          console.log(`[Personnel] Update check found waiting service worker`);
+          this.#dispatchUpdateEvent(this.#registration.waiting);
+        }
+      }, 100);
+    } catch (error) {
+      console.error(`[Personnel] Failed to check for updates:`, error);
+    }
   }
 
   /**
@@ -167,14 +217,19 @@ export class ServiceWorkerManager {
 
   /**
    * Force service worker to skip waiting and activate
+   * @param {ServiceWorker} worker - Optional specific worker to skip waiting for
    * @returns {Promise<void>}
    */
-  async skipWaiting() {
-    if (!this.#registration || !this.#registration.waiting) {
+  async skipWaiting(worker = null) {
+    const targetWorker = worker || this.#registration?.waiting;
+    
+    if (!this.#registration || !targetWorker) {
+      console.warn(`[Personnel] No waiting service worker to skip waiting`);
       return;
     }
 
-    this.#registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+    console.log(`[Personnel] Sending SKIP_WAITING message to service worker`);
+    targetWorker.postMessage({ type: 'SKIP_WAITING' });
     
     // Wait for the new service worker to take control
     return new Promise((resolve) => {
@@ -192,7 +247,7 @@ export class ServiceWorkerManager {
     
     try {
       // Skip waiting and activate the new service worker
-      await this.skipWaiting();
+      await this.skipWaiting(pendingWorker);
       
       // Reload the page to use the new service worker
       window.location.reload();

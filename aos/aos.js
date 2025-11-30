@@ -13,10 +13,25 @@ const listSlug = (armyList) => {
   ]);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+const whenLoaded = Promise.all([
+  customElements.whenDefined("update-notification"),
+]);
+
+whenLoaded.then(() => {
+  // Set up update notification
+  const updateNotification = document.querySelector('update-notification');
+
+  // Listen for service worker updates
+  window.addEventListener('sw-update-available', (event) => {
+    console.log('Service worker update available, showing notification');
+    updateNotification.show(event.detail.pendingWorker);
+  });
+
   // Initialize service worker
   serviceWorkerManager.register();
-  
+});
+
+document.addEventListener("DOMContentLoaded", () => {
   const savedLists = document.querySelector(".saved-lists");
   const btnNew = document.querySelector(".faction-selector button");
   const factionSelector = document.querySelector("select#faction");

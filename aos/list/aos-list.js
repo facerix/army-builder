@@ -11,6 +11,7 @@ const whenLoaded = Promise.all(
   [
     customElements.whenDefined("aos-section"),
     customElements.whenDefined("aos-regiment"),
+    customElements.whenDefined("update-notification"),
   ],
 );
 
@@ -20,6 +21,15 @@ const getTotalPoints = (list) => {
 }
 
 whenLoaded.then(() => {
+  // Set up update notification
+  const updateNotification = document.querySelector('update-notification');
+
+  // Listen for service worker updates
+  window.addEventListener('sw-update-available', (event) => {
+    console.log('Service worker update available, showing notification');
+    updateNotification.show(event.detail.pendingWorker);
+  });
+
   // Initialize service worker
   serviceWorkerManager.register();
   

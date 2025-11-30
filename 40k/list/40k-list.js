@@ -10,6 +10,7 @@ import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
 const whenLoaded = Promise.all(
   [
     customElements.whenDefined("category-section"),
+    customElements.whenDefined("update-notification"),
   ],
 );
 
@@ -25,6 +26,15 @@ const getTotalPoints = (list) => {
 }
 
 whenLoaded.then(() => {
+  // Set up update notification
+  const updateNotification = document.querySelector('update-notification');
+
+  // Listen for service worker updates
+  window.addEventListener('sw-update-available', (event) => {
+    console.log('Service worker update available, showing notification');
+    updateNotification.show(event.detail.pendingWorker);
+  });
+
   const urlParams = new URL(window.location).searchParams;
   const id = urlParams.get('id');
   const faction = urlParams.get('faction');
