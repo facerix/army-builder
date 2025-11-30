@@ -148,6 +148,24 @@ export class ServiceWorkerManager {
   }
 
   /**
+   * Get the current service worker version information
+   * @returns {Promise<string|null>}
+   */
+  async getVersion() {
+    if (!this.#registration || !this.#registration.active) {
+      return null;
+    }
+
+    try {
+      const cacheInfo = await this.getCacheInfo();
+      return cacheInfo?.version || null;
+    } catch (error) {
+      console.error(`[Personnel] Failed to get service worker version:`, error);
+      return null;
+    }
+  }
+
+  /**
    * Force service worker to skip waiting and activate
    * @returns {Promise<void>}
    */

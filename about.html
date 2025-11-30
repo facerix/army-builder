@@ -38,6 +38,50 @@
       text-align: justify;
     }
 
+    details {
+      margin: 2em auto 0;
+      width: 600px;
+      padding: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #303030;
+      color: #f0f0f0;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+      font-size: 0.875rem;
+      line-height: 1.5;
+
+      summary {
+        font-weight: bold;
+        cursor: pointer;
+        display: block;
+        margin-bottom: 0.5em;
+        padding: 0.5em;
+        border-bottom: 1px dashed #ccc;
+        text-align: center;
+      }
+
+      p {
+        margin: 0.5em 0;
+        padding: 0.5em;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+      }
+
+      button {
+        margin-left: 1em;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        color: #303030;
+        border: none;
+        padding: 0.5em 1em;
+        border-radius: 5px;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+    }
+
     /* responsive design (breakpoints adopted from Bootstrap) */
 
     /* Small devices (e.g. phones, 575px and under) */
@@ -98,6 +142,15 @@
       Additional 40k-flavor icons are from <a href="https://github.com/Locequen/40k-Data-Card" target="_blank">Locequen</a>.
       Most were tweaked by me, because SVG is rad that way.
     </p>
+
+    <details>
+      <summary>Debug Info</summary>
+      <p>
+        <strong>Version:</strong> <span id="version">#...</span>
+        <button id="btnUpdate">Update now</button>
+      </p>
+    </details>
   </main>
+  <script src="/about.js" type="module"></script>
 </body>
 </html>
