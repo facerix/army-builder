@@ -80,6 +80,43 @@ const calculatePoints = (units) => {
   );
 };
 
+export const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
+  const actualItems = [ ...defaultItems ].map(w => ({ ...w, count: w.count || unitSize }));
+  itemOptions?.forEach(opt => {
+    if (opt.selected && opt.selected !== "off") {
+      let upgrade = { ...opt, count: opt.max || unitSize };
+      if (opt.replaces) {
+        const originalItem = actualItems.find(w => {
+          if (Array.isArray(opt.replaces)) {
+            return opt.replaces.includes(w.name);
+          }
+          return w.name === opt.replaces
+        });
+        if (opt.max && opt.max < originalItem?.count) {
+          originalItem.count -= opt.max;
+          actualItems.push(upgrade);
+        } else {
+          actualItems.splice(actualItems.indexOf(originalItem), 1, {
+            ...upgrade,
+            count: originalItem?.count || unitSize
+          });
+        }
+      } else {
+        actualItems.push(upgrade);
+      }
+    }
+  });
+
+  const summaries = actualItems.map(item => {
+    const count = item.count || unitSize;
+    const countStr = count > 1 ? `${count}x ` : "";
+    // if item.name is an array, the "selected" value is the name of the selected option
+    const itemName = (Array.isArray(item.name) && item.selected) ? item.selected : item.name;
+    return `${countStr}${itemName}`;
+  });
+  return summaries;
+}
+
 const printUnit = (unit) => {
   const isWarlord = !!unit.options?.warlord ? " [Warlord]" : "";
   const modelCount = unit.options?.unitSize ?? 1; // we don't care about denoting single units that have multiple models
@@ -93,25 +130,27 @@ const printUnit = (unit) => {
         case "warlord":
           // skip these since we already noted them above
           break;
-        case "wargear":
         case "weapons":
-          if (value?.length) {
-            value.forEach(w => {
-              if (w.selected && w.selected !== "off") {
-                // TODO: handle "replaces" logic for weapon options with a max
-                // const count = w.max ? w.max : modelCount;
-                // const countStr = count > 1 || count < modelCount ? `${count}x ` : "";
-                // lines.push(`  ◦ ${countStr}${w.name}`);
-                lines.push(`  ◦ ${w.name}`);
-              }
-            });
-          }
+        case "wargear":
+          // skip these since we'll do them regardless of selected options
           break;
         default:
           lines.push(`  ◦ ${key}: ${value}`);
       }
     });
   }
+  // print weapons/wargear including both defaults and selected options
+  const unitCount = unit.options?.unitSize || unit.modelCount || 1;
+  ["weapons", "wargear"].forEach(key => {
+    const defaultItems = key === "weapons" ? (unit.weapons || []) : (unit.wargear || []);
+    const selectedOptions = unit.options?.[key] || [];
+    if (defaultItems.length > 0 || selectedOptions.length > 0) {
+      const profiles = getOptionSummaries(defaultItems, selectedOptions, unitCount);
+      profiles.forEach(profile => {
+        lines.push(`  ◦ ${profile}`);
+      });
+    }
+  });
   return lines.join("\n");
 }
 

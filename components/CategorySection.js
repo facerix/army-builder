@@ -1,43 +1,7 @@
 import './UnitModal.js';
 import './OptionsModal.js';
 import { h } from '../src/domUtils.js';
-
-const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
-  const actualItems = [ ...defaultItems ].map(w => ({ ...w, count: w.count || unitSize }));
-  itemOptions?.forEach(opt => {
-    if (opt.selected && opt.selected !== "off") {
-      let upgrade = { ...opt, count: opt.max || unitSize };
-      if (opt.replaces) {
-        const originalItem = actualItems.find(w => {
-          if (Array.isArray(opt.replaces)) {
-            return opt.replaces.includes(w.name);
-          }
-          return w.name === opt.replaces
-        });
-        if (opt.max && opt.max < originalItem?.count) {
-          originalItem.count -= opt.max;
-          actualItems.push(upgrade);
-        } else {
-          actualItems.splice(actualItems.indexOf(originalItem), 1, {
-            ...upgrade,
-            count: originalItem?.count || unitSize
-          });
-        }
-      } else {
-        actualItems.push(upgrade);
-      }
-    }
-  });
-
-  const summaries = actualItems.map(item => {
-    const count = item.count || unitSize;
-    const countStr = count > 1 ? `${count}x ` : "";
-    // if item.name is an array, the "selected" value is the name of the selected option
-    const itemName = (Array.isArray(item.name) && item.selected) ? item.selected : item.name;
-    return `${countStr}${itemName}`;
-  });
-  return summaries;
-}
+import { getOptionSummaries } from '../src/parsers.js';
 
 const UnitRow = (unit, options = null) => {
   const buttons = [
