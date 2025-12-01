@@ -751,10 +751,10 @@ export const ARMIES = {
       {
         "name": "The Angelic Host",
         "enhancements": [
-          { "name": "Archangel's Shard", tags: ["Jump Pack"]  },
+          { "name": "Archangel's Shard", tags: ["Jump Pack"] },
           { "name": "Artisan of War", tags: ["Jump Pack"] },
-          { "name": "Gleaming Pinions", tags: ["Jump Pack"]  },
-          { "name": "Visage of Death", tags: ["Jump Pack"]  }
+          { "name": "Gleaming Pinions", tags: ["Jump Pack"] },
+          { "name": "Visage of Death", tags: ["Jump Pack"] }
         ]
       },
       {
@@ -796,7 +796,7 @@ export const ARMIES = {
       /* characters */
       { name: "Abaddon the Despoiler", tags: ["Character", "Epic Hero"] },
       { name: "Chaos Lord", tags: ["Character", "Chaos Lord"] },
-      { name: "Chaos Lord In Terminator Armour", tags: ["Character", "Chaos Lord"] },
+      { name: "Chaos Lord in Terminator Armour", tags: ["Character", "Chaos Lord"] },
       { name: "Chaos Lord with Jump Pack", tags: ["Character", "Chaos Lord"] },
       { name: "Cultist Firebrand", tags: ["Character", "Damned"] },
       { name: "Cypher", tags: ["Character", "Epic Hero", "Fallen"] },
@@ -834,7 +834,7 @@ export const ARMIES = {
       { name: "Havocs" },
       { name: "Helbrute" },
       { name: "Heldrake" },
-      { name: "Khorne Lord Of Skulls" },
+      { name: "Khorne Lord of Skulls" },
       { name: "Maulerfiend" },
       { name: "Nemesis Claw", unitOptions: { unitSize: [5, 10] } },
       { name: "Obliterators" },
@@ -929,8 +929,8 @@ export const ARMIES = {
       {
         "name": "Veterans of the Long War",
         "enhancements": [
-          { "name": "Eager for Vengeance", tags: ["!Damned"]  },
-          { "name": "Eye of Abaddon", tags: ["!Damned"]  },
+          { "name": "Eager for Vengeance", tags: ["!Damned"] },
+          { "name": "Eye of Abaddon", tags: ["!Damned"] },
           { "name": "Mark of Legend", tags: ["!Damned"] },
           { "name": "Warmaster’s Gift", tags: ["Chaos Lord"] },
         ]
@@ -1176,7 +1176,7 @@ export const ARMIES = {
             {
               name: "Twin concussion gauntlets",
               max: 1,
-              replaces: ["Heavy plasma axe", "Concussion maul"] 
+              replaces: ["Heavy plasma axe", "Concussion maul"]
             },
             {
               name: "Concussion maul",
@@ -3605,18 +3605,21 @@ export const get40kArmyData = (faction) => {
   if (!cachedArmyData[faction]) {
     const rawFactionData = ARMIES[faction];
     const points = POINTS[faction];
+    const factionUnitsWithPoints = rawFactionData.units.map(u => getPointsForUnit(u, points.units));
 
     // if faction is an (imperium or chaos) space marine chapter, pull the relevant units and points and merge them here
     if (rawFactionData.chapterInfo) {
       const parentFaction = ARMIES[rawFactionData.chapterInfo.parentFaction];
       const parentPoints = POINTS[rawFactionData.chapterInfo.parentFaction];
       if (parentFaction && parentPoints) {
+        // filter parent units to only include units that are not already in the factionUnitsWithPoints array
+        const parentUnitsWithPoints = parentFaction.units.filter((unit) => {
+          return !factionUnitsWithPoints.some((t) => t.name === unit.name);
+        }).map(u => getPointsForUnit(u, parentPoints.units));
+        
         // Merge units arrays
-        if (!rawFactionData.units) {
-          rawFactionData.units = [];
-        }
-        rawFactionData.units.push(...parentFaction.units);
-        rawFactionData.units.sort(sortByName);
+        factionUnitsWithPoints.push(...parentUnitsWithPoints);
+        factionUnitsWithPoints.sort(sortByName);
 
         rawFactionData.enhancements = { ...rawFactionData.enhancements, ...parentFaction.enhancements };
         points.units = { ...points.units, ...parentPoints.units };
@@ -3625,7 +3628,7 @@ export const get40kArmyData = (faction) => {
     }
 
     const dataWithPoints = {
-      units: rawFactionData.units.map(u => getPointsForUnit(u, points.units)),
+      units: factionUnitsWithPoints,
       detachments: getPointsForDetachments(rawFactionData.detachments, points.enhancements),
     };
     cachedArmyData[faction] = dataWithPoints;
@@ -3634,29 +3637,6 @@ export const get40kArmyData = (faction) => {
 };
 
 const getPointsForUnit = (unit, points) => {
-  /*
-  data structure:
-  ["characters" | "battleline" | "otherUnits"]: [
-    { name: "Ministorum Priest", modelCount: 1, tags: ["Penitent"] },
-    {
-      name: "Arco-flagellants",
-      modelCount: [3, 10],
-      tags: ["Penitent"],
-      unitOptions: {
-        unitSize: [3, 10],
-      }
-    },
-    ...
-  ]
-
-  points structure:
-  {
-    "Ministorum Priest": 50,
-    "Arco-flagellants": [45, 140],  // multiple unit size options
-    ...
-  }
-  */
-
   const pointsForUnit = points[unit.name] ?? 0;
   return {
     ...unit,
@@ -3675,5 +3655,5 @@ const getPointsForDetachments = (detachmentData, pointsData) => {
       })),
     };
   });
-  return detachmentWithPoints; 
+  return detachmentWithPoints;
 };

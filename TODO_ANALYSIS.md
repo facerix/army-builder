@@ -164,29 +164,7 @@ let tags = []; // TODO
 ## 🟠 MEDIUM-HIGH COMPLEXITY (8-16 hours)
 
 ### 8. **Chapter-Specific Unit Deduplication**
-**Location:** `40k/40k-army-data.js:1940`
-```javascript
-// TODO: de-duplicate chapter-specific units with those coming from the parent faction
-parentFaction: "Chaos Space Marines",
-```
-**Complexity:** ⭐⭐⭐ Medium-High  
-**Effort:** ~8-12 hours  
-**Description:** When a chapter (like World Eaters) has a `parentFaction`, it should inherit units from the parent but avoid duplicates. Need to merge parent faction units with chapter-specific units, removing duplicates.
-
-**Implementation Notes:**
-- Need to understand the data loading/merging logic
-- May need to modify how armies are initialized
-- Need to identify duplicate units (by name? by tags?)
-- Handle edge cases: what if chapter overrides a parent unit?
-- Check where `chapterInfo.parentFaction` is used
-
-**Code Changes Required:**
-- Find where armies are loaded/initialized
-- Implement merge logic that:
-  1. Loads parent faction units
-  2. Merges with chapter-specific units
-  3. Removes duplicates (likely by unit name)
-  4. Preserves chapter-specific overrides
+Done.
 
 ---
 
