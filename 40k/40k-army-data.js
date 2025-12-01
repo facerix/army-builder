@@ -805,22 +805,19 @@ export const ARMIES = {
       { name: "Fabius Bile", tags: ["Character", "Epic Hero"] },
       { name: "Haarken Worldclaimer", tags: ["Character", "Epic Hero"] },
       { name: "Heretic Astartes Daemon Prince", tags: ["Character", "Daemon Prince"] },
-      { name: "Heretic Astartes Daemon Prince With Wings", tags: ["Character", "Daemon Prince"] },
+      { name: "Heretic Astartes Daemon Prince with Wings", tags: ["Character", "Daemon Prince"] },
       { name: "Huron Blackheart", tags: ["Character", "Epic Hero"] },
-      { name: "Lord Discordant On Helstalker", tags: ["Character"] },
+      { name: "Lord Discordant on Helstalker", tags: ["Character"] },
       { name: "Master of Executions", tags: ["Character"] },
       { name: "Master of Possession", tags: ["Character"] },
       { name: "Sorcerer", tags: ["Character"] },
-      { name: "Sorcerer In Terminator Armour", tags: ["Character"] },
+      { name: "Sorcerer in Terminator Armour", tags: ["Character"] },
       { name: "Traitor Enforcer", tags: ["Character", "Damned"] },
-      { name: "Vashtorr The Arkifane", tags: ["Character", "Epic Hero"] },
+      { name: "Vashtorr the Arkifane", tags: ["Character", "Epic Hero"] },
       { name: "Warpsmith", tags: ["Character"] },
       /* battleline */
-      { name: "Cultist Mob", tags: ["Battleline", "Damned"], unitOptions: { unitSize: [8, 16] } },
+      { name: "Cultist Mob", tags: ["Battleline", "Damned"], unitOptions: { unitSize: [10, 20] } },
       { name: "Legionaries", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-      // { name: "Khorne Berzerkers", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-      // { name: "Plague Marines", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-      // { name: "Rubric Marines", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
       { name: "Accursed Cultists", tags: ["Damned"], unitOptions: { unitSize: [8, 16] } },
       { name: "Chaos Bikers", unitOptions: { unitSize: [3, 6] } },
       { name: "Chaos Land Raider" },
@@ -828,9 +825,9 @@ export const ARMIES = {
       { name: "Chaos Predator Destructor" },
       { name: "Chaos Rhino" },
       { name: "Chaos Spawn" },
-      { name: "Chaos Terminator Squad" },
+      { name: "Chaos Terminator Squad", unitOptions: { unitSize: [5, 10] } },
       { name: "Chaos Vindicator" },
-      { name: "Chosen" },
+      { name: "Chosen", unitOptions: { unitSize: [5, 10] } },
       { name: "Defiler" },
       { name: "Fellgor Beastmen", tags: ["Damned"] },
       { name: "Forgefiend" },
@@ -839,14 +836,13 @@ export const ARMIES = {
       { name: "Heldrake" },
       { name: "Khorne Lord Of Skulls" },
       { name: "Maulerfiend" },
-      { name: "Nemesis Claw" },
+      { name: "Nemesis Claw", unitOptions: { unitSize: [5, 10] } },
       { name: "Obliterators" },
-      { name: "Possessed" },
-      { name: "Raptors" },
-      { name: "Traitor Guardsmen Squad", tags: ["Damned"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Possessed", unitOptions: { unitSize: [5, 10] } },
+      { name: "Raptors", unitOptions: { unitSize: [5, 10] } },
+      { name: "Traitor Guardsmen Squad", tags: ["Damned"], modelCount: 10 },
       { name: "Venomcrawler" },
-      { name: "Warp Talons" },
-      // { name: "Noise Marines", unitOptions: { unitSize: [5, 10] } },
+      { name: "Warp Talons", unitOptions: { unitSize: [5, 10] } },
     ],
     "detachments": [
       {
@@ -1941,60 +1937,488 @@ export const ARMIES = {
 
   "World Eaters": {
     "chapterInfo": {
+      // TODO: de-duplicate chapter-specific units with those coming from the parent faction
       parentFaction: "Chaos Space Marines",
     },
-    "models": [
-      { name: "Angron", tags: ["Character", "Epic Hero"] },
-      { name: "Eightbound", tags: ["Battleline"], modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
-      { name: "Exalted Eightbound", tags: ["Battleline"], modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
-      { name: "Jakhals", tags: ["Battleline"], modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
-      { name: "Khorne Berzerkers", tags: ["Battleline"], modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Khorne Lord of Skulls", tags: ["Character", "Epic Hero"] },
-      { name: "Kharn the Betrayer", tags: ["Character", "Epic Hero"] },
-      { name: "Lord Invocatus", tags: ["Character"] },
-      { name: "World Eaters Chaos Spawn", tags: ["Battleline"], modelCount: 2, unitOptions: { unitSize: [2, 4] } },
-      { name: "World Eaters Daemon Prince", tags: ["Character", "Daemon Prince"], modelCount: 185 },
-      { name: "World Eaters Daemon Prince with Wings", tags: ["Character", "Daemon Prince"], modelCount: 155 },
-      { name: "World Eaters Defiler", tags: ["Character"], modelCount: 190 },
-      { name: "World Eaters Forgefiend", tags: ["Character"], modelCount: 145 },
-      { name: "World Eaters Helbrute", tags: ["Character"], modelCount: 130 },
-      { name: "World Eaters Heldrake", tags: ["Character"], modelCount: 210 },
-      { name: "World Eaters Land Raider", tags: ["Character"], modelCount: 240 },
-      { name: "World Eaters Lord on Juggernaut", tags: ["Character"], modelCount: 80 },
-      { name: "World Eaters Master of Executions", tags: ["Character"], modelCount: 110 },
-      { name: "World Eaters Maulerfiend", tags: ["Character"], modelCount: 140 },
-      { name: "World Eaters Predator Annihilator", tags: ["Character"], modelCount: 135 },
-      { name: "World Eaters Predator Destructor", tags: ["Character"], modelCount: 140 },
-      { name: "World Eaters Rhino", tags: ["Character"], modelCount: 75 },
-      { name: "World Eaters Terminator Squad", tags: ["Battleline"], modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+    "units": [
+      {
+        "name": "Angron",
+        "modelCount": 1,
+        "tags": [
+          "Monster",
+          "Fly",
+          "Character",
+          "Epic Hero",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Primarch",
+          "Angron",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Bloodthirster",
+        "modelCount": 1,
+        "tags": [
+          "Monster",
+          "Character",
+          "Fly",
+          "Chaos",
+          "Daemon",
+          "Khorne",
+          "Summoned",
+          "Bloodthirster",
+          "Blood Legion"
+        ]
+      },
+      {
+        "name": "Daemon Prince of Khorne",
+        "modelCount": 1,
+        "tags": [
+          "Monster",
+          "Character",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Daemon Prince",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Daemon Prince of Khorne with wings",
+        "modelCount": 1,
+        "tags": [
+          "Monster",
+          "Character",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Daemon Prince",
+          "Fly",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Khârn the Betrayer",
+        "modelCount": 1,
+        "tags": [
+          "Infantry",
+          "Character",
+          "Epic Hero",
+          "Grenades",
+          "Chaos",
+          "Khorne",
+          "Khârn the Betrayer",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Lord Invocatus",
+        "modelCount": 1,
+        "tags": [
+          "Mounted",
+          "Character",
+          "Epic Hero",
+          "Chaos",
+          "Khorne",
+          "Lord Invocatus",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Lord on Juggernaut",
+        "modelCount": 1,
+        "tags": [
+          "Mounted",
+          "Character",
+          "Chaos",
+          "Khorne",
+          "Lord on Juggernaut",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Master of Executions",
+        "modelCount": 1,
+        "tags": [
+          "Infantry",
+          "Character",
+          "Chaos",
+          "Khorne",
+          "Master of Executions",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Skarbrand",
+        "modelCount": 1,
+        "tags": [
+          "Monster",
+          "Character",
+          "Epic Hero",
+          "Chaos",
+          "Daemon",
+          "Khorne",
+          "Skarbrand",
+          "Blood Legion"
+        ]
+      },
+      {
+        "name": "Slaughterbound",
+        "modelCount": 1,
+        "tags": [
+          "Character",
+          "Infantry",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Possessed",
+          "Slaughterbound",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Bloodletters",
+        "modelCount": 10,
+        "tags": [
+          "Infantry",
+          "Battleline",
+          "Chaos",
+          "Daemon",
+          "Khorne",
+          "Summoned",
+          "Blood Legion"
+        ]
+      },
+      {
+        "name": "Khorne Berzerkers",
+        "tags": [
+          "Infantry",
+          "Battleline",
+          "Grenades",
+          "Chaos",
+          "Khorne",
+          "Berzerkers",
+          "World Eaters"
+        ],
+        "unitOptions": {
+          "unitSize": [
+            10,
+            20
+          ]
+        }
+      },
+      {
+        "name": "Chaos Rhino",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Transport",
+          "Dedicated Transport",
+          "Smoke",
+          "Chaos",
+          "Khorne",
+          "Rhino",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Bloodcrushers",
+        "tags": [
+          "Mounted",
+          "Chaos",
+          "Daemon",
+          "Khorne",
+          "Summoned",
+          "Bloodcrushers",
+          "Blood Legion"
+        ],
+        "unitOptions": {
+          "unitSize": [
+            3,
+            6
+          ]
+        }
+      },
+      {
+        "name": "Chaos Land Raider",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Transport",
+          "Smoke",
+          "Chaos",
+          "Khorne",
+          "Land Raider",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Chaos Predator Annihilator",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Smoke",
+          "Chaos",
+          "Khorne",
+          "Predator Annihilator",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Chaos Predator Destructor",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Smoke",
+          "Chaos",
+          "Khorne",
+          "Predator Destructor",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Chaos Spawn",
+        "modelCount": 2,
+        "tags": [
+          "Beast",
+          "Chaos",
+          "Khorne",
+          "Spawn",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Chaos Terminators",
+        "tags": [
+          "Infantry",
+          "Chaos",
+          "Khorne",
+          "Terminator",
+          "Terminator Squad",
+          "World Eaters"
+        ],
+        "unitOptions": {
+          "unitSize": [
+            5,
+            10
+          ]
+        }
+      },
+      {
+        "name": "Defiler",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Walker",
+          "Smoke",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Defiler",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Eightbound",
+        "tags": [
+          "Infantry",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Eightbound",
+          "Possessed",
+          "World Eaters"
+        ],
+        "unitOptions": {
+          "unitSize": [
+            3,
+            6
+          ]
+        }
+      },
+      {
+        "name": "Exalted Eightbound",
+        "tags": [
+          "Infantry",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Exalted Eightbound",
+          "Possessed",
+          "World Eaters"
+        ],
+        "unitOptions": {
+          "unitSize": [
+            3,
+            6
+          ]
+        }
+      },
+      {
+        "name": "Flesh Hounds",
+        "tags": [
+          "Beast",
+          "Chaos",
+          "Daemon",
+          "Khorne",
+          "Summoned",
+          "Flesh Hounds",
+          "Blood Legion"
+        ],
+        "unitOptions": {
+          "unitSize": [
+            5,
+            10
+          ]
+        }
+      },
+      {
+        "name": "Forgefiend",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Walker",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Forgefiend",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Goremongers",
+        "modelCount": 8,
+        "tags": [
+          "Infantry",
+          "Grenades",
+          "Chaos",
+          "Khorne",
+          "Goremongers",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Helbrute",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Walker",
+          "Chaos",
+          "Khorne",
+          "Helbrute",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Heldrake",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Fly",
+          "Aircraft",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Heldrake",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Jakhals",
+        "modelCount": 3,
+        "tags": [
+          "Infantry",
+          "Chaos",
+          "Khorne",
+          "Jakhals",
+          "Grenades",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Khorne Lord of Skulls",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Titanic",
+          "Towering",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Lord of Skulls",
+          "World Eaters"
+        ]
+      },
+      {
+        "name": "Maulerfiend",
+        "modelCount": 1,
+        "tags": [
+          "Vehicle",
+          "Walker",
+          "Chaos",
+          "Khorne",
+          "Daemon",
+          "Maulerfiend",
+          "World Eaters"
+        ]
+      }
     ],
     "detachments": [
       {
         "name": "Berzerker Warband",
         "enhancements": [
-          { name: "Battle-lust", tags: ["World Eaters"] },
-          { name: "Berzerker Glaive", tags: ["World Eaters"] },
-          { name: "Favoured of Khorne", tags: ["World Eaters"] },
-          { name: "Helm of Brazen Ire", tags: ["World Eaters"] },
-        ],
+          { "name": "Berzerker Glaive", tags: ["World Eaters"] },
+          { "name": "Battle-lust", tags: ["World Eaters"] },
+          { "name": "Helm of Brazen Ire", tags: ["World Eaters"] },
+          { "name": "Favoured of Khorne", tags: ["World Eaters"] },
+        ]
+      },
+      {
+        "name": "Vessels of Wrath",
+        "enhancements": [
+          { "name": "Archslaughterer", tags: ["World Eaters"] },
+          { "name": "Vox-Diabolus", tags: ["World Eaters"] },
+          { "name": "Avenger's Crown", tags: ["World Eaters"] },
+          { "name": "Gateways to Glory", tags: ["World Eaters+Daemon Prince", "World Eaters+Mounted"] },
+        ]
       },
       {
         "name": "Cult of Blood",
         "enhancements": [
-          { name: "Chosen of the Blood God", tags: ["World Eaters+Monster"] },
-          { name: "Butcher Lord", tags: ["World Eaters+Infantry"] },
-          { name: "Brazen Form", tags: ["World Eaters+Monster"] },
-          { name: "Strategic Slaughter", tags: ["World Eaters"] },
-        ],
-      }
+          { "name": "Brazen Form", tags: ["World Eaters+Monster"] },
+          { "name": "Butcher Lord", tags: ["World Eaters+Infantry"] },
+          { "name": "Chosen of the Blood God", tags: ["World Eaters+Monster"] },
+          { "name": "Strategic Slaughter", tags: ["World Eaters"] },
+        ]
+      },
       {
-        "name": "Vessels of Wrath",
+        "name": "Khorne Daemonkin",
         "enhancements": [
-          { name: "Archslaughterer", tags: ["World Eaters"] },
-          { name: "Avenger's Crown", tags: ["World Eaters"] },
-          { name: "Gateways to Glory", tags: ["World Eaters"] },
-          { name: "Vox-diabolus", tags: ["World Eaters"] },
-        ],
+          { "name": "Disciple of Khorne", tags: ["Lord on Juggernaut"] },
+          { "name": "Blood-forged Armour", tags: ["World Eaters", "Blood Legion"] },
+          { "name": "Icon of War", tags: ["World Eaters"] },
+          { "name": "Blade of Endless Bloodshed", tags: ["World Eaters"] },
+        ]
+      },
+      {
+        "name": "Possessed Slaughterband",
+        "enhancements": [
+          { "name": "Frenzied Focus", tags: ["World Eaters+Daemon"] },
+          { "name": "Killing Clarity", tags: ["World Eaters+Daemon"] },
+          { "name": "Violent Demise", tags: ["World Eaters+Daemon"] },
+          { "name": "Malicious Vigour", tags: ["Slaughterbound"] },
+        ]
+      },
+      {
+        "name": "Goretrack Onslaught",
+        "enhancements": [
+          { "name": "Aggressive Deployment", tags: ["World Eaters"] },
+          { "name": "Unleash Hell", tags: ["World Eaters"] },
+          { "name": "Infernal Infusion", tags: ["World Eaters"] },
+          { "name": "Murderous Onslaught", tags: ["World Eaters"] },
+        ]
       }
     ]
   }
@@ -3101,34 +3525,76 @@ const POINTS = {
     }
   },
   "World Eaters": {
-    "Angron": 435,
-    "Eightbound (3)": 140,
-    "Eightbound (6)": 280,
-    "Exalted Eightbound (3)": 155,
-    "Exalted Eightbound (6)": 310,
-    "Jakhals (10)": 65,
-    "Jakhals (20)": 130,
-    "Khorne Berzerkers (5)": 90,
-    "Khorne Berzerkers (10)": 180,
-    "Khorne Lord of Skulls": 450,
-    "Kharn the Betrayer": 100,
-    "Lord Invocatus": 140,
-    "World Eaters Chaos Spawn (2)": 70,
-    "World Eaters Daemon Prince": 185,
-    "World Eaters Daemon Prince with Wings": 155,
-    "World Eaters Defiler": 190,
-    "World Eaters Forgefiend": 145,
-    "World Eaters Helbrute": 130,
-    "World Eaters Heldrake": 210,
-    "World Eaters Land Raider": 240,
-    "World Eaters Lord on Juggernaut": 80,
-    "World Eaters Master of Executions": 110,
-    "World Eaters Maulerfiend": 140,
-    "World Eaters Predator Annihilator": 135,
-    "World Eaters Predator Destructor": 140,
-    "World Eaters Rhino": 75,
-    "World Eaters Terminator Squad (5)": 180,
-    "World Eaters Terminator Squad (10)": 360
+    "units": {
+      "Angron": 360,
+      "Bloodcrushers": [110, 220],
+      "Bloodletters": 90,
+      "Bloodthirster": 305,
+      "Chaos Land Raider": 220,
+      "Chaos Predator Annihilator": 145,
+      "Chaos Predator Destructor": 145,
+      "Chaos Rhino": 85,
+      "Chaos Spawn": 90,
+      "Chaos Terminators": [175, 350],
+      "Daemon Prince of Khorne": 200,
+      "Daemon Prince of Khorne with wings": 180,
+      "Defiler": 180,
+      "Eightbound": [135, 270],
+      "Exalted Eightbound": [140, 280],
+      "Flesh Hounds": [75, 150],
+      "Forgefiend": 170,
+      "Goremongers": 85,
+      "Helbrute": 120,
+      "Heldrake": 200,
+      "Jakhals": [65, 140],
+      "Khârn the Betrayer": 100,
+      "Khorne Berzerkers": [180, 360],
+      "Khorne Lord of Skulls": 505,
+      "Lord Invocatus": 110,
+      "Lord on Juggernaut": 90,
+      "Master of Executions": 60,
+      "Maulerfiend": 150,
+      "Skarbrand": 305,
+      "Slaughterbound": 85,
+    },
+    "enhancements": {
+      "Berzerker Warband": {
+        "Battle-lust": 10,
+        "Berzerker Glaive": 25,
+        "Favoured of Khorne": 15,
+        "Helm of Brazen Ire": 20,
+      },
+      "Cult of Blood": {
+        "Brazen Form": 25,
+        "Butcher Lord": 10,
+        "Chosen of the Blood God": 15,
+        "Strategic Slaughter": 20,
+      },
+      "Khorne Daemonkin": {
+        "Blade of Endless Bloodshed": 30,
+        "Blood-forged Armour": 20,
+        "Disciple of Khorne": 15,
+        "Icon of War": 25,
+      },
+      "Possessed Slaughterband": {
+        "Frenzied Focus": 20,
+        "Killing Clarity": 15,
+        "Malicious Vigour": 30,
+        "Violent Demise": 10,
+      },
+      "Goretrack Onslaught": {
+        "Aggressive Deployment": 20,
+        "Infernal Infusion": 25,
+        "Murderous Onslaught": 5,
+        "Unleash Hell": 10,
+      },
+      "Vessels of Wrath": {
+        "Archslaughterer": 25,
+        "Avenger's Crown": 15,
+        "Gateways to Glory": 10,
+        "Vox-Diabolus": 20,
+      }
+    }
   }
 };
 
