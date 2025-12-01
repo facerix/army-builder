@@ -1,4 +1,5 @@
 import { FACTION_NAMES_TO_CODES, FACTION_NAMES } from "./factions.js";
+export { parseBattleScribeCatalogue } from "./battlescribe-parser.js";
 
 const nameAndPointsRE = /^([^(]+)\(([0-9]+).*\)$/im;
 const aosListNameLineRE = /^(.*) (\d+)\/(\d+) pts$/im;
@@ -175,6 +176,7 @@ export const exportArmyList = (armyData) => {
 
   return lines.join("\n");
 }
+
 
 export const parseAOSlist = (exported) => {
 /*

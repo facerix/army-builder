@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test BattleScribe Catalogue Parser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #entryParseDebug {
+            width: 100%;
+            max-width: 100vw;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+
+            section {
+                flex: 1
+            }
+            textarea {
+                width: 100%;
+                height: 200px;
+            }
+
+            #entryResults {
+                font-family: monospace;
+            }
+        }
+        #status {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>BattleScribe Catalogue Parser Test</h1>
+
+    <div id="entryParseDebug">
+        <section>
+            <label for="entryText">Entry XML</label><br/>
+            <textarea id="entryText"></textarea>
+        </section>
+        <button onclick="parseEntry()">Parse entry &gt;&gt;</button>
+        <section>
+            <label for="entryResults">Parse Results</label><br/>
+            <textarea id="entryResults" readonly></textarea>
+        </section>
+    </div>
+    
+    <div>
+        <input type="file" id="catalogueFile" accept=".cat,.xml" />
+        <button onclick="loadAndParse()">Load & Parse Catalogue</button>
+        <input type="checkbox" id="simplifyOutput" checked />
+        <label for="simplifyOutput">Simplify Output</label>
+    </div>
+    
+    <div id="status"></div>
+    
+    <div id="results"></div>
+    <div id="rawResults"></div>
+
+    <script type="module">
+        import { parseBattleScribeCatalogue, parseBattleScribeUnit } from '../src/battlescribe-parser.js';
+        let parsedData = null;
+        let expectedData = null;
+        let simplifyOutput = true;
+
+        document.getElementById('simplifyOutput').addEventListener('change', (e) => {
+            simplifyOutput = e.target.checked;
+        });
+
+        const statsHeaderRow = '<thead><tr>' + ['M', 'T', 'SV', 'W', 'LD', 'OC'].map(header => `<th>${header}</th>`).join('') + '</tr></thead>';
+        const formatUnit = (unit) => {
+            const unitSizeInner = unit.unitOptions?.unitSize ? unit.unitOptions.unitSize.join(' / ') : unit.modelCount ?? '(error parsing)';
+            const summary = `<b>${unit.name}</b>`;
+            const unitSize = `<p><b>Unit Size:</b> ${unitSizeInner}</p>`;
+            const stats = unit.stats ? `<table><thead>${statsHeaderRow}</thead><tr>${unit.stats.map(s => `<td>${s}</td>`).join('')}</tr></table>` : '';
+            const tags = unit.tags ? `<p><b>Tags:</b> ${unit.tags.join(', ')}</p>` : '';
+            const rules = unit.rules ? `<p><b>Rules:</b> ${unit.rules.join(', ')}</p>` : '';
+            const abilities = unit.abilities ? `<p><b>Abilities:</b> ${unit.abilities.map(a => a.name).join(', ')}</p>` : '';
+            const details = `${unitSize}${stats}${tags}${rules}${abilities}`;
+            const debug = `<details><summary>Debug info</summary><pre>${JSON.stringify(unit, null, 2)}</pre></details>`;
+            return `<li><details><summary>${summary}</summary>${details}${debug}</details></li>`;
+        }
+        const formatEnhancement = (enhancement) => {
+            return `<li><details><summary>${enhancement.name} (${enhancement.points} points)</summary><p>${enhancement.description}</p></details></li>`;
+        }
+
+        window.parseEntry = async function() {
+            const entryText = document.getElementById('entryText').value;
+            const entryResults = document.getElementById('entryResults');
+
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(entryText, 'text/xml');
+
+            // Check for parsing errors
+            const parserError = doc.querySelector('parsererror');
+            if (parserError) {
+                throw new Error(`XML parsing error: ${parserError.textContent}`);
+            }
+
+            // Find the catalogue root element
+            const entry = doc.documentElement;
+            if (!entry || entry.tagName !== 'selectionEntry') {
+                throw new Error('Expected selectionEntry as root element');
+            }
+
+            const parsedEntry = parseBattleScribeUnit(entry);
+            entryResults.value = JSON.stringify(parsedEntry, null, 2);
+        }
+
+        const sortedUnits = (units) => {
+            return units.toSorted((a, b) => a.name.localeCompare(b.name));
+        }
+
+        const simplifiedUnits = (units) => {
+            if (!simplifyOutput) {
+                return units;
+            }
+            return units.map(u => {
+                const unit = {
+                    name: u.name,
+                    modelCount: u.modelCount,
+                    tags: u.tags,
+                };
+                if (Object.keys(u.unitOptions).length > 0) {
+                    unit.unitOptions = u.unitOptions;
+                }
+                return unit;
+            });
+        }
+
+        const writerRawOutput = (parsedData, simplify) => {
+            const unitsInOrder = [
+                ...simplifiedUnits(sortedUnits(parsedData.units.filter(u => u.tags?.includes('Character')))),
+                ...simplifiedUnits(sortedUnits(parsedData.units.filter(u => u.tags?.includes('Battleline')))),
+                ...simplifiedUnits(sortedUnits(parsedData.units.filter(u => u.tags?.includes('Dedicated Transport')))),
+                ...simplifiedUnits(sortedUnits(parsedData.units.filter(u => !u.tags?.includes('Character') && !u.tags?.includes('Battleline') && !u.tags?.includes('Dedicated Transport')))),
+            ];
+            const detachments = Object.keys(parsedData.enhancements).map(detachmentName => {
+                return {
+                    name: detachmentName,
+                    enhancements: parsedData.enhancements[detachmentName].map(enhancement => {
+                        return { name: enhancement.name, points: enhancement.points };
+                    }),
+                };
+            });
+            return `<textarea>{
+    "faction": "${parsedData.faction}",
+    "units": ${JSON.stringify(unitsInOrder, null, 2)},
+    "detachments": ${JSON.stringify(detachments, null, 2)}
+}</textarea>`;
+        };
+
+        window.loadAndParse = async function() {
+            const statusDiv = document.getElementById('status');
+            const resultsDiv = document.getElementById('results');
+            const rawResultsDiv = document.getElementById('rawResults');
+            const fileInput = document.getElementById('catalogueFile');
+            
+            try {
+                // Get file from input
+                const file = fileInput.files[0];
+                if (!file) {
+                    throw new Error('Please select a catalogue file (.cat)');
+                }
+                
+                statusDiv.className = 'info';
+                statusDiv.textContent = 'Loading catalogue file...';
+                
+                // Read the file
+                const catalogueXml = await file.text();
+                
+                await parseCatalogue(catalogueXml);
+                
+            } catch (error) {
+                statusDiv.className = 'error';
+                statusDiv.textContent = `✗ Error: ${error.message}`;
+                console.error('Error:', error);
+                resultsDiv.innerHTML = `<pre>${error.stack}</pre>`;
+            }
+            
+            async function parseCatalogue(catalogueXml) {
+                const statusDiv = document.getElementById('status');
+                const resultsDiv = document.getElementById('results');
+                const rawResultsDiv = document.getElementById('rawResults');
+
+                statusDiv.textContent = 'Parsing catalogue...';
+                
+                // Parse the catalogue
+                parsedData = parseBattleScribeCatalogue(catalogueXml);
+                rawResultsDiv.innerHTML = writerRawOutput(parsedData);
+                
+                statusDiv.className = 'success';
+                statusDiv.textContent = `✓ Successfully parsed ${parsedData.units.length} units!`;
+                
+                // Display results
+                const characters = simplifiedUnits(sortedUnits(parsedData.units.filter(u => u.tags?.includes('Character'))));
+                const battleline = simplifiedUnits(sortedUnits(parsedData.units.filter(u => u.tags?.includes('Battleline'))));
+                const dedicatedTransports = simplifiedUnits(sortedUnits(parsedData.units.filter(u => u.tags?.includes('Dedicated Transport'))));
+                const otherUnits = simplifiedUnits(sortedUnits(parsedData.units.filter(u => !u.tags?.includes('Character') && !u.tags?.includes('Battleline') && !u.tags?.includes('Dedicated Transport'))));
+                resultsDiv.innerHTML = `
+                    <h3>Parsed Catalogue: ${parsedData.faction}</h3>
+                    <details><summary><b>Parsed Units (${parsedData.units.length})</b></summary>
+                    <b>Characters:</b>
+                    <ul>${characters.map(formatUnit).join('')}</ul>
+                    <b>Battleline:</b>
+                    <ul>${battleline.map(formatUnit).join('')}</ul>
+                    <b>Dedicated Transports:</b>
+                    <ul>${dedicatedTransports.map(formatUnit).join('')}</ul>
+                    <b>Other Units:</b>
+                    <ul>${otherUnits.map(formatUnit).join('')}</ul>
+                    </details>
+                    <details><summary><b>Parsed Enhancements (${Object.keys(parsedData.enhancements).length})</b></summary>
+                    <ul>${Object.keys(parsedData.enhancements).map(detachmentName => {
+                        return `<li>${detachmentName}:<ul>${parsedData.enhancements[detachmentName].map(formatEnhancement).join('')}</ul></li>`;
+                    }).join('')}</ul></details>
+                `;
+            }
+        };
+
+        // debug data if we're trying to fix a specific parsing issue
+        // document.getElementById('entryText').value = ``;
+    </script>
+</body>
+</html>
+
