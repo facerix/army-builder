@@ -182,7 +182,7 @@ const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   const availableOptions = {};
   if (!unit.tags?.includes("Epic Hero") && includeEnhancements) {
     // filter enhancements to either match unit name or tags (e.g. "exo-armor")
-    availableOptions.enhancements = categoryOptions.enhancements?.filter(o => {
+    availableOptions.enhancements = categoryOptions?.enhancements?.filter(o => {
       return !o.tags || o.tags.includes(unit.name) || o.tags.some(t => unit.tags.includes(t));
     }) ?? [];
   }

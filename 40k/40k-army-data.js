@@ -130,84 +130,53 @@ export const ARMIES = {
         }
       }
     ],
-    "enhancements": {
-      "Army of Faith": [
-        {
-          name: "Blade of Saint Ellynor",
-        },
-        {
-          name: "Divine Aspect",
-        },
-        {
-          name: "Litanies of Faith",
-          tags: ["Canoness", "Palatine"],
-        },
-        {
-          name: "Triptych of the Macharian Crusade",
-        },
-      ],
-      "Bringers of Flame": [
-        {
-          name: "Fire and Fury",
-        },
-        {
-          name: "Iron Surplice of Saint Istalela",
-          tags: ["Canoness", "Palatine"],
-        },
-        {
-          name: "Manual of Saint Griselda",
-        },
-        {
-          name: "Righteous Rage",
-        },
-      ],
-      "Champions of Faith": [
-        {
-          name: "Eyes of the Oracle",
-        },
-        {
-          name: "Mark of Devotion",
-        },
-        {
-          name: "Sanctified Amulet",
-        },
-        {
-          name: "Triptych of Judgement",
-        },
-      ],
-      "Hallowed Martyrs": [
-        {
-          name: "Chaplet of Sacrifice",
-        },
-        {
-          name: "Mantle of Ophelia",
-          tags: ["Canoness", "Palatine"],
-        },
-        {
-          name: "Saintly Example",
-        },
-        {
-          name: "Through Suffering, Strength",
-        },
-      ],
-      "Penitent Host": [
-        {
-          name: "Catechism of Divine Penitence",
-          tags: ["Canoness", "Palatine", "Ministorum Priest"]
-        },
-        {
-          name: "Psalm of Righteous Judgement",
-        },
-        {
-          name: "Refrain of Enduring Faith",
-          tags: ["Penitent"]
-        },
-        {
-          name: "Verse of Holy Piety",
-          tags: ["Penitent"],
-        },
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Army of Faith",
+        "enhancements": [
+          { "name": "Blade of Saint Ellynor" },
+          { "name": "Divine Aspect" },
+          { "name": "Litanies of Faith", "tags": ["Canoness", "Palatine"] },
+          { "name": "Triptych of the Macharian Crusade" }
+        ]
+      },
+      {
+        "name": "Bringers of Flame",
+        "enhancements": [
+          { "name": "Fire and Fury" },
+          { "name": "Iron Surplice of Saint Istalela", "tags": ["Canoness", "Palatine"] },
+          { "name": "Manual of Saint Griselda" },
+          { "name": "Righteous Rage" }
+        ]
+      },
+      {
+        "name": "Champions of Faith",
+        "enhancements": [
+          { "name": "Eyes of the Oracle" },
+          { "name": "Mark of Devotion" },
+          { "name": "Sanctified Amulet" },
+          { "name": "Triptych of Judgement" }
+        ]
+      },
+      {
+        "name": "Hallowed Martyrs",
+        "enhancements": [
+          { "name": "Chaplet of Sacrifice" },
+          { "name": "Mantle of Ophelia", "tags": ["Canoness", "Palatine"] },
+          { "name": "Saintly Example" },
+          { "name": "Through Suffering, Strength" }
+        ]
+      },
+      {
+        "name": "Penitent Host",
+        "enhancements": [
+          { "name": "Catechism of Divine Penitence", "tags": ["Canoness", "Palatine", "Ministorum Priest"] },
+          { "name": "Psalm of Righteous Judgement" },
+          { "name": "Refrain of Enduring Faith", "tags": ["Penitent"] },
+          { "name": "Verse of Holy Piety", "tags": ["Penitent"] }
+        ]
+      }
+    ]
   },
 
   "Adeptus Custodes": {
@@ -250,107 +219,65 @@ export const ARMIES = {
       { name: "Telemon Heavy Dreadnought", tags: ["Vehicle", "Walker", "Telemon Heavy Dreadnought"] },
       { name: "Venatari Custodians", modelCount: [3, 6], tags: ["Infantry", "Fly", "Jump Pack", "Venatari Custodians"], unitOptions: { unitSize: [3, 6] } },
     ],
-    "enhancements": {
-      "Auric Champions": [
-        {
-          name: "Blade Imperator",
-        },
-        {
-          name: "Inspirational Exemplar",
-        },
-        {
-          name: "Martial Philosopher",
-        },
-        {
-          name: "Veiled Blade",
-        },
-      ],
-      "Lions of the Emperor": [
-        {
-          name: "Admonimortis",
-          tags: ["Shield-Captain"],
-        },
-        {
-          name: "Fierce Conqueror",
-          tags: ["Shield-Captain"],
-        },
-        {
-          name: "Praesidius",
-        },
-        {
-          name: "Superior Creation",
-          tags: ["Infantry"],
-        },
-      ],
-      "Null Maiden Vigil": [
-        {
-          name: "Enhanced Voidsheen Cloak",
-          tags: ["Anathema Psykana"],
-        },
-        {
-          name: "Huntress' Eye",
-          tags: ["Anathema Psykana"],
-        },
-        {
-          name: "Oblivion Knigh",
-          tags: ["Anathema Psykana"],
-        },
-        {
-          name: "Raptor Blade",
-          tags: ["Anathema Psykana"],
-        },
-      ],
-      "Shield Host": [
-        {
-          name: "Auric Mantle",
-          tags: ["Shield-Captain", "Blade Champion"],
-        },
-        {
-          name: "Castellan's Mark",
-          tags: ["Shield-Captain"],
-        },
-        {
-          name: "From the Hall of Armouries",
-          tags: ["Shield-Captain"],
-        },
-        {
-          name: "Panoptispex",
-          tags: ["Shield-Captain", "Blade Champion"],
-        },
-      ],
-      "Solar Spearhead": [
-        {
-          name: "Adamantine Talisman",
-        },
-        {
-          name: "Augury Uplink",
-        },
-        {
-          name: "Honoured Fallen",
-          /* TODO: this detachment has special rules that allow you to designate walkers as characters;
-              figure out how to support this */
-          tags: ["Vehicle"],
-        },
-        {
-          name: "Veteran of the Kataphraktoi",
-          tags: ["Infantry", "Mounted"],
-        },
-      ],
-      "Talons of the Emperor": [
-        {
-          name: "Aegis Projector",
-        },
-        {
-          name: "Champion of the Imperium",
-        },
-        {
-          name: "Gift of Terran Artifice",
-        },
-        {
-          name: "Radiant Mantle",
-        },
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Auric Champions",
+        "enhancements": [
+          { "name": "Blade Imperator" },
+          { "name": "Inspirational Exemplar" },
+          { "name": "Martial Philosopher" },
+          { "name": "Veiled Blade" }
+        ]
+      },
+      {
+        "name": "Lions of the Emperor",
+        "enhancements": [
+          { "name": "Admonimortis", "tags": ["Shield-Captain"] },
+          { "name": "Fierce Conqueror", "tags": ["Shield-Captain"] },
+          { "name": "Praesidius" },
+          { "name": "Superior Creation", "tags": ["Infantry"] }
+        ]
+      },
+      {
+        "name": "Null Maiden Vigil",
+        "enhancements": [
+          { "name": "Enhanced Voidsheen Cloak", "tags": ["Anathema Psykana"] },
+          { "name": "Huntress' Eye", "tags": ["Anathema Psykana"] },
+          { "name": "Oblivion Knight", "tags": ["Anathema Psykana"] },
+          { "name": "Raptor Blade", "tags": ["Anathema Psykana"] }
+        ]
+      },
+      {
+        "name": "Shield Host",
+        "enhancements": [
+          { "name": "Auric Mantle", "tags": ["Shield-Captain", "Blade Champion"] },
+          { "name": "Castellan's Mark", "tags": ["Shield-Captain"] },
+          { "name": "From the Hall of Armouries", "tags": ["Shield-Captain"] },
+          { "name": "Panoptispex", "tags": ["Shield-Captain", "Blade Champion"] }
+        ]
+      },
+      {
+        "name": "Solar Spearhead",
+        "enhancements": [
+          { "name": "Adamantine Talisman" },
+          { "name": "Augury Uplink" },
+          { "name": "Honoured Fallen", "tags": ["Vehicle"] },
+          { "name": "Veteran of the Kataphraktoi", "tags": ["Infantry", "Mounted"] }
+        ],
+        "unitModifications": [
+          { type: "addTags", target: "Walker", tags: ["Character"], max: 2 }
+        ]
+      },
+      {
+        "name": "Talons of the Emperor",
+        "enhancements": [
+          { "name": "Aegis Projector" },
+          { "name": "Champion of the Imperium" },
+          { "name": "Gift of Terran Artifice" },
+          { "name": "Radiant Mantle" }
+        ]
+      }
+    ]
   },
 
   "Adeptus Mechanicus": {
@@ -390,111 +317,63 @@ export const ARMIES = {
       { name: "Sydonian Dragoons with Radium Jezzails", modelCount: [1, 2, 3], tags: ["vehicle", "walker", "smoke", "skitarii", "sydonian"] },
       { name: "Sydonian Dragoons with Taser Lances", modelCount: [1, 2, 3], tags: ["vehicle", "walker", "smoke", "skitarii", "sydonian"] },
     ],
-    "enhancements": {
-      "Cohort Cybernetica": [
-        {
-          name: "Arch-negator",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Emotionless Clarity",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Lord of Machines",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Necromechanic",
-          tags: ["Tech-Priest"],
-        },
-      ],
-      "Data-psalm Conclave": [
-        {
-          name: "Data-blessed Autosermon",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Mantle of the Gnosticarch",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Mechanicus Locum",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Temporcopia",
-          tags: ["Tech-Priest"],
-        },
-      ],
-      "Explorator Maniple": [
-        {
-          name: "Artisan",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Genetor",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Logis",
-          tags: ["Tech-Priest"],
-        },
-        {
-          name: "Magos",
-          tags: ["Tech-Priest"],
-        },
-      ],
-      "Haloscreed Battle Clade": [
-        {
-          name: "Cognitive Reinforcement",
-          tags: ["!Cybernetica Datasmith"],
-        },
-        {
-          name: "Inloaded Lethality",
-          tags: ["Tech-Priest Dominus", "Tech-Priest Manipulus"],
-        },
-        {
-          name: "Sanctified Ordnance",
-        },
-        {
-          name: "Transoracular Dyad Wafer",
-          tags: ["Cybernetica Datasmith"],
-        },
-      ],
-      "Rad-zone Corps": [
-        {
-          name: "Autoclavic Denunciation",
-        },
-        {
-          name: "Malphonic Susurrus",
-        },
-        {
-          name: "Peerless Eradicator",
-        },
-        {
-          name: "Radial Suffusion",
-        },
-      ],
-      "Skitarii Hunter Cohort": [
-        {
-          name: "Battle-sphere Uplink",
-          tags: ["Skitarii"],
-        },
-        {
-          name: "Cantic Thrallnet",
-          tags: ["Skitarii Marshal"],
-        },
-        {
-          name: "Clandestine Infiltrator",
-          tags: ["Skitarii"],
-        },
-        {
-          name: "Veiled Hunter",
-          tags: ["Skitarii Marshal"],
-        },
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Cohort Cybernetica",
+        "enhancements": [
+          { "name": "Arch-negator", "tags": ["Tech-Priest"] },
+          { "name": "Emotionless Clarity", "tags": ["Tech-Priest"] },
+          { "name": "Lord of Machines", "tags": ["Tech-Priest"] },
+          { "name": "Necromechanic", "tags": ["Tech-Priest"] }
+        ]
+      },
+      {
+        "name": "Data-psalm Conclave",
+        "enhancements": [
+          { "name": "Data-blessed Autosermon", "tags": ["Tech-Priest"] },
+          { "name": "Mantle of the Gnosticarch", "tags": ["Tech-Priest"] },
+          { "name": "Mechanicus Locum", "tags": ["Tech-Priest"] },
+          { "name": "Temporcopia", "tags": ["Tech-Priest"] }
+        ]
+      },
+      {
+        "name": "Explorator Maniple",
+        "enhancements": [
+          { "name": "Artisan", "tags": ["Tech-Priest"] },
+          { "name": "Genetor", "tags": ["Tech-Priest"] },
+          { "name": "Logis", "tags": ["Tech-Priest"] },
+          { "name": "Magos", "tags": ["Tech-Priest"] }
+        ]
+      },
+      {
+        "name": "Haloscreed Battle Clade",
+        "enhancements": [
+          // TODO: add support for tag-negation when looking for enhancement options
+          { "name": "Cognitive Reinforcement", "tags": ["!Cybernetica Datasmith"] },
+          { "name": "Inloaded Lethality", "tags": ["Tech-Priest Dominus", "Tech-Priest Manipulus"] },
+          { "name": "Sanctified Ordnance" },
+          { "name": "Transoracular Dyad Wafer", "tags": ["Cybernetica Datasmith"] }
+        ]
+      },
+      {
+        "name": "Rad-zone Corps",
+        "enhancements": [
+          { "name": "Autoclavic Denunciation" },
+          { "name": "Malphonic Susurrus" },
+          { "name": "Peerless Eradicator" },
+          { "name": "Radial Suffusion" }
+        ]
+      },
+      {
+        "name": "Skitarii Hunter Cohort",
+        "enhancements": [
+          { "name": "Battle-sphere Uplink", "tags": ["Skitarii"] },
+          { "name": "Cantic Thrallnet", "tags": ["Skitarii Marshal"] },
+          { "name": "Clandestine Infiltrator", "tags": ["Skitarii"] },
+          { "name": "Veiled Hunter", "tags": ["Skitarii Marshal"] }
+        ]
+      }
+    ]
   },
 
   "Aeldari": {
@@ -694,67 +573,95 @@ export const ARMIES = {
       { name: "Phantom Titan", modelCount: 1, tags: ["Monster", "Titanic", "Towering", "Walker", "Wraith Construct", "Phantom Titan", "Asuryani"] },
       { name: "Revenant Titan", modelCount: 1, tags: ["Monster", "Titanic", "Towering", "Walker", "Fly", "Wraith Construct", "Revenant Titan", "Asuryani"] },
     ],
-    "enhancements": {
-      "Armoured Warhost": [
-        { name: "Guiding Presence", tags: ["Psyker"] },
-        { name: "Guileful Strategist" },
-        { name: "Harmonisation Matrix" },
-        { name: "Spirit Stone of Raelyth", tags: ["Psyker"] }
-      ],
-      "Aspect Host": [
-        { name: "Aspect of Murder", tags: ["Autarch", "Autarch Wayleaper"] },
-        { name: "Mantle of Wisdom", tags: ["Autarch", "Autarch Wayleaper"] },
-        { name: "Shimmerstone", tags: ["Autarch", "Autarch Wayleaper"] },
-        { name: "Strategic Savant", tags: ["Autarch", "Autarch Wayleaper"] }
-      ],
-      "Devoted of Ynnead": [
-        { name: "Borrowed Vigour", tags: ["Archon"] },
-        { name: "Gaze of Ynnead", tags: ["Farseer"] },
-        { name: "Morbid Might", tags: ["Succubus"] },
-        { name: "Storm of Whispers", tags: ["Warlock"] }
-      ],
-      "Ghosts of the Webway": [
-        { name: "Cegorach’s Coil", tags: ["Troupe Master"] },
-        { name: "Mask of Secrets", tags: ["Harlequin"] },
-        { name: "Mistweave", tags: ["Shadowseer"] },
-        { name: "Murder’s Jest", tags: ["Death Jester"] }
-      ],
-      "Guardian Battlehost": [
-        { name: "Breath of Vaul", tags: ["Asuryani"] },
-        { name: "Craftworld’s Champion", tags: ["Asuryani"] },
-        { name: "Ethereal Pathway", tags: ["Asuryani"] },
-        { name: "Protector of the Paths", tags: ["Asuryani"] }
-      ],
-      "Seer Council": [
-        { name: "Lucid Eye", tags: ["Asuryani+Psyker"] },
-        { name: "Runes of Warding", tags: ["Asuryani+Psyker"] },
-        { name: "Stone of Eldritch Fury", tags: ["Asuryani+Psyker"] },
-        { name: "Torc of Morai-Heg", tags: ["Asuryani+Psyker"] }
-      ],
-      "Spirit Conclave": [
-        { name: "Higher Duty", tags: ["Spiritseer"] },
-        { name: "Light of Clarity", tags: ["Spiritseer"] },
-        { name: "Rune of Mists", tags: ["Spiritseer"] },
-        { name: "Stave of Kurnous", tags: ["Spiritseer"] }
-      ],
-      "Warhost": [
-        { name: "Gift of Foresight", tags: ["Asuryani"] },
-        { name: "Phoenix Gem", tags: ["Asuryani"] },
-        { name: "Psychic Destroyer", tags: ["Asuryani+Psyker"] },
-        { name: "Timeless Strategist", tags: ["Asuryani"] }
-      ],
-      "Windrider Host": [
-        { name: "Echoes of Ulthanesh", tags: ["Asuryani+Mounted"] },
-        { name: "Firstdrawn Blade", tags: ["Asuryani+Mounted"] },
-        { name: "Mirage Field", tags: ["Asuryani+Mounted"] },
-        { name: "Seersight Strike", tags: ["Asuryani+Mounted+Psyker"] }
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Armoured Warhost",
+        "enhancements": [
+          { "name": "Guiding Presence", "tags": ["Psyker"] },
+          { "name": "Guileful Strategist" },
+          { "name": "Harmonisation Matrix" },
+          { "name": "Spirit Stone of Raelyth", "tags": ["Psyker"] }
+        ]
+      },
+      {
+        "name": "Aspect Host",
+        "enhancements": [
+          { "name": "Aspect of Murder", "tags": ["Autarch", "Autarch Wayleaper"] },
+          { "name": "Mantle of Wisdom", "tags": ["Autarch", "Autarch Wayleaper"] },
+          { "name": "Shimmerstone", "tags": ["Autarch", "Autarch Wayleaper"] },
+          { "name": "Strategic Savant", "tags": ["Autarch", "Autarch Wayleaper"] }
+        ]
+      },
+      {
+        "name": "Devoted of Ynnead",
+        "enhancements": [
+          { "name": "Borrowed Vigour", "tags": ["Archon"] },
+          { "name": "Gaze of Ynnead", "tags": ["Farseer"] },
+          { "name": "Morbid Might", "tags": ["Succubus"] },
+          { "name": "Storm of Whispers", "tags": ["Warlock"] }
+        ]
+      },
+      {
+        "name": "Ghosts of the Webway",
+        "enhancements": [
+          { "name": "Cegorach’s Coil", "tags": ["Troupe Master"] },
+          { "name": "Mask of Secrets", "tags": ["Harlequin"] },
+          { "name": "Mistweave", "tags": ["Shadowseer"] },
+          { "name": "Murder’s Jest", "tags": ["Death Jester"] }
+        ]
+      },
+      {
+        "name": "Guardian Battlehost",
+        "enhancements": [
+          { "name": "Breath of Vaul", "tags": ["Asuryani"] },
+          { "name": "Craftworld’s Champion", "tags": ["Asuryani"] },
+          { "name": "Ethereal Pathway", "tags": ["Asuryani"] },
+          { "name": "Protector of the Paths", "tags": ["Asuryani"] }
+        ]
+      },
+      {
+        "name": "Seer Council",
+        "enhancements": [
+          // TODO: add support for multi-tag matching
+          { "name": "Lucid Eye", "tags": ["Asuryani+Psyker"] },
+          { "name": "Runes of Warding", "tags": ["Asuryani+Psyker"] },
+          { "name": "Stone of Eldritch Fury", "tags": ["Asuryani+Psyker"] },
+          { "name": "Torc of Morai-Heg", "tags": ["Asuryani+Psyker"] }
+        ]
+      },
+      {
+        "name": "Spirit Conclave",
+        "enhancements": [
+          { "name": "Higher Duty", "tags": ["Spiritseer"] },
+          { "name": "Light of Clarity", "tags": ["Spiritseer"] },
+          { "name": "Rune of Mists", "tags": ["Spiritseer"] },
+          { "name": "Stave of Kurnous", "tags": ["Spiritseer"] }
+        ]
+      },
+      {
+        "name": "Warhost",
+        "enhancements": [
+          { "name": "Gift of Foresight", "tags": ["Asuryani"] },
+          { "name": "Phoenix Gem", "tags": ["Asuryani"] },
+          { "name": "Psychic Destroyer", "tags": ["Asuryani+Psyker"] },
+          { "name": "Timeless Strategist", "tags": ["Asuryani"] }
+        ]
+      },
+      {
+        "name": "Windrider Host",
+        "enhancements": [
+          { "name": "Echoes of Ulthanesh", "tags": ["Asuryani+Mounted"] },
+          { "name": "Firstdrawn Blade", "tags": ["Asuryani+Mounted"] },
+          { "name": "Mirage Field", "tags": ["Asuryani+Mounted"] },
+          { "name": "Seersight Strike", "tags": ["Asuryani+Mounted+Psyker"] }
+        ]
+      }
+    ]
   },
 
   "Astra Militarum": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Black Templars": {
@@ -765,7 +672,7 @@ export const ARMIES = {
       */
     },
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Blood Angels": {
@@ -822,76 +729,99 @@ export const ARMIES = {
         tags: ["Vehicle", "Walker", "Dreadnought", "Death Company", "Death Company Dreadnought"]
       }
     ],
-    "enhancements": {
-      "Angelic Inheritors": [
-        { name: "Blazing Icon" },
-        { name: "Ordained Sacrifice" },
-        { name: "Prescient Flash" },
-        { name: "Troubling Visions" }
-      ],
-      "Liberator Assault Group": [
-        { name: "Gift of Foresight" },
-        { name: "Icon of the Angel" },
-        { name: "Rage-fuelled Warrior" },
-        { name: "Speed of the Primarch" }
-      ],
-      "The Angelic Host": [
-        { name: "Archangel's Shard" },
-        { name: "Artisan of War" },
-        { name: "Gleaming Pinions" },
-        { name: "Visage of Death" }
-      ],
-      "The Lost Brethren": [
-        { name: "Blood Shard" },
-        { name: "Sanguinius' Grace" },
-        { name: "To Slay the Warmaster" },
-        { name: "Vengeful Onslaught" }
-      ]
-    }
+    "detachments": [
+      {
+        "name": "Angelic Inheritors",
+        "enhancements": [
+          { "name": "Blazing Icon", tags: ["Infantry"] },
+          { "name": "Ordained Sacrifice" },
+          { "name": "Prescient Flash" },
+          { "name": "Troubling Visions" }
+        ]
+      },
+      {
+        "name": "Liberator Assault Group",
+        "enhancements": [
+          { "name": "Gift of Foresight" },
+          { "name": "Icon of the Angel" },
+          { "name": "Rage-fuelled Warrior" },
+          { "name": "Speed of the Primarch" }
+        ]
+      },
+      {
+        "name": "The Angelic Host",
+        "enhancements": [
+          { "name": "Archangel's Shard", tags: ["Jump Pack"]  },
+          { "name": "Artisan of War", tags: ["Jump Pack"] },
+          { "name": "Gleaming Pinions", tags: ["Jump Pack"]  },
+          { "name": "Visage of Death", tags: ["Jump Pack"]  }
+        ]
+      },
+      {
+        "name": "The Lost Brethren",
+        "enhancements": [
+          { "name": "Blood Shard", tags: ["Death Company"] },
+          { "name": "Sanguinius' Grace", tags: ["Death Company"] },
+          { "name": "To Slay the Warmaster", tags: ["Death Company"] },
+          { "name": "Vengeful Onslaught", tags: ["Death Company"] }
+        ],
+        "unitModifications": [
+          {
+            type: "addTags",
+            target: "Death Company Marines",
+            tags: ["Battleline"],
+          },
+          {
+            type: "addTags",
+            target: "Death Company Marines with Bolt Rifles",
+            tags: ["Battleline"],
+          },
+        ],
+      }
+    ]
   },
 
   "Chaos Daemons": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Chaos Knights": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Chaos Space Marines": {
     "units": [
       /* characters */
       { name: "Abaddon the Despoiler", tags: ["Character", "Epic Hero"] },
-      { name: "Chaos Lord", tags: ["Character"] },
-      { name: "Chaos Lord In Terminator Armour", tags: ["Character"] },
-      { name: "Chaos Lord with Jump Pack", tags: ["Character"] },
-      { name: "Cultist Firebrand", tags: ["Character"] },
+      { name: "Chaos Lord", tags: ["Character", "Chaos Lord"] },
+      { name: "Chaos Lord In Terminator Armour", tags: ["Character", "Chaos Lord"] },
+      { name: "Chaos Lord with Jump Pack", tags: ["Character", "Chaos Lord"] },
+      { name: "Cultist Firebrand", tags: ["Character", "Damned"] },
       { name: "Cypher", tags: ["Character", "Epic Hero", "Fallen"] },
       { name: "Dark Apostle", tags: ["Character"] },
-      { name: "Dark Commune", tags: ["Character"] },
+      { name: "Dark Commune", tags: ["Character", "Damned"] },
       { name: "Fabius Bile", tags: ["Character", "Epic Hero"] },
       { name: "Haarken Worldclaimer", tags: ["Character", "Epic Hero"] },
-      { name: "Heretic Astartes Daemon Prince", tags: ["Character"] },
-      { name: "Heretic Astartes Daemon Prince With Wings", tags: ["Character"] },
+      { name: "Heretic Astartes Daemon Prince", tags: ["Character", "Daemon Prince"] },
+      { name: "Heretic Astartes Daemon Prince With Wings", tags: ["Character", "Daemon Prince"] },
       { name: "Huron Blackheart", tags: ["Character", "Epic Hero"] },
       { name: "Lord Discordant On Helstalker", tags: ["Character"] },
       { name: "Master of Executions", tags: ["Character"] },
       { name: "Master of Possession", tags: ["Character"] },
       { name: "Sorcerer", tags: ["Character"] },
       { name: "Sorcerer In Terminator Armour", tags: ["Character"] },
-      { name: "Traitor Enforcer", tags: ["Character"] },
+      { name: "Traitor Enforcer", tags: ["Character", "Damned"] },
       { name: "Vashtorr The Arkifane", tags: ["Character", "Epic Hero"] },
       { name: "Warpsmith", tags: ["Character"] },
       /* battleline */
-      { name: "Cultist Mob", tags: ["Battleline"], unitOptions: { unitSize: [8, 16] } },
+      { name: "Cultist Mob", tags: ["Battleline", "Damned"], unitOptions: { unitSize: [8, 16] } },
       { name: "Legionaries", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-      { name: "Traitor Guardsmen Squad", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
       // { name: "Khorne Berzerkers", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
       // { name: "Plague Marines", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
       // { name: "Rubric Marines", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-      { name: "Accursed Cultists", unitOptions: { unitSize: [8, 16] } },
+      { name: "Accursed Cultists", tags: ["Damned"], unitOptions: { unitSize: [8, 16] } },
       { name: "Chaos Bikers", unitOptions: { unitSize: [3, 6] } },
       { name: "Chaos Land Raider" },
       { name: "Chaos Predator Annihilator" },
@@ -902,7 +832,7 @@ export const ARMIES = {
       { name: "Chaos Vindicator" },
       { name: "Chosen" },
       { name: "Defiler" },
-      { name: "Fellgor Beastmen" },
+      { name: "Fellgor Beastmen", tags: ["Damned"] },
       { name: "Forgefiend" },
       { name: "Havocs" },
       { name: "Helbrute" },
@@ -913,72 +843,103 @@ export const ARMIES = {
       { name: "Obliterators" },
       { name: "Possessed" },
       { name: "Raptors" },
+      { name: "Traitor Guardsmen Squad", tags: ["Damned"], unitOptions: { unitSize: [5, 10] } },
       { name: "Venomcrawler" },
       { name: "Warp Talons" },
       // { name: "Noise Marines", unitOptions: { unitSize: [5, 10] } },
     ],
-    "enhancements": {
-      "Cabal of Chaos": [
-        { name: "Eye of Z’desh" },
-        { name: "Infernal Avatar" },
-        { name: "Mind Blade" },
-        { name: "Touched by the Warp" },
-      ],
-      "Chaos Cult": [
-        { name: "Amulet of Tainted Vigour" },
-        { name: "Cultist’s Brand" },
-        { name: "Incendiary Goad" },
-        { name: "Warped Foresight" },
-      ],
-      "Creations of Bile": [
-        { name: "Helm of All-seeing" },
-        { name: "Living Carapace" },
-        { name: "Prime Test Subject" },
-        { name: "Surgical Precision" },
-      ],
-      "Deceptors": [
-        { name: "Cursed Fang" },
-        { name: "Falsehood" },
-        { name: "Shroud of Obfuscation" },
-        { name: "Soul Link" },
-      ],
-      "Dread Talons": [
-        { name: "Eater of Dread" },
-        { name: "Night’s Shroud" },
-        { name: "Warp-fuelled Thrusters" },
-        { name: "Willbreaker" },
-      ],
-      "Fellhammer Siege-host": [
-        { name: "Bastion Plate" },
-        { name: "Iron Artifice" },
-        { name: "Ironbound Enmity" },
-        { name: "Warp Tracer" },
-      ],
-      "Pactbound Zealots": [
-        { name: "Eye of Tzeentch" },
-        { name: "Intoxicating Elixir" },
-        { name: "Orbs of Unlife" },
-        { name: "Talisman of Burning Blood" },
-      ],
-      "Renegade Raiders": [
-        { name: "Despot’s Claim" },
-        { name: "Dread Reaver" },
-        { name: "Mark of the Hound" },
-        { name: "Tyrant’s Lash" },
-      ],
-      "Soulforged Warpack": [
-        { name: "Forge’s Blessing" },
-        { name: "Invigorated Mechatendrils" },
-        { name: "Tempting Addendum" },
-        { name: "Soul Harvester" },
-      ],
-      "Veterans of the Long War": [
-        { name: "Eager for Vengeance" },
-        { name: "Eye of Abaddon" },
-        { name: "Mark of Legend" },
-        { name: "Warmaster’s Gift" },
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Cabal of Chaos",
+        "enhancements": [
+          { name: "Eye of Z’desh" },
+          { name: "Infernal Avatar", tags: ["Daemon Prince"] },
+          { name: "Mind Blade", tags: ["Psyker"] },
+          { name: "Touched by the Warp", tags: ["!Khorne"] },
+        ]
+      },
+      {
+        "name": "Chaos Cult",
+        "enhancements": [
+          { name: "Amulet of Tainted Vigour", tags: ["Dark Apostle"] },
+          { name: "Cultist’s Brand", tags: ["Dark Apostle", "Damned"] },
+          { name: "Incendiary Goad", tags: ["Dark Apostle", "Damned"] },
+          { name: "Warped Foresight", tags: ["Dark Apostle", "Damned"] }
+        ]
+      },
+      {
+        "name": "Creations of Bile",
+        "enhancements": [
+          { name: "Helm of All-seeing", tags: ["Infantry"] },
+          { name: "Living Carapace", tags: ["Chaos Lord"] },
+          { name: "Prime Test Subject", tags: ["Infantry"] },
+          { name: "Surgical Precision", tags: ["!Damned"] },
+        ]
+      },
+      {
+        "name": "Deceptors",
+        "enhancements": [
+          { "name": "Cursed Fang", tags: ["Infantry"] },
+          { "name": "Falsehood", tags: ["Chaos Lord+!Terminator+!Jump Pack"] },
+          { "name": "Shroud of Obfuscation", tags: ["Infantry"] },
+          { "name": "Soul Link", tags: ["Infantry"] },
+        ]
+      },
+      {
+        "name": "Dread Talons",
+        "enhancements": [
+          { "name": "Eater of Dread" },
+          { "name": "Night’s Shroud", tags: ["Chaos Lord+!Terminator"] },
+          { "name": "Warp-fuelled Thrusters", tags: ["Chaos Lord with Jump Pack"] },
+          { "name": "Willbreaker" }
+        ]
+      },
+      {
+        "name": "Fellhammer Siege-host",
+        "enhancements": [
+          { "name": "Bastion Plate", tags: ["Chaos Lord+!Jump Pack"] },
+          { "name": "Iron Artifice", tags: ["Infantry"] },
+          { "name": "Ironbound Enmity" },
+          { "name": "Warp Tracer" }
+        ]
+      },
+      {
+        "name": "Pactbound Zealots",
+        "enhancements": [
+          { name: "Eye of Tzeentch", tags: ["Tzeentch"] },
+          { name: "Intoxicating Elixir", tags: ["Slaanesh"] },
+          { name: "Orbs of Unlife", tags: ["Nurgle"] },
+          { name: "Talisman of Burning Blood", tags: ["Khorne"] },
+        ]
+      },
+      {
+        "name": "Renegade Raiders",
+        "enhancements": [
+          { "name": "Despot’s Claim" },
+          { "name": "Dread Reaver" },
+          { "name": "Mark of the Hound" },
+          { "name": "Tyrant’s Lash" }
+        ]
+      },
+      {
+        "name": "Soulforged Warpack",
+        "enhancements": [
+          { name: "Forge’s Blessing" },
+          { name: "Invigorated Mechatendrils", tags: ["Warpsmith"] },
+          { name: "Tempting Addendum" },
+          { name: "Soul Harvester" },
+        ]
+      },
+      {
+        "name": "Veterans of the Long War",
+        "enhancements": [
+          { "name": "Eager for Vengeance", tags: ["!Damned"]  },
+          { "name": "Eye of Abaddon", tags: ["!Damned"]  },
+          { "name": "Mark of Legend", tags: ["!Damned"] },
+          { "name": "Warmaster’s Gift", tags: ["Chaos Lord"] },
+        ]
+      }
+    ]
   },
 
   "Dark Angels": {
@@ -986,7 +947,7 @@ export const ARMIES = {
       parentFaction: "Space Marines",
     },
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Death Guard": {
@@ -994,7 +955,7 @@ export const ARMIES = {
       parentFaction: "Chaos Space Marines",
     },
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Deathwatch": {
@@ -1005,12 +966,12 @@ export const ARMIES = {
       */
     },
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Drukhari": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Emperor's Children": {
@@ -1018,27 +979,27 @@ export const ARMIES = {
       parentFaction: "Chaos Space Marines",
     },
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Genestealer Cults": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Grey Knights": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Imperial Agents": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Imperial Knights": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Leagues of Votann": {
@@ -1205,7 +1166,6 @@ export const ARMIES = {
             { name: ["Graviton blast cannon", "SP conversion beamer"], replaces: "Bolt cannon" },
           ]
         },
-
       },
       {
         name: "Cthonian Beserks",
@@ -1383,44 +1343,62 @@ export const ARMIES = {
         }
       },
     ],
-    "enhancements": {
-      "Brandfast Oathband": [
-        { name: "Precursive Judgement" },
-        { name: "Signature Restoration" },
-        { name: "Tactical Alchemy" },
-        { name: "Trivärg Cyber Implant" },
-      ],
-      "Dêlve Assault Shift": [
-        { name: "Dêlvwerke Navigator" },
-        { name: "Multiwave System Jammer" },
-        { name: "Piledriver" },
-        { name: "Quake Supervisor" },
-      ],
-      "Hearthband": [
-        { name: "Bastion Shield" },
-        { name: "High Kâhl", tags: ["Kâhl"] },
-        { name: "Ironskein" },
-        { name: "Quake Multigenerator", tags: ["Kâhl"] },
-      ],
-      "Hearthfyre Arsenal": [
-        { name: "Calculated Tenacity", tags: ["Brôkhyr Iron-master", "Memnyr Strategist"] },
-        { name: "Fârstrydr Node", tags: ["Brôkhyr Iron-master", "Memnyr Strategist"] },
-        { name: "Graviton Vault", tags: ["Brôkhyr Iron-master"] },
-        { name: "Mantle of Elders", tags: ["Memnyr Strategist"] },
-      ],
-      "Needgaârd Oathband": [
-        { name: "Ancestral Crest" },
-        { name: "Dead Reckoning" },
-        { name: "Iron Ambassador" },
-        { name: "Oathbound Speculator" },
-      ],
-      "Persecution Prospect": [
-        { name: "Eye for Weakness" },
-        { name: "Nomad Strategist" },
-        { name: "Surgical Saboteur" },
-        { name: "Writ of Acquisition" },
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Brandfast Oathband",
+        "enhancements": [
+          { "name": "Precursive Judgement" },
+          { "name": "Signature Restoration" },
+          { "name": "Tactical Alchemy" },
+          { "name": "Trivärg Cyber Implant" }
+        ]
+      },
+      {
+        "name": "Dêlve Assault Shift",
+        "enhancements": [
+          { "name": "Dêlvwerke Navigator" },
+          { "name": "Multiwave System Jammer" },
+          { "name": "Piledriver" },
+          { "name": "Quake Supervisor" }
+        ]
+      },
+      {
+        "name": "Hearthband",
+        "enhancements": [
+          { "name": "Bastion Shield" },
+          { "name": "High Kâhl", "tags": ["Kâhl"] },
+          { "name": "Ironskein" },
+          { "name": "Quake Multigenerator", "tags": ["Kâhl"] }
+        ]
+      },
+      {
+        "name": "Hearthfyre Arsenal",
+        "enhancements": [
+          { "name": "Calculated Tenacity", "tags": ["Brôkhyr Iron-master", "Memnyr Strategist"] },
+          { "name": "Fârstrydr Node", "tags": ["Brôkhyr Iron-master", "Memnyr Strategist"] },
+          { "name": "Graviton Vault", "tags": ["Brôkhyr Iron-master"] },
+          { "name": "Mantle of Elders", "tags": ["Memnyr Strategist"] }
+        ]
+      },
+      {
+        "name": "Needgaârd Oathband",
+        "enhancements": [
+          { "name": "Ancestral Crest" },
+          { "name": "Dead Reckoning" },
+          { "name": "Iron Ambassador" },
+          { "name": "Oathbound Speculator" }
+        ]
+      },
+      {
+        "name": "Persecution Prospect",
+        "enhancements": [
+          { "name": "Eye for Weakness" },
+          { "name": "Nomad Strategist" },
+          { "name": "Surgical Saboteur" },
+          { "name": "Writ of Acquisition" }
+        ]
+      }
+    ]
   },
 
   "Necrons": {
@@ -1486,109 +1464,127 @@ export const ARMIES = {
       /* forge world models */
       { name: "Seraptek Heavy Construct", tags: ["Vehicle", "Walker", "Titanic", "Towering", "Seraptek Heavy Construct"] },
     ],
-    "enhancements": {
-      "Annihilation Legion": [
-        { name: "Eldritch Nightmare", tags: ["Destroyer Cult"] },
-        { name: "Eternal Madness" },
-        { name: "Ingrained Superiority" },
-        { name: "Soulless Reaper", tags: ["Destroyer Cult"] },
-      ],
-      "Awakened Dynasty": [
-        { name: "Enaegic Dermal Bond" },
-        { name: "Nether-realm Casket" },
-        { name: "Phasal Subjugator" },
-        { name: "Veil of Darkness" },
-      ],
-      "Canoptek Court": [
-        { name: "Autodivinator", tags: ["Cryptek"] },
-        { name: "Dimensional Sanctum", tags: ["Cryptek"] },
-        { name: "Hyperphasic Fulcrum", tags: ["Cryptek"] },
-        { name: "Metalodermal Tesla Weave", tags: ["Cryptek"] },
-      ],
-      "Hypercrypt Legion": [
-        { name: "Arisen Tyrant" },
-        { name: "Dimensional Overseer" },
-        { name: "Hyperspatial Transfer Node" },
-        { name: "Osteoclave Fulcrum" },
-      ],
-      "Obeisance Phalanx": [
-        { name: "Eternal Conqueror", tags: ["Overlord"] },
-        { name: "Honourable Combatant", tags: ["Overlord"] },
-        { name: "Unflinching Will", tags: ["Overlord"] },
-        { name: "Warrior Noble", tags: ["Overlord"] },
-      ],
-      "Starshatter Arsenal": [
-        { name: "Chrono-impedance Fields" },
-        { name: "Demanding Leader" },
-        { name: "Dread Majesty", tags: ["Overlord", "Catacomb Command Barge"] },
-        { name: "Miniaturised Nebuloscope" },
-      ],
-    }
+    "detachments": [
+      {
+        "name": "Annihilation Legion",
+        "enhancements": [
+          { "name": "Eldritch Nightmare", tags: ["Destroyer Cult"] },
+          { "name": "Eternal Madness" },
+          { "name": "Ingrained Superiority" },
+          { "name": "Soulless Reaper", tags: ["Destroyer Cult"] }
+        ]
+      },
+      {
+        "name": "Awakened Dynasty",
+        "enhancements": [
+          { "name": "Enaegic Dermal Bond" },
+          { "name": "Nether-realm Casket" },
+          { "name": "Phasal Subjugator" },
+          { "name": "Veil of Darkness" }
+        ]
+      },
+      {
+        "name": "Canoptek Court",
+        "enhancements": [
+          { name: "Autodivinator", tags: ["Cryptek"] },
+          { name: "Dimensional Sanctum", tags: ["Cryptek"] },
+          { name: "Hyperphasic Fulcrum", tags: ["Cryptek"] },
+          { name: "Metalodermal Tesla Weave", tags: ["Cryptek"] },
+        ]
+      },
+      {
+        "name": "Hypercrypt Legion",
+        "enhancements": [
+          { name: "Arisen Tyrant" },
+          { name: "Dimensional Overseer" },
+          { name: "Hyperspatial Transfer Node" },
+          { name: "Osteoclave Fulcrum" },
+        ]
+      },
+      {
+        "name": "Obeisance Phalanx",
+        "enhancements": [
+          { name: "Eternal Conqueror", tags: ["Overlord"] },
+          { name: "Honourable Combatant", tags: ["Overlord"] },
+          { name: "Unflinching Will", tags: ["Overlord"] },
+          { name: "Warrior Noble", tags: ["Overlord"] },
+        ]
+      },
+      {
+        "name": "Starshatter Arsenal",
+        "enhancements": [
+          { name: "Chrono-impedance Fields" },
+          { name: "Demanding Leader" },
+          { name: "Dread Majesty", tags: ["Overlord", "Catacomb Command Barge"] },
+          { name: "Miniaturised Nebuloscope" },
+        ]
+      }
+    ]
   },
 
   "Orks": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Space Marines": {
     "units": [
-      { name: "Adrax Agatone", tags: ["Character", "Epic Hero"] },
+      { name: "Adrax Agatone", tags: ["Character", "Epic Hero", "Salamanders"] },
       { name: "Aethon Shaan", tags: ["Character", "Epic Hero"] },
-      { name: "Ancient", tags: ["Character"] },
-      { name: "Ancient in Terminator Armour", tags: ["Character"] },
+      { name: "Ancient", tags: ["Character", "Ancient"] },
+      { name: "Ancient in Terminator Armour", tags: ["Character", "Ancient"] },
       { name: "Apothecary", tags: ["Character"] },
-      { name: "Apothecary Biologis", tags: ["Character"] },
-      { name: "Bladeguard Ancient", tags: ["Character"] },
+      { name: "Apothecary Biologis", tags: ["Character", "Gravis"] },
+      { name: "Bladeguard Ancient", tags: ["Character", "Ancient"] },
       { name: "Captain", tags: ["Character"] },
-      { name: "Captain in Gravis Armour", tags: ["Character"] },
-      { name: "Captain in Phobos Armour", tags: ["Character"] },
+      { name: "Captain in Gravis Armour", tags: ["Character", "Gravis"] },
+      { name: "Captain in Phobos Armour", tags: ["Character", "Phobos"] },
       { name: "Captain in Terminator Armour", tags: ["Character"] },
       { name: "Captain Sicarius", tags: ["Character", "Epic Hero"] },
       { name: "Captain with Jump Pack", tags: ["Character"] },
       { name: "Chaplain", tags: ["Character"] },
       { name: "Chaplain in Terminator Armour", tags: ["Character"] },
-      { name: "Chaplain on Bike", tags: ["Character"] },
+      { name: "Chaplain on Bike", tags: ["Character", "Mounted"] },
       { name: "Chaplain with Jump Pack", tags: ["Character"] },
       { name: "Chief Librarian Tigurius", tags: ["Character", "Epic Hero"] },
-      { name: "Darnath Lysander", tags: ["Character", "Epic Hero"] },
+      { name: "Darnath Lysander", tags: ["Character", "Epic Hero", "Imperial Fists"] },
       { name: "Iron Father Feirros", tags: ["Character", "Epic Hero"] },
       { name: "Judiciar", tags: ["Character"] },
       { name: "Kayvan Shrike", tags: ["Character", "Epic Hero"] },
       { name: "Kor'Sarro Khan", tags: ["Character", "Epic Hero"] },
       { name: "Librarian", tags: ["Character"] },
-      { name: "Librarian in Phobos Armour", tags: ["Character"] },
+      { name: "Librarian in Phobos Armour", tags: ["Character", "Phobos"] },
       { name: "Librarian in Terminator Armour", tags: ["Character"] },
       { name: "Lieutenant", tags: ["Character"] },
-      { name: "Lieutenant in Phobos Armour", tags: ["Character"] },
-      { name: "Lieutenant in Reiver Armour", tags: ["Character"] },
-      { name: "Lieutenant with Combi-weapon", tags: ["Character"] },
+      { name: "Lieutenant in Phobos Armour", tags: ["Character", "Phobos"] },
+      { name: "Lieutenant in Reiver Armour", tags: ["Character", "Phobos"] },
+      { name: "Lieutenant with Combi-weapon", tags: ["Character", "Phobos"] },
       { name: "Lieutenant Titus", tags: ["Character", "Epic Hero"] },
       { name: "Marneus Calgar", tags: ["Character", "Epic Hero"] },
-      { name: "Pedro Kantor", tags: ["Character", "Epic Hero"] },
+      { name: "Pedro Kantor", tags: ["Character", "Epic Hero", "Imperial Fists"] },
       { name: "Roboute Guilliman", tags: ["Character", "Epic Hero"] },
       { name: "Techmarine", tags: ["Character"] },
-      { name: "Tor Garadon", tags: ["Character", "Epic Hero"] },
+      { name: "Tor Garadon", tags: ["Character", "Epic Hero", "Imperial Fists"] },
       { name: "Uriel Ventris", tags: ["Character", "Epic Hero"] },
-      { name: "Vulkan He'stan", tags: ["Character", "Epic Hero"] },
+      { name: "Vulkan He'stan", tags: ["Character", "Epic Hero", "Salamanders"] },
       { name: "Assault Intercessor Squad", modelCount: [5, 10], tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-      { name: "Heavy Intercessor Squad", modelCount: [5, 10], tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Heavy Intercessor Squad", modelCount: [5, 10], tags: ["Battleline", "Gravis"], unitOptions: { unitSize: [5, 10] } },
       { name: "Intercessor Squad", modelCount: [5, 10], tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
       { name: "Tactical Squad", modelCount: 10, tags: ["Battleline"] },
-      { name: "Aggressor Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Aggressor Squad", modelCount: [3, 6], tags: ["Gravis"], unitOptions: { unitSize: [3, 6] } },
       { name: "Assault Intercessors with Jump Packs", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Ballistus Dreadnought", modelCount: 140 },
       { name: "Bladeguard Veteran Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
       { name: "Brutalis Dreadnought", modelCount: 160 },
       { name: "Centurion Assault Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
       { name: "Centurion Devastator Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
-      { name: "Company Heroes", modelCount: 4 },
+      { name: "Company Heroes", modelCount: 4, tags: ["Ancient"] },
       { name: "Desolation Squad", modelCount: 5 },
       { name: "Devastator Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Dreadnought", modelCount: 1 },
       { name: "Drop Pod", modelCount: 1 },
-      { name: "Eliminator Squad", modelCount: 3 },
-      { name: "Eradicator Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Eliminator Squad", modelCount: 3, tags: ["Phobos"] },
+      { name: "Eradicator Squad", modelCount: [3, 6], tags: ["Gravis"], unitOptions: { unitSize: [3, 6] } },
       { name: "Firestrike Servo-turrets", modelCount: [1, 2], unitOptions: { unitSize: [1, 2] } },
       { name: "Gladiator Lancer", modelCount: 1 },
       { name: "Gladiator Reaper", modelCount: 1 },
@@ -1596,21 +1592,21 @@ export const ARMIES = {
       { name: "Hammerfall Bunker", modelCount: 1 },
       { name: "Hellblaster Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
       { name: "Impulsor", modelCount: 1 },
-      { name: "Inceptor Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
-      { name: "Incursor Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Inceptor Squad", modelCount: [3, 6], tags: ["Gravis"], unitOptions: { unitSize: [3, 6] } },
+      { name: "Incursor Squad", modelCount: [5, 10], tags: ["Phobos"], unitOptions: { unitSize: [5, 10] } },
       { name: "Infernus Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Infiltrator Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
-      { name: "Invader ATV", modelCount: 1 },
-      { name: "Invictor Tactical Warsuit", modelCount: 1 },
+      { name: "Infiltrator Squad", modelCount: [5, 10], tags: ["Phobos"], unitOptions: { unitSize: [5, 10] } },
+      { name: "Invader ATV", modelCount: 1, tags: ["Mounted"] },
+      { name: "Invictor Tactical Warsuit", modelCount: 1, tags: ["Phobos"] },
       { name: "Land Raider", modelCount: 1 },
       { name: "Land Raider Crusader", modelCount: 1 },
       { name: "Land Raider Redeemer", modelCount: 1 },
-      { name: "Outrider Squad", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },  // figure out how to handle Invader ATV +60
+      { name: "Outrider Squad", modelCount: [3, 6], tags: ["Mounted"], unitOptions: { unitSize: [3, 6] } },  // figure out how to handle Invader ATV +60
       { name: "Predator Annihilator", modelCount: 1 },
       { name: "Predator Destructor", modelCount: 1 },
       { name: "Razorback", modelCount: 1 },
       { name: "Redemptor Dreadnought", modelCount: 1 },
-      { name: "Reiver Squad", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Reiver Squad", modelCount: [5, 10], tags: ["Phobos"], unitOptions: { unitSize: [5, 10] } },
       { name: "Repulsor", modelCount: 1 },
       { name: "Repulsor Executioner", modelCount: 1 },
       { name: "Rhino", modelCount: 1 },
@@ -1631,75 +1627,110 @@ export const ARMIES = {
       { name: "Astraeus", modelCount: 1 },
       { name: "Thunderhawk Gunship", modelCount: 1 },
     ],
-    "enhancements": {
-      // TODO: check enhancement restrictions
-      "1st Company Task Force": [
-        { name: "Fear Made Manifest" },
-        { name: "Iron Resolve" },
-        { name: "Rites of War" },
-        { name: "The Imperium's Sword" },
-      ],
-      "Anvil Siege Force": [
-        { name: "Architect of War" },
-        { name: "Fleet Commander" },
-        { name: "Indomitable Fury" },
-        { name: "Stoic Defender" },
-      ],
-      "Emperor's Shield": [
-        { name: "Champion of the Feast" },
-        { name: "Disciple of Rhetoricus" },
-        { name: "Indomitable Champion" },
-        { name: "Malodraxian Standard" },
-      ],
-      "Firestorm Assault Force": [
-        { name: "Adamantine Mantle" },
-        { name: "Champion of Humanity" },
-        { name: "Forged in Battle" },
-        { name: "War-tempered Artifice" },
-      ],
-      "Forgefather's Seekers": [
-        { name: "Adamantine Mantle" },
-        { name: "Forged in Battle" },
-        { name: "Immolator" },
-        { name: "War-tempered Artifice" },
-      ],
-      "Gladius Task Force": [
-        { name: "Adept of the Codex" },
-        { name: "Artificer Armour" },
-        { name: "Fire Discipline" },
-        { name: "The Honour Vehement" },
-      ],
-      "Ironstorm Spearhead": [
-        { name: "Adept of the Omnissiah" },
-        { name: "Master of Machine War" },
-        { name: "Target Augury Web" },
-        { name: "The Flesh is Weak" },
-      ],
-      "Librarius Conclave": [
-        { name: "Celerity" },
-        { name: "Fusillade" },
-        { name: "Obfuscation" },
-        { name: "Prescience" },
-      ],
-      "Shadowmark Talon": [
-        { name: "Blackwing Shroud" },
-        { name: "Coronal Susurrant" },
-        { name: "Hunter’s Instincts" },
-        { name: "Umbral Raptor" },
-      ],
-      "Stormlance Task Force": [
-        { name: "Feinting Withdrawal" },
-        { name: "Fury of the Storm" },
-        { name: "Hunter’s Instincts" },
-        { name: "Portents of Wisdom" },
-      ],
-      "Vanguard Spearhead": [
-        { name: "Execute and Redeploy" },
-        { name: "Ghostweave Cloak" },
-        { name: "Shadow War Veteran" },
-        { name: "The Blade Driven Deep" },
-      ],
-    },
+    "detachments": [
+      {
+        name: "1st Company Task Force",
+        "enhancements": [
+          { name: "Fear Made Manifest" },
+          { name: "Iron Resolve", tags: ["Terminator"] },
+          { name: "Rites of War", tags: ["Terminator"] },
+          { name: "The Imperium's Sword" },
+        ],
+      },
+      {
+        name: "Anvil Siege Force",
+        enhancements: [
+          { name: "Architect of War" },
+          { name: "Fleet Commander", tags: ["Captain"] },
+          { name: "Indomitable Fury", tags: ["Gravis"] },
+          { name: "Stoic Defender" },
+        ],
+      },
+      {
+        name: "Emperor's Shield",
+        enhancements: [
+          { name: "Champion of the Feast", tags: ["Imperial Fists"] },
+          { name: "Disciple of Rhetoricus", tags: ["Imperial Fists+Terminator"] },
+          { name: "Indomitable Champion", tags: ["Imperial Fists+Terminator"] },
+          { name: "Malodraxian Standard", tags: ["Imperial Fists+Ancient"] },
+        ],
+        "restrictions": ["Imperial Fists"],
+      },
+      {
+        name: "Firestorm Assault Force",
+        enhancements: [
+          { name: "Adamantine Mantle" },
+          { name: "Champion of Humanity", tags: ["Tacticus"] },
+          { name: "Forged in Battle" },
+          { name: "War-tempered Artifice", tags: ["Infantry"] },
+        ],
+      },
+      {
+        name: "Forgefather's Seekers",
+        enhancements: [
+          { name: "Adamantine Mantle", tags: ["Salamanders"] },
+          { name: "Forged in Battle", tags: ["Salamanders"] },
+          { name: "Immolator", tags: ["Salamanders"] },
+          { name: "War-tempered Artifice", tags: ["Salamanders+Infantry"] },
+        ],
+        "restrictions": ["Salamanders"],
+      },
+      {
+        name: "Gladius Task Force",
+        enhancements: [
+          { name: "Adept of the Codex", tags: ["Captain"] },
+          { name: "Artificer Armour" },
+          { name: "Fire Discipline" },
+          { name: "The Honour Vehement" },
+        ],
+      },
+      {
+        name: "Ironstorm Spearhead",
+        enhancements: [
+          { name: "Adept of the Omnissiah", tags: ["Techmarine"] },
+          { name: "Master of Machine War" },
+          { name: "Target Augury Web", tags: ["Techmarine"] },
+          { name: "The Flesh is Weak" },
+        ],
+      },
+      {
+        name: "Librarius Conclave",
+        enhancements: [
+          { name: "Celerity", tags: ["Psyker"] },
+          { name: "Fusillade", tags: ["Psyker"] },
+          { name: "Obfuscation", tags: ["Psyker"] },
+          { name: "Prescience", tags: ["Psyker"] },
+        ]
+      },
+      {
+        name: "Shadowmark Talon",
+        enhancements: [
+          { name: "Blackwing Shroud", tags: ["Infantry+Raven Guard"] },
+          { name: "Coronal Susurrant", tags: ["Phobos+Raven Guard"] },
+          { name: "Hunter’s Instincts", tags: ["Raven Guard"] },
+          { name: "Umbral Raptor", tags: ["Raven Guard"] },
+        ],
+        "restrictions": ["Raven Guard"],
+      },
+      {
+        name: "Stormlance Task Force",
+        enhancements: [
+          { name: "Feinting Withdrawal" },
+          { name: "Fury of the Storm", tags: ["Mounted"] },
+          { name: "Hunter’s Instincts", tags: ["Mounted"] },
+          { name: "Portents of Wisdom" },
+        ],
+      },
+      {
+        name: "Vanguard Spearhead",
+        enhancements: [
+          { name: "Execute and Redeploy", tags: ["Phobos"] },
+          { name: "Ghostweave Cloak" },
+          { name: "Shadow War Veteran", tags: ["Phobos"] },
+          { name: "The Blade Driven Deep", tags: ["Infantry"] },
+        ],
+      },
+    ],
   },
 
   "Space Wolves": {
@@ -1742,35 +1773,35 @@ export const ARMIES = {
     ],
     "enhancements": {
       "Champions of Fenris": [
-        { name: "Fangrune Pendant" },
-        { name: "Foes’ Fate" },
+        { name: "Fangrune Pendant", tags: ["Terminator"] },
+        { name: "Foes’ Fate", tags: ["Terminator"] },
         { name: "Longstrider" },
-        { name: "Wolves’ Wisdom" },
+        { name: "Wolves’ Wisdom", tags: ["Infantry"] },
       ],
       "Saga of the Beastslayer": [
-        { name: "Elder’s Guidance" },
+        { name: "Elder’s Guidance", tags: ["Space Wolves"] },
         { name: "Helm of the Beastslayer" },
         { name: "Hunter’s Guile" },
-        { name: "Wolf-touched" },
+        { name: "Wolf-touched", tags: ["Space Wolves"] },
       ],
       "Saga of the Bold": [
-        { name: "Braggart’s Steel" },
-        { name: "Hordeslayer" },
+        { name: "Braggart’s Steel", tags: ["Space Wolves"] },
+        { name: "Hordeslayer", tags: ["Space Wolves"] },
         { name: "Skjald" },
         { name: "Thunderwolf’s Fortitude" },
       ],
       "Saga of the Hunter": [
         { name: "Fenrisian Grit" },
         { name: "Feral Rage" },
-        { name: "Swift Hunter" },
-        { name: "Wolf Master" },
+        { name: "Swift Hunter", tags: ["Space Wolves"] },
+        { name: "Wolf Master", tags: ["Space Wolves"] },
       ],
     }
   },
 
   "T'au Empire": {
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Thousand Sons": {
@@ -1778,7 +1809,7 @@ export const ARMIES = {
       parentFaction: "Chaos Space Marines",
     },
     "units": [],
-    "enhancements": {},
+    "detachments": []
   },
 
   "Tyranids": {
@@ -1832,118 +1863,140 @@ export const ARMIES = {
       { name: "Von Ryan's Leapers", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Vanguard Invader"] },
       { name: "Zoanthropes", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] }, tags: ["Psyker", "Synapse"] },
     ],
-    "enhancements": {
-      "Assimilation Swarm": [
-        { name: "Biophagic Flow" },
-        { name: "Instinctive Defence" },
-        { name: "Parasitic Biomorphology" },
-        { name: "Regenerating Monstrosity" },
-      ],
-      "Crusher Stampede": [
-        { name: "Enraged Reserves", tags: ["Monster"] },
-        { name: "Monstrous Nemesis", tags: ["Monster"] },
-        { name: "Null Nodules", tags: ["Monster"] },
-        { name: "Ominous Presence", tags: ["Monster"] },
-      ],
-      "Invasion Fleet": [
-        { name: "Adaptive Biology" },
-        { name: "Alien Cunning" },
-        { name: "Perfectly Adapted" },
-        { name: "Synaptic Linchpin" },
-      ],
-      "Subterranean Assault": [
-        { name: "Synaptic Strategy" },
-        { name: "Tremor Senses" },
-        { name: "Trygon Prime", tags: ["Trygon"] },
-        { name: "Vanguard Intellect" },
-      ],
-      "Synaptic Nexus": [
-        { name: "Power of the Hive Mind", tags: ["Psyker"] },
-        { name: "Psychostatic Disruption", tags: ["Synapse"] },
-        { name: "Synaptic Control", tags: ["Synapse"] },
-        { name: "The Dirgeheart of Kharis", tags: ["Synapse"] },
-      ],
-      "Unending Swarm": [
-        { name: "Adrenalised Onslaught" },
-        { name: "Naturalised Camouflage" },
-        { name: "Piercing Talons" },
-        { name: "Relentless Hunger" },
-      ],
-      "Vanguard Onslaught": [
-        { name: "Chameleonic", tags: ["Vanguard Invader"] },
-        { name: "Hunting Grounds" },
-        { name: "Neuronode" },
-        { name: "Stalker", tags: ["Vanguard Invader"] },
-      ],
-      "Warrior Bioform Onslaught": [
-        { name: "Elevated Might" },
-        { name: "Ocular Adaptation", tags: ["Winged Tyranid Prime"] },
-        { name: "Sensory Assimilation", tags: ["Winged Tyranid Prime"] },
-        { name: "Synaptic Tyrant", tags: ["Neurotyrant"] },
-      ],
-    },
+    "detachments": [
+      {
+        name: "Assimilation Swarm",
+        enhancements: [
+          { name: "Biophagic Flow" },
+          { name: "Instinctive Defence" },
+          { name: "Parasitic Biomorphology" },
+          { name: "Regenerating Monstrosity" },
+        ],
+      },
+      {
+        name: "Crusher Stampede",
+        enhancements: [
+          { name: "Enraged Reserves", tags: ["Monster"] },
+          { name: "Monstrous Nemesis", tags: ["Monster"] },
+          { name: "Null Nodules", tags: ["Monster"] },
+          { name: "Ominous Presence", tags: ["Monster"] },
+        ],
+      },
+      {
+        name: "Invasion Fleet",
+        enhancements: [
+          { name: "Adaptive Biology" },
+          { name: "Alien Cunning" },
+          { name: "Perfectly Adapted" },
+          { name: "Synaptic Linchpin" },
+        ],
+      },
+      {
+        name: "Subterranean Assault",
+        enhancements: [
+          { name: "Synaptic Strategy" },
+          { name: "Tremor Senses" },
+          { name: "Trygon Prime", tags: ["Trygon"] },
+          { name: "Vanguard Intellect" },
+        ],
+      },
+      {
+        name: "Synaptic Nexus",
+        enhancements: [
+          { name: "Power of the Hive Mind", tags: ["Psyker"] },
+          { name: "Psychostatic Disruption", tags: ["Synapse"] },
+          { name: "Synaptic Control", tags: ["Synapse"] },
+          { name: "The Dirgeheart of Kharis", tags: ["Synapse"] },
+        ],
+      },
+      {
+        name: "Unending Swarm",
+        enhancements: [
+          { name: "Adrenalised Onslaught" },
+          { name: "Naturalised Camouflage" },
+          { name: "Piercing Talons" },
+          { name: "Relentless Hunger" },
+        ],
+      },
+      {
+        name: "Vanguard Onslaught",
+        enhancements: [
+          { name: "Chameleonic", tags: ["Vanguard Invader"] },
+          { name: "Hunting Grounds" },
+          { name: "Neuronode" },
+          { name: "Stalker", tags: ["Vanguard Invader"] },
+        ],
+      },
+      {
+        name: "Warrior Bioform Onslaught",
+        enhancements: [
+          { name: "Elevated Might" },
+          { name: "Ocular Adaptation", tags: ["Winged Tyranid Prime"] },
+          { name: "Sensory Assimilation", tags: ["Winged Tyranid Prime"] },
+          { name: "Synaptic Tyrant", tags: ["Neurotyrant"] },
+        ],
+      },
+    ]
   },
 
   "World Eaters": {
     "chapterInfo": {
       parentFaction: "Chaos Space Marines",
     },
-    "models": {
-      "Angron": 435,
-      "Eightbound": {
-        "3x": 140,
-        "6x": 280
+    "models": [
+      { name: "Angron", tags: ["Character", "Epic Hero"] },
+      { name: "Eightbound", tags: ["Battleline"], modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Exalted Eightbound", tags: ["Battleline"], modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+      { name: "Jakhals", tags: ["Battleline"], modelCount: [10, 20], unitOptions: { unitSize: [10, 20] } },
+      { name: "Khorne Berzerkers", tags: ["Battleline"], modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      { name: "Khorne Lord of Skulls", tags: ["Character", "Epic Hero"] },
+      { name: "Kharn the Betrayer", tags: ["Character", "Epic Hero"] },
+      { name: "Lord Invocatus", tags: ["Character"] },
+      { name: "World Eaters Chaos Spawn", tags: ["Battleline"], modelCount: 2, unitOptions: { unitSize: [2, 4] } },
+      { name: "World Eaters Daemon Prince", tags: ["Character", "Daemon Prince"], modelCount: 185 },
+      { name: "World Eaters Daemon Prince with Wings", tags: ["Character", "Daemon Prince"], modelCount: 155 },
+      { name: "World Eaters Defiler", tags: ["Character"], modelCount: 190 },
+      { name: "World Eaters Forgefiend", tags: ["Character"], modelCount: 145 },
+      { name: "World Eaters Helbrute", tags: ["Character"], modelCount: 130 },
+      { name: "World Eaters Heldrake", tags: ["Character"], modelCount: 210 },
+      { name: "World Eaters Land Raider", tags: ["Character"], modelCount: 240 },
+      { name: "World Eaters Lord on Juggernaut", tags: ["Character"], modelCount: 80 },
+      { name: "World Eaters Master of Executions", tags: ["Character"], modelCount: 110 },
+      { name: "World Eaters Maulerfiend", tags: ["Character"], modelCount: 140 },
+      { name: "World Eaters Predator Annihilator", tags: ["Character"], modelCount: 135 },
+      { name: "World Eaters Predator Destructor", tags: ["Character"], modelCount: 140 },
+      { name: "World Eaters Rhino", tags: ["Character"], modelCount: 75 },
+      { name: "World Eaters Terminator Squad", tags: ["Battleline"], modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+    ],
+    "detachments": [
+      {
+        "name": "Berzerker Warband",
+        "enhancements": [
+          { name: "Battle-lust", tags: ["World Eaters"] },
+          { name: "Berzerker Glaive", tags: ["World Eaters"] },
+          { name: "Favoured of Khorne", tags: ["World Eaters"] },
+          { name: "Helm of Brazen Ire", tags: ["World Eaters"] },
+        ],
       },
-      "Exalted Eightbound": {
-        "3x": 155,
-        "6x": 310
-      },
-      "Jakhals": {
-        "10x": 65,
-        "20x": 130
-      },
-      "Khorne Berzerkers": {
-        "5x": 90,
-        "10x": 180
-      },
-      "Khorne Lord of Skulls": 450,
-      "Kharn the Betrayer": 100,
-      "Lord Invocatus": 140,
-      "World Eaters Chaos Spawn": {
-        "2x": 70
-      },
-      "World Eaters Daemon Prince": 185,
-      "World Eaters Daemon Prince with Wings": 155,
-      "World Eaters Defiler": 190,
-      "World Eaters Forgefiend": 145,
-      "World Eaters Helbrute": 130,
-      "World Eaters Heldrake": 210,
-      "World Eaters Land Raider": 240,
-      "World Eaters Lord on Juggernaut": 80,
-      "World Eaters Master of Executions": 110,
-      "World Eaters Maulerfiend": 140,
-      "World Eaters Predator Annihilator": 135,
-      "World Eaters Predator Destructor": 140,
-      "World Eaters Rhino": 75,
-      "World Eaters Terminator Squad": {
-        "5x": 180,
-        "10x": 360
+      {
+        "name": "Cult of Blood",
+        "enhancements": [
+          { name: "Chosen of the Blood God", tags: ["World Eaters+Monster"] },
+          { name: "Butcher Lord", tags: ["World Eaters+Infantry"] },
+          { name: "Brazen Form", tags: ["World Eaters+Monster"] },
+          { name: "Strategic Slaughter", tags: ["World Eaters"] },
+        ],
       }
-    },
-    "enhancements": {
-      "Berzerker Warband": {
-        "Battle-lust": 15,
-        "Berzerker Glaive": 25,
-        "Favoured of Khorne": 20,
-        "Helm of Brazen Ire": 25
-      },
-      "Vessels of Wrath": {
-        "Archslaughterer": 25,
-        "Avenger's Crown": 15,
-        "Gateways to Glory": 10,
-        "Vox-diabolus": 20
+      {
+        "name": "Vessels of Wrath",
+        "enhancements": [
+          { name: "Archslaughterer", tags: ["World Eaters"] },
+          { name: "Avenger's Crown", tags: ["World Eaters"] },
+          { name: "Gateways to Glory", tags: ["World Eaters"] },
+          { name: "Vox-diabolus", tags: ["World Eaters"] },
+        ],
       }
-    }
+    ]
   }
 };
 
@@ -3107,7 +3160,7 @@ export const get40kArmyData = (faction) => {
 
     const dataWithPoints = {
       units: rawFactionData.units.map(u => getPointsForUnit(u, points.units)),
-      enhancements: getPointsForEnhancements(rawFactionData.enhancements, points.enhancements),
+      detachments: getPointsForDetachments(rawFactionData.detachments, points.enhancements),
     };
     cachedArmyData[faction] = dataWithPoints;
   }
@@ -3145,14 +3198,16 @@ const getPointsForUnit = (unit, points) => {
   };
 };
 
-const getPointsForEnhancements = (enhancementData, pointsData) => {
-  let enhancementsWithPoints = {};
-  Object.entries(enhancementData).forEach(([detachmentName, enhancements]) => {
-    const pointsForDetachment = pointsData[detachmentName] ?? {};
-    enhancementsWithPoints[detachmentName] = enhancements.map(enhData => ({
-      ...enhData,
-      points: pointsForDetachment[enhData.name] ?? 0,
-    }));
+const getPointsForDetachments = (detachmentData, pointsData) => {
+  let detachmentWithPoints = {};
+  detachmentData.forEach(detachment => {
+    const pointsForDetachment = pointsData[detachment.name] ?? {};
+    detachmentWithPoints[detachment.name] = {
+      enhancements: detachment.enhancements.map(enhData => ({
+        ...enhData,
+        points: pointsForDetachment[enhData.name] ?? 0,
+      })),
+    };
   });
-  return enhancementsWithPoints;
+  return detachmentWithPoints; 
 };

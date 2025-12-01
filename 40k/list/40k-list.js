@@ -47,7 +47,7 @@ whenLoaded.then(() => {
     armyData = get40kArmyData(factionName);
 
     // populate detachment selector
-    Object.keys(armyData.enhancements).forEach(detachmentName => {
+    Object.keys(armyData.detachments).forEach(detachmentName => {
       detachmentSelector.append(h("option", { value: detachmentName, innerText: detachmentName }));
     });
   }
@@ -127,7 +127,7 @@ whenLoaded.then(() => {
 
   const getDetachmentOptions = (armyData, detachment) => {
     return {
-      enhancements: armyData.enhancements[detachment] || [],
+      enhancements: armyData.detachments[detachment]?.enhancements || [],
     };
   }
 
