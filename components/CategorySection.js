@@ -178,12 +178,80 @@ const TEMPLATE = `
 <!--confirmation-modal></confirmation-modal-->
 `;
 
+/**
+ * Matches a single tag requirement against unit tags.
+ * Supports:
+ * - Simple tags: "Tag1" - unit must have Tag1
+ * - Negated tags: "!Tag2" - unit must NOT have Tag2
+ * - Compound tags: "Tag1+!Tag2" - unit must have Tag1 AND NOT Tag2
+ * 
+ * @param {string} tagRequirement - Single tag requirement to match
+ * @param {string[]} unitTags - Tags that the unit has
+ * @param {string} unitName - Name of the unit (for exact name matching)
+ * @returns {boolean} True if the unit matches the tag requirement
+ */
+const matchesSingleTagRequirement = (tagRequirement, unitTags, unitName) => {
+  // Handle compound tags (AND logic) - e.g., "Tag1+!Tag2"
+  if (tagRequirement.includes('+')) {
+    const parts = tagRequirement.split('+').map(p => p.trim());
+    return parts.every(part => matchesSingleTagRequirement(part, unitTags, unitName));
+  }
+
+  // Handle negated tags/names - e.g., "!Tag2" or "!UnitName"
+  if (tagRequirement.startsWith('!')) {
+    const tag = tagRequirement.substring(1);
+    // Check if negated tag matches unit name
+    if (tag === unitName) {
+      return false;
+    }
+    // Check if negated tag matches any unit tag
+    return !unitTags?.includes(tag);
+  }
+
+  // Check for exact unit name match
+  if (tagRequirement === unitName) {
+    return true;
+  }
+
+  // Handle simple positive tags
+  return unitTags?.includes(tagRequirement) || false;
+};
+
+/**
+ * Matches a unit against tag requirements.
+ * Supports:
+ * - Simple tags: "Tag1" - unit must have Tag1
+ * - Negated tags: "!Tag2" - unit must NOT have Tag2
+ * - Compound tags: "Tag1+!Tag2" - unit must have Tag1 AND NOT Tag2
+ * - Array of tags: ["Tag1+!Tag2", "Tag3"] - (Tag1 AND NOT Tag2) OR Tag3
+ * 
+ * @param {string|string[]} tagRequirements - Tag requirement(s) to match (can be array for OR logic)
+ * @param {string[]} unitTags - Tags that the unit has
+ * @param {string} unitName - Name of the unit (for exact name matching)
+ * @returns {boolean} True if the unit matches the tag requirements
+ */
+const matchesTagRequirement = (tagRequirements, unitTags, unitName) => {
+  // If no tags requirement, always match
+  if (!tagRequirements) {
+    return true;
+  }
+
+  // Handle array of tag requirements (OR logic)
+  if (Array.isArray(tagRequirements)) {
+    return tagRequirements.some(req => matchesSingleTagRequirement(req, unitTags, unitName));
+  }
+
+  // Handle single tag requirement
+  return matchesSingleTagRequirement(tagRequirements, unitTags, unitName);
+};
+
 const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   const availableOptions = {};
   if (!unit.tags?.includes("Epic Hero") && includeEnhancements) {
     // filter enhancements to either match unit name or tags (e.g. "exo-armor")
     availableOptions.enhancements = categoryOptions?.enhancements?.filter(o => {
-      return !o.tags || o.tags.includes(unit.name) || o.tags.some(t => unit.tags.includes(t));
+      // Check if enhancement matches tag requirements (handles arrays, compound tags, negation)
+      return matchesTagRequirement(o.tags, unit.tags || [], unit.name);
     }) ?? [];
   }
   // other options

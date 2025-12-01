@@ -348,11 +348,10 @@ export const ARMIES = {
       {
         "name": "Haloscreed Battle Clade",
         "enhancements": [
-          // TODO: add support for tag-negation when looking for enhancement options
           { "name": "Cognitive Reinforcement", "tags": ["!Cybernetica Datasmith"] },
           { "name": "Inloaded Lethality", "tags": ["Tech-Priest Dominus", "Tech-Priest Manipulus"] },
           { "name": "Sanctified Ordnance" },
-          { "name": "Transoracular Dyad Wafer", "tags": ["Cybernetica Datasmith"] }
+          { "name": "Transoracular Dyad Wafers", "tags": ["Cybernetica Datasmith"] }
         ]
       },
       {
@@ -622,7 +621,6 @@ export const ARMIES = {
       {
         "name": "Seer Council",
         "enhancements": [
-          // TODO: add support for multi-tag matching
           { "name": "Lucid Eye", "tags": ["Asuryani+Psyker"] },
           { "name": "Runes of Warding", "tags": ["Asuryani+Psyker"] },
           { "name": "Stone of Eldritch Fury", "tags": ["Asuryani+Psyker"] },
@@ -1937,7 +1935,6 @@ export const ARMIES = {
 
   "World Eaters": {
     "chapterInfo": {
-      // TODO: de-duplicate chapter-specific units with those coming from the parent faction
       parentFaction: "Chaos Space Marines",
     },
     "units": [
