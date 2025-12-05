@@ -253,6 +253,17 @@ a:focus-visible {
   flex: 1;
 }
 
+/* background scroll fix for dialogs */
+/* see https://www.bram.us/2025/11/25/use-overscroll-behavior-contain-to-prevent-a-page-from-scrolling-while-a-dialog-is-open/ */
+dialog {
+	overscroll-behavior: contain;
+}
+
+dialog::backdrop {
+	overflow: hidden;
+	overscroll-behavior: contain;
+}
+
 /* responsive design tweaks (breakpoints adopted from Bootstrap) */
 
 /* Small devices (e.g. phones, 575px and under) */

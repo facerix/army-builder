@@ -158,7 +158,6 @@ const CSS = `
     font-size: small;
     margin: 0 0.75rem 0 auto;
   }
-
 }
 `;
 

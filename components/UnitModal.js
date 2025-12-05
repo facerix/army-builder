@@ -129,6 +129,16 @@ const CSS = `
       max-height: 80dvh;
       overflow-y: scroll;
     }
+
+
+    /* background scroll fix */
+    /* see https://www.bram.us/2025/11/25/use-overscroll-behavior-contain-to-prevent-a-page-from-scrolling-while-a-dialog-is-open/ */
+    overscroll-behavior: contain;
+  
+    &::backdrop {
+      overflow: hidden;
+      overscroll-behavior: contain;
+    }
   }
 }
 `;
