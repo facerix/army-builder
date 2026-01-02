@@ -1,6 +1,6 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
-import { FACTION_IMAGE_URLS, AOS_FACTION_NAMES } from '../src/factions.js';
+import { FACTION_IMAGE_URLS, FACTION_NAMES } from './factions.js';
 import { BATTLE_PROFILES } from './aos-army-data.js';
 import { serviceWorkerManager } from '../src/ServiceWorkerManager.js';
 import '../components/UpdateNotification.js';
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     DataStore.addItem({
       game: "aos",
       faction,
-      name: `Unnamed ${AOS_FACTION_NAMES[faction]} army`,
+      name: `Unnamed ${FACTION_NAMES[faction]} army`,
       totalPoints: 0,
       regiments: [],
       auxiliaryUnits: [],

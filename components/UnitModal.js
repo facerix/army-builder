@@ -201,34 +201,25 @@ class UnitModal extends HTMLElement {
           const { unitName: name, defaultModelCount } = unitSummary.dataset;
           // Unit definition :> name: string, points: number, tags?: string[], modelCount?: number | number[], unitOptions?: object
           const unitDef = this.#options.find(u => u.name === name);
-          const { points, tags = [], unitOptions = undefined, weapons = [], wargear = [] } = unitDef;
+          const { unitOptions = undefined } = unitDef;
           const modelCount = parseInt(defaultModelCount, 10);
+          
+          // Store only instance-specific data: id, name, and options
           const unitToAdd = {
             id: v4WithTimestamp(),
             name,
-            points,
-            modelCount,
-            tags,
-            weapons,
-            wargear,
+            options: {}
           };
+          
           if (unitOptions) {
             // populate options object for unit's defaults
-            unitToAdd.unitOptions = {};
-            unitToAdd.options = {};
             Object.keys(unitOptions).forEach(option => {
               switch (option) {
                 case "unitSize":
                   // pick smallest unit size as default
-                  const sizeOptions = [ ...unitOptions.unitSize ]; // .sort((a, b) => a - b);
+                  const sizeOptions = [ ...unitOptions.unitSize ];
                   const selectedSize = sizeOptions[0];
-                  unitToAdd.points = points[0];
                   unitToAdd.options.unitSize = selectedSize;
-                  unitToAdd.unitOptions.unitSize = sizeOptions.map((modelCount, idx) => ({
-                    modelCount,
-                    points: points[idx]
-                  }));
-
                   break;
                 case "weapons":
                   const weaponOptions = [ ...unitOptions.weapons ];
@@ -242,10 +233,6 @@ class UnitModal extends HTMLElement {
                       ...(replaces ? { replaces } : {}),
                     };
                   });
-                  unitToAdd.unitOptions.weapons = weaponOptions.map(weapon => ({
-                    ...weapon,
-                    selected: false,
-                  }));
                   break;
                 case "wargear":
                   const wargearOptions = [ ...unitOptions.wargear ];
@@ -259,10 +246,6 @@ class UnitModal extends HTMLElement {
                       ...(replaces ? { replaces } : {}),
                     };
                   });
-                  unitToAdd.unitOptions.wargear = wargearOptions.map(wargear => ({
-                    ...wargear,
-                    selected: false,
-                  }));
                   break;
                 default:
                   unitToAdd.options[option] = unitOptions[option];

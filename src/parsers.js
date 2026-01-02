@@ -1,4 +1,4 @@
-import { FACTION_NAMES_TO_CODES, FACTION_NAMES } from "./factions.js";
+import { FACTION_NAMES_TO_CODES, FACTION_NAMES } from "../40k/army-data/factions.js";
 export { parseBattleScribeCatalogue } from "./battlescribe-parser.js";
 
 const nameAndPointsRE = /^([^(]+)\(([0-9]+).*\)$/im;

@@ -3,7 +3,7 @@ import '/components/AOSSection.js';
 import '/components/Regiment.js';
 import '/components/UpdateNotification.js';
 import { BATTLE_PROFILES } from '../aos-army-data.js';
-import { AOS_FACTION_NAMES } from '/src/factions.js';
+import { FACTION_NAMES } from '/aos/factions.js';
 import { h } from '/src/domUtils.js';
 import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
 
@@ -36,7 +36,7 @@ whenLoaded.then(() => {
   const urlParams = new URL(window.location).searchParams;
   const id = urlParams.get('id');
   const faction = urlParams.get('faction');
-  const factionName = AOS_FACTION_NAMES[faction];
+  const factionName = FACTION_NAMES[faction];
   const formationSelector = document.querySelector("select#formation");
 
   let armyList;

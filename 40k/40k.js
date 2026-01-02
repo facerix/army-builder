@@ -1,7 +1,6 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
-import { FACTION_IMAGE_URLS, FACTION_NAMES } from '../src/factions.js';
-import { ARMIES } from './40k-army-data.js';
+import { FACTION_IMAGE_URLS, FACTION_NAMES, FACTION_NAMES_TO_CODES } from './army-data/factions.js';
 import { serviceWorkerManager } from '../src/ServiceWorkerManager.js';
 import '../components/UpdateNotification.js';
 
@@ -40,8 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
   factionSelector.querySelectorAll("option").forEach(option => {
     const faction = FACTION_NAMES[option.value];
     if (faction) {
-      if (!ARMIES[faction] || !ARMIES[faction]?.units?.length) {
-        console.log(`faction '${faction}' is missing battle profile data`);
+      if (!(faction in FACTION_NAMES_TO_CODES)) {
+        // console.log(`faction '${faction}' is missing battle profile data`);
         option.disabled = true;
       }
     }

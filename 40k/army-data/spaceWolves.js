@@ -1,0 +1,65 @@
+export const factionData = {
+  "chapterInfo": {
+        parentFaction: "Space Marines",
+        restrictions: [
+          "Apothecary",
+          "Devastator Squad",
+          "Tactical Squad"
+        ],
+      },
+      "units": [
+        { name: "Arjac Rockfist", tags: ["Character", "Epic Hero"] },
+        { name: "Bjorn the Fell-Handed", tags: ["Character", "Epic Hero"] },
+        { name: "Iron Priest", tags: ["Character"] },
+        { name: "Logan Grimnar", tags: ["Character", "Epic Hero"] },
+        { name: "Murderfang", tags: ["Character", "Epic Hero"] },
+        { name: "Njal Stormcaller", tags: ["Character", "Epic Hero"] },
+        { name: "Ragnar Blackmane", tags: ["Character", "Epic Hero"] },
+        { name: "Ulrik the Slayer", tags: ["Character", "Epic Hero"] },
+        { name: "Wolf Guard Battle Leader", tags: ["Character"] },
+        { name: "Wolf Priest", tags: ["Character"] },
+        { name: "Blood Claws", modelCount: [10, 20], tags: ["Battleline"], unitOptions: { unitSize: [10, 20] } },
+        { name: "Grey Hunters", modelCount: 10, tags: ["Battleline"] },
+        {
+          name: "Fenrisian Wolves",
+          modelCount: [5, 10],
+          unitOptions: {
+            unitSize: [5, 10],
+          }
+        },
+        { name: "Thunderwolf Cavalry", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+        { name: "Venerable Dreadnought" },
+        { name: "Wolf Guard Headtakers", modelCount: [3, 6], unitOptions: { unitSize: [3, 6] } },
+        { name: "Wolf Guard Headtakers and Hunting Wolves", modelCount: [6, 12], unitOptions: { unitSize: [6, 12] } },
+        { name: "Wolf Guard Terminators", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+        { name: "Wulfen", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+        { name: "Wulfen Dreadnought" },
+        { name: "Wulfen with Storm Shields", modelCount: [5, 10], unitOptions: { unitSize: [5, 10] } },
+      ],
+      "enhancements": {
+        "Champions of Fenris": [
+          { name: "Fangrune Pendant", tags: ["Terminator"] },
+          { name: "Foes’ Fate", tags: ["Terminator"] },
+          { name: "Longstrider" },
+          { name: "Wolves’ Wisdom", tags: ["Infantry"] },
+        ],
+        "Saga of the Beastslayer": [
+          { name: "Elder’s Guidance", tags: ["Space Wolves"] },
+          { name: "Helm of the Beastslayer" },
+          { name: "Hunter’s Guile" },
+          { name: "Wolf-touched", tags: ["Space Wolves"] },
+        ],
+        "Saga of the Bold": [
+          { name: "Braggart’s Steel", tags: ["Space Wolves"] },
+          { name: "Hordeslayer", tags: ["Space Wolves"] },
+          { name: "Skjald" },
+          { name: "Thunderwolf’s Fortitude" },
+        ],
+        "Saga of the Hunter": [
+          { name: "Fenrisian Grit" },
+          { name: "Feral Rage" },
+          { name: "Swift Hunter", tags: ["Space Wolves"] },
+          { name: "Wolf Master", tags: ["Space Wolves"] },
+        ],
+      }
+};
