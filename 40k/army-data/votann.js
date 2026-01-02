@@ -145,7 +145,12 @@ export const factionData = {
             { name: "HYLas beam cannon" },
             { name: "Twin bolt cannon" },
             { name: "Armoured wheels" },
-          ]
+          ],
+          unitOptions: {
+            weapons: [
+              { name: ["L7 missile launcher & 1 Sagitaur missile launcher", "MATR autocannon"], replaces: "HYLas beam cannon" },
+            ]
+          }
         },
 
         {
