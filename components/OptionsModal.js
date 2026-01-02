@@ -214,10 +214,23 @@ const OptionFieldset = (optionType, optionOptions, currentOptions, labelText) =>
     // if it has a "max", then it doesn't matter if it has a "replaces": it should be a checkbox per max value
     // if "name" is an array instead of a single string, there are multiple upgrade options: show radio buttons for each
     const currentOption = currentOptions[optionsKey]?.find(w => {
+      // Match by name, handling arrays
       if (Array.isArray(option.name)) {
-        return option.name.includes(w.selected);
+        // If option.name is an array, check if w.name matches (also array) or if w.selected is in the array
+        if (Array.isArray(w.name)) {
+          // Compare arrays by checking if they have the same length and same elements
+          return w.name.length === option.name.length && 
+                 w.name.every((val, idx) => val === option.name[idx]);
+        }
+        // If w.name is not an array but w.selected is set, check if selected value is in option.name array
+        return w.selected && option.name.includes(w.selected);
+      } else {
+        // If option.name is a string, check if w.name matches (string or array containing it)
+        if (Array.isArray(w.name)) {
+          return w.name.includes(option.name);
+        }
+        return w.name === option.name;
       }
-      return w.name === option.name;
     });
 
     const fieldsetName = optionFieldsetName(option);
@@ -239,6 +252,24 @@ const OptionFieldset = (optionType, optionOptions, currentOptions, labelText) =>
     }
 
     if (option.max) {
+      // If name is an array, show radio buttons (choose one of the options)
+      if (Array.isArray(option.name)) {
+        const upgradeOptions = option.name;
+        const isInactive = !currentOption?.selected || currentOption?.selected === "off";
+        return h("div", { className: "option-item" }, [
+          h("div", { className: "option-value" }, [
+            h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
+            h("label", { innerText: "None", className: "option-value" }),
+          ]),
+          ...upgradeOptions.map(upgradeName => {
+            return h("div", { className: "option-value" }, [
+              h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: currentOption?.selected === upgradeName }),
+              h("label", { innerText: upgradeName, className: "option-value" }),
+            ]);
+          }),
+        ]);
+      }
+      // If name is a string, show checkbox (can select/deselect)
       return h("div", { className: "option-item" }, [
         h("label", { innerText: option.name, className: "option-value" }),
         h("input", { type: "checkbox", id: fieldsetName, name: fieldsetName, checked: currentOption?.selected }),
