@@ -85,32 +85,46 @@ export const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
   const actualItems = [ ...defaultItems ].map(w => ({ ...w, count: w.count || unitSize }));
   itemOptions?.forEach(opt => {
     if (opt.selected && opt.selected !== "off") {
-      let upgrade = { ...opt, count: opt.max || unitSize };
-      if (opt.replaces) {
-        const originalItem = actualItems.find(w => {
-          if (Array.isArray(opt.replaces)) {
-            return opt.replaces.includes(w.name);
-          }
-          return w.name === opt.replaces
-        });
-        if (opt.max && opt.max < originalItem?.count) {
-          originalItem.count -= opt.max;
-          actualItems.push(upgrade);
-        } else {
-          actualItems.splice(actualItems.indexOf(originalItem), 1, {
-            ...upgrade,
-            count: originalItem?.count || unitSize
+      // Handle array selections (for max > 1 with array name)
+      const selectedValues = Array.isArray(opt.selected) ? opt.selected : [opt.selected];
+      
+      selectedValues.forEach(selectedValue => {
+        // When max > 1 with array name, each selection counts as 1 (regardless of how many selected)
+        // Otherwise, use max or unitSize for single selections
+        const isMultiSelectOption = Array.isArray(opt.name) && opt.max > 1;
+        const count = isMultiSelectOption ? 1 : (opt.max || unitSize);
+        let upgrade = { ...opt, count, selected: selectedValue };
+        if (opt.replaces) {
+          const originalItem = actualItems.find(w => {
+            if (Array.isArray(opt.replaces)) {
+              return opt.replaces.includes(w.name);
+            }
+            return w.name === opt.replaces
           });
+          // When max > 1 with array name, each selection replaces 1 item
+          // Otherwise, use max or count for single selections
+          const replaceCount = isMultiSelectOption ? 1 : (opt.max || count);
+          if (replaceCount < originalItem?.count) {
+            originalItem.count -= replaceCount;
+            actualItems.push(upgrade);
+          } else {
+            actualItems.splice(actualItems.indexOf(originalItem), 1, {
+              ...upgrade,
+              count: originalItem?.count || unitSize
+            });
+          }
+        } else {
+          actualItems.push(upgrade);
         }
-      } else {
-        actualItems.push(upgrade);
-      }
+      });
     }
   });
 
   const summaries = actualItems.map(item => {
     const count = item.count || unitSize;
-    const countStr = count > 1 ? `${count}x ` : "";
+    // If unit has more than 1 model and weapon has max: 1, prefix with "1x"
+    const shouldPrefixMax1 = unitSize > 1 && item.max === 1 && count === 1;
+    const countStr = count > 1 || shouldPrefixMax1 ? `${count}x ` : "";
     // if item.name is an array, the "selected" value is the name of the selected option
     const itemName = (Array.isArray(item.name) && item.selected) ? item.selected : item.name;
     return `${countStr}${itemName}`;

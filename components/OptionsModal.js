@@ -133,9 +133,14 @@ const CSS = `
         display: flex;
         gap: 0.5rem;
         align-items: center;
-        flex-align: start;
+        flex-wrap: wrap;
         justify-content: space-between;
         width: 100%;
+        width: -webkit-fill-available;
+
+        border: 1px dashed gray;
+        margin: 0 0.25rem;
+        padding: 0.25rem;
 
         label {
           font-size: small;
@@ -149,6 +154,43 @@ const CSS = `
 
         .option-legend-replaces {
           margin-left: 0.5em;
+        }
+
+        &.option-item-multi {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+
+          .option-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            align-items: center;
+          }
+
+          .option-counter {
+            font-size: small;
+            color: #666;
+            font-weight: 500;
+          }
+
+          .option-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            width: 100%;
+
+            .option-checkbox-item {
+              display: flex;
+              gap: 0.5rem;
+              align-items: center;
+
+              input:disabled + label {
+                opacity: 0.5;
+                cursor: not-allowed;
+              }
+            }
+          }
         }
       }
     }
@@ -252,21 +294,82 @@ const OptionFieldset = (optionType, optionOptions, currentOptions, labelText) =>
     }
 
     if (option.max) {
-      // If name is an array, show radio buttons (choose one of the options)
+      // If name is an array, handle based on max value
       if (Array.isArray(option.name)) {
         const upgradeOptions = option.name;
-        const isInactive = !currentOption?.selected || currentOption?.selected === "off";
-        return h("div", { className: "option-item" }, [
-          h("div", { className: "option-value" }, [
-            h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
-            h("label", { innerText: "None", className: "option-value" }),
-          ]),
-          ...upgradeOptions.map(upgradeName => {
-            return h("div", { className: "option-value" }, [
-              h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: currentOption?.selected === upgradeName }),
-              h("label", { innerText: upgradeName, className: "option-value" }),
+        // If max is 1, show radio buttons only if there's a replaces property, otherwise show checkbox
+        if (option.max === 1) {
+          // If there's a replaces property, use radio buttons (mutually exclusive choice)
+          if (option.replaces) {
+            const isInactive = !currentOption?.selected || currentOption?.selected === "off" || 
+                              (Array.isArray(currentOption?.selected) && currentOption.selected.length === 0);
+            return h("div", { className: "option-item" }, [
+              h("div", { className: "option-value" }, [
+                h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
+                h("label", { innerText: "None", className: "option-value" }),
+              ]),
+              ...upgradeOptions.map(upgradeName => {
+                const isSelected = Array.isArray(currentOption?.selected) 
+                  ? currentOption.selected.includes(upgradeName)
+                  : currentOption?.selected === upgradeName;
+                return h("div", { className: "option-value" }, [
+                  h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: isSelected }),
+                  h("label", { innerText: upgradeName, className: "option-value" }),
+                ]);
+              }),
             ]);
-          }),
+          }
+          // If no replaces property, use checkboxes (optional selection, max 1)
+          const selectedArray = Array.isArray(currentOption?.selected) 
+            ? currentOption.selected 
+            : (currentOption?.selected && currentOption.selected !== "off" ? [currentOption.selected] : []);
+          
+          return h("div", { className: "option-item" }, [
+            ...upgradeOptions.map(upgradeName => {
+              const isChecked = selectedArray.includes(upgradeName);
+              const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
+              return h("div", { className: "option-checkbox-item", style: "display: flex; gap: 0.5rem; align-items: center;" }, [
+                h("input", { 
+                  type: "checkbox", 
+                  id: checkboxId, 
+                  name: fieldsetName, 
+                  value: upgradeName,
+                  checked: isChecked
+                }),
+                h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
+              ]);
+            }),
+          ]);
+        }
+        // If max > 1, show checkboxes with counter (choose up to max)
+        const selectedArray = Array.isArray(currentOption?.selected) 
+          ? currentOption.selected 
+          : (currentOption?.selected && currentOption.selected !== "off" ? [currentOption.selected] : []);
+        const selectedCount = selectedArray.length;
+        const isMaxReached = selectedCount >= option.max;
+        
+        return h("div", { className: "option-item option-item-multi" }, [
+          h("div", { className: "option-header" }, [
+            h("span", { className: "option-legend-max", innerText: `Select up to ${option.max}` }),
+            h("span", { className: "option-counter", innerText: `${selectedCount} / ${option.max} selected` }),
+          ]),
+          h("div", { className: "option-checkboxes" }, [
+            ...upgradeOptions.map(upgradeName => {
+              const isChecked = selectedArray.includes(upgradeName);
+              const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
+              return h("div", { className: "option-checkbox-item" }, [
+                h("input", { 
+                  type: "checkbox", 
+                  id: checkboxId, 
+                  name: fieldsetName, 
+                  value: upgradeName,
+                  checked: isChecked,
+                  disabled: !isChecked && isMaxReached
+                }),
+                h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
+              ]);
+            }),
+          ]),
         ]);
       }
       // If name is a string, show checkbox (can select/deselect)
@@ -325,10 +428,65 @@ class OptionsModal extends HTMLElement {
         evt.preventDefault();
         this.saveOptions();
       });
+      
+      // Add change listeners for checkboxes to update counters dynamically and enforce max: 1
+      this.form.addEventListener("change", (evt) => {
+        if (evt.target.type === "checkbox" && evt.target.name) {
+          // Check if this is a max: 1 checkbox option (no counter header, just checkboxes)
+          const optionItem = evt.target.closest(".option-item");
+          if (optionItem && !optionItem.classList.contains("option-item-multi")) {
+            // This might be a max: 1 checkbox group - check if we need to enforce single selection
+            const checkboxes = this.form.querySelectorAll(`input[type="checkbox"][name="${evt.target.name}"]`);
+            if (checkboxes.length > 1 && evt.target.checked) {
+              // If max is 1, uncheck all other checkboxes when one is checked
+              checkboxes.forEach(cb => {
+                if (cb !== evt.target && cb.checked) {
+                  cb.checked = false;
+                }
+              });
+            }
+          } else {
+            // Multi-select with counter
+            this.updateMultiSelectCounter(evt.target.name);
+          }
+        }
+      });
     }
 
     this.#ready = true;
     this.render();
+  }
+
+  updateMultiSelectCounter(fieldsetName) {
+    const shadow = this.shadowRoot;
+    if (!shadow) return;
+    
+    const checkboxes = shadow.querySelectorAll(`input[type="checkbox"][name="${fieldsetName}"]`);
+    const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const firstCheckbox = shadow.querySelector(`input[type="checkbox"][name="${fieldsetName}"]`);
+    if (!firstCheckbox) return;
+    
+    const optionItem = firstCheckbox.closest(".option-item-multi");
+    if (!optionItem) return;
+    
+    const counter = optionItem.querySelector(".option-counter");
+    const header = optionItem.querySelector(".option-legend-max");
+    
+    if (counter && header) {
+      // Extract max from the option header text (e.g., "Select up to 2")
+      const maxMatch = header.textContent.match(/\d+/);
+      const max = maxMatch ? parseInt(maxMatch[0], 10) : 0;
+      counter.textContent = `${checkedCount} / ${max} selected`;
+      
+      // Enable/disable checkboxes based on max
+      checkboxes.forEach(cb => {
+        if (!cb.checked && checkedCount >= max) {
+          cb.disabled = true;
+        } else {
+          cb.disabled = false;
+        }
+      });
+    }
   }
 
   get options() {
@@ -370,7 +528,15 @@ class OptionsModal extends HTMLElement {
     // interpret weapons form data back into the unit options format
     weapons?.forEach(weaponOption => {
       const fieldsetName = optionFieldsetName(weaponOption);
-      if (fieldsetName in rest) {
+      // Check if this is a multi-select option (array name with max > 1)
+      const isMultiSelect = Array.isArray(weaponOption.name) && weaponOption.max > 1;
+      
+      if (isMultiSelect) {
+        // Use getAll to get all checkbox values
+        const selectedValues = formData.getAll(fieldsetName).filter(v => v !== "off");
+        weaponOption.selected = selectedValues.length > 0 ? selectedValues : false;
+      } else if (fieldsetName in rest) {
+        // Single select: radio buttons or single checkbox
         // weapon option radio buttons all have a value equal to their name, except the default / "replaces" weapon, which has a value of "off",
         // rest[fieldsetName] will reflect both states
         weaponOption.selected = rest[fieldsetName];
@@ -382,7 +548,15 @@ class OptionsModal extends HTMLElement {
     // interpret wargear form data back into the unit options format
     wargear?.forEach(wargearOption => {
       const fieldsetName = optionFieldsetName(wargearOption);
-      if (fieldsetName in rest) {
+      // Check if this is a checkbox option (array name with max, regardless of max value)
+      const isCheckboxOption = Array.isArray(wargearOption.name) && wargearOption.max && !wargearOption.replaces;
+      
+      if (isCheckboxOption) {
+        // Use getAll to get all checkbox values
+        const selectedValues = formData.getAll(fieldsetName).filter(v => v !== "off");
+        wargearOption.selected = selectedValues.length > 0 ? selectedValues : false;
+      } else if (fieldsetName in rest) {
+        // Single select: radio buttons or single checkbox
         // wargear option radio buttons all have a value equal to their name, except the default / "replaces" wargear, which has a value of "off",
         // rest[fieldsetName] will reflect both states
         wargearOption.selected = rest[fieldsetName];
@@ -426,6 +600,24 @@ class OptionsModal extends HTMLElement {
       }
       if (this.#availableOptions.wargear) {
         this.optionsList.append(OptionFieldset("wargear", this.#availableOptions.wargear, this.#options, "Wargear options:"));
+      }
+      
+      // Initialize counters for multi-select options
+      if (this.#availableOptions.weapons) {
+        this.#availableOptions.weapons.forEach(opt => {
+          if (Array.isArray(opt.name) && opt.max > 1) {
+            const fieldsetName = optionFieldsetName(opt);
+            this.updateMultiSelectCounter(fieldsetName);
+          }
+        });
+      }
+      if (this.#availableOptions.wargear) {
+        this.#availableOptions.wargear.forEach(opt => {
+          if (Array.isArray(opt.name) && opt.max > 1) {
+            const fieldsetName = optionFieldsetName(opt);
+            this.updateMultiSelectCounter(fieldsetName);
+          }
+        });
       }
     }
   }
