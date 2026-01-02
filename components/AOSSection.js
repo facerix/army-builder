@@ -245,7 +245,7 @@ class AOSSection extends HTMLElement {
   }
 
   get units() {
-    return { ...this.#data };
+    return [...this.#data];
   }
 
   get points() {

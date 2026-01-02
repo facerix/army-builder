@@ -1,0 +1,225 @@
+# Personnel - Army Builder App
+
+## Project Overview
+
+Personnel is a Progressive Web App (PWA) for building army lists for tabletop wargames, specifically Warhammer 40k and Age of Sigmar. It's a vanilla JavaScript application using ES6 modules, Web Components, and service workers for offline functionality.
+
+## Architecture
+
+### Core Technologies
+- **Vanilla JavaScript** with ES6 modules (no framework)
+- **Web Components** (Custom Elements) for UI components
+- **Service Workers** for offline support and caching
+- **localStorage** for data persistence (IndexedDB alternative exists but unused)
+- **CSS** with modern features (CSS nesting, custom properties)
+
+### Project Structure
+
+```
+/
+├── index.html/js          # Main entry point (game selection)
+├── 40k/                   # Warhammer 40k game system
+│   ├── 40k.js            # 40k main page
+│   ├── 40k-army-data.js  # Large army data file (128KB, all factions)
+│   └── list/             # Army list builder
+│       ├── 40k-list.js   # List management logic
+│       └── index.html    # List UI
+├── aos/                   # Age of Sigmar game system (similar structure)
+├── components/            # Web Components (Custom Elements)
+│   ├── CategorySection.js
+│   ├── UnitModal.js
+│   ├── OptionsModal.js
+│   └── UpdateNotification.js
+├── src/                   # Core utilities
+│   ├── DataStore.js      # Singleton data store (localStorage)
+│   ├── DBDataStore.js    # IndexedDB alternative (unused)
+│   ├── domUtils.js       # DOM helper functions (h() function)
+│   ├── factions.js       # Faction name/image mappings
+│   ├── parsers.js        # Export/import parsers
+│   └── ServiceWorkerManager.js # Service worker lifecycle
+└── images/                # SVG/PNG assets
+
+```
+
+## Key Patterns & Conventions
+
+### 1. Data Storage
+- **DataStore.js** is a singleton EventTarget that manages army lists
+- Stores data in localStorage under key "armyLists"
+- Uses UUIDs (v4WithTimestamp) for unique IDs
+- Emits "change" events with `changeType` (init, add, update, delete)
+- **Important**: Army lists store minimal data (id, name, faction, units array with options), not full unit objects
+
+### 2. DOM Creation
+- Use `h()` helper from `domUtils.js` for creating DOM elements
+- Pattern: `h(tag, attributes, children)`
+- Example: `h("div", { className: "foo", innerText: "bar" }, [child1, child2])`
+
+### 3. Web Components
+- Custom elements defined in `/components/`
+- Use Shadow DOM with `<style>` tags for scoped CSS
+- Follow naming convention: kebab-case for tag names (e.g., `update-notification`)
+- Register with `customElements.define()`
+
+### 4. Service Worker
+- Managed by `ServiceWorkerManager` singleton
+- Separate files: `sw.js` (production) and `sw-dev.js` (development)
+- Automatically detects development mode via `isDevelopmentMode()` in `domUtils.js`
+- Handles update notifications via custom events
+
+### 5. Game Systems
+- **40k** and **AoS** have different data structures:
+  - **40k**: `{ characters, battleline, otherUnits }` OR `{ units }` (new format)
+  - **AoS**: `{ regiments, auxiliaryUnits, lores, terrain }`
+- Both use similar patterns but different unit categorization
+- Migration code exists for old 40k format (three arrays) to new format (single units array)
+
+### 6. Army Data Structure
+- **40k**: `ARMIES` object in `40k-army-data.js` - massive file with all factions
+- **AoS**: `BATTLE_PROFILES` object in `aos-army-data.js`
+- Units have: `name`, `tags`, `modelCount`, `points`, `unitOptions`
+- Detachments modify units via tags (e.g., "Battleline" tag added/removed)
+
+## Coding Standards
+
+### JavaScript
+- Use ES6 modules (`import`/`export`)
+- Use private fields (`#field`) for encapsulation
+- Prefer `const` over `let`, avoid `var`
+- Use arrow functions for callbacks
+- Use template literals for strings with variables
+- Use `async`/`await` for promises
+
+### Naming Conventions
+- **Files**: kebab-case or camelCase (e.g., `40k-list.js`, `DataStore.js`)
+- **Classes**: PascalCase (e.g., `DataStore`, `ServiceWorkerManager`)
+- **Functions**: camelCase (e.g., `getTotalPoints`, `buildDisplayUnit`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `FACTION_NAMES`, `ARMIES`)
+- **Private fields**: `#fieldName` (e.g., `#items`, `#isRegistered`)
+
+### CSS
+- Use CSS custom properties (variables) in `:root`
+- Use CSS nesting (modern browsers)
+- Utility classes prefixed with `u-` (e.g., `u-flex`, `u-center`)
+- Component-specific styles in Web Component `<style>` tags
+
+## Important Files & Their Purposes
+
+### Core Files
+- `src/DataStore.js`: Central data management singleton
+- `src/domUtils.js`: DOM helpers, `h()` function, development mode detection
+- `src/factions.js`: Faction name/code/image mappings for both games
+- `src/ServiceWorkerManager.js`: Service worker registration and update handling
+
+### Game-Specific Files
+- `40k/40k-army-data.js`: **HUGE file** (3661 lines) - contains all 40k faction data
+- `40k/list/40k-list.js`: Main list builder logic for 40k
+- `aos/aos-army-data.js`: AoS faction data
+- `aos/list/aos-list.js`: Main list builder logic for AoS
+
+### Components
+- `components/UnitModal.js`: Modal for adding/editing units
+- `components/CategorySection.js`: Displays units in categories (Characters, Battleline, etc.)
+- `components/UpdateNotification.js`: Shows service worker update notifications
+
+## Common Patterns
+
+### Event Handling
+```javascript
+// DataStore events
+DataStore.addEventListener("change", evt => {
+  switch (evt.detail.changeType) {
+    case "init": // Initial load
+    case "add":  // New item added
+    case "update": // Item updated
+    case "delete": // Item deleted
+  }
+});
+```
+
+### Service Worker Setup
+```javascript
+import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
+import '/components/UpdateNotification.js';
+
+whenLoaded.then(() => {
+  const updateNotification = document.querySelector('update-notification');
+  window.addEventListener('sw-update-available', (event) => {
+    updateNotification.show(event.detail.pendingWorker);
+  });
+  serviceWorkerManager.register();
+});
+```
+
+### Creating DOM Elements
+```javascript
+import { h } from '/src/domUtils.js';
+
+const element = h("div", { 
+  className: "my-class", 
+  innerText: "Hello",
+  dataset: { unitId: "123" }
+}, [
+  h("span", { innerText: "Child" })
+]);
+```
+
+## Performance Considerations
+
+### Known Issues (from OPTIMIZATION_SUGGESTIONS.md)
+1. **Large monolithic data file**: `40k-army-data.js` loads all factions even when only one is needed
+2. **Full re-renders**: `render()` rebuilds entire DOM on every change
+3. **Deep cloning**: Uses `JSON.parse(JSON.stringify())` which is slow
+4. **No memoization**: Repeated calculations for same inputs
+
+### Optimization Opportunities
+- Split army data by faction with dynamic imports
+- Implement incremental DOM updates instead of full rebuilds
+- Add memoization for expensive calculations
+- Consider code splitting by route (40k vs AoS)
+
+## Things to Avoid
+
+1. **Don't modify army data files directly** - These are large, carefully structured data files
+2. **Don't break data format** - Migration code exists for old formats, but be careful with changes
+3. **Don't use frameworks** - This is intentionally vanilla JS
+4. **Don't add build tools unnecessarily** - Currently uses live-server only
+5. **Don't store full unit objects** - Store only `{id, name, options}` in army lists
+6. **Don't bypass DataStore** - Always use DataStore methods for data operations
+
+## Testing & Development
+
+- Development server: `npm start` (uses live-server)
+- No test framework currently set up
+- Service worker has separate dev/prod files
+- Development mode detected via URL parameter or hostname
+
+## Data Migration
+
+- 40k lists migrated from `{characters, battleline, otherUnits}` to `{units}` format
+- Migration code exists in `40k-list.js` - handles both formats
+- Be careful when modifying data structures - ensure backward compatibility
+
+## Browser Support
+
+- Modern browsers with ES6 module support
+- Service Worker support required for PWA features
+- CSS nesting support (Chrome 112+, Safari 16.5+)
+- localStorage for data persistence
+
+## When Adding Features
+
+1. **New game system**: Follow pattern in `40k/` or `aos/` directories
+2. **New component**: Create in `components/` with Shadow DOM
+3. **New utility**: Add to `src/` with appropriate exports
+4. **Data changes**: Update DataStore if needed, consider migration
+5. **UI changes**: Use `h()` helper, follow existing CSS patterns
+
+## Questions to Ask
+
+- Does this need to work offline? (Service worker considerations)
+- Does this affect data storage? (DataStore considerations)
+- Is this game-specific? (40k vs AoS vs both)
+- Does this need to persist? (localStorage vs session state)
+- Is this a one-time operation or repeated? (Performance considerations)
+

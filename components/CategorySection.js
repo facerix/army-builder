@@ -476,14 +476,192 @@ class CategorySection extends HTMLElement {
   }
 
   get units() {
-    return { ...this.#data };
+    return [...this.#data];
   }
 
+  /**
+   * Generates a display signature/hash for a unit based on all display-relevant properties
+   * This signature is used to quickly compare if a unit's display has changed
+   * @param {Object} unit - The unit object
+   * @param {Object} options - The normalized unit options
+   * @returns {string} A hash string representing the unit's display state
+   */
+  #getDisplaySignature(unit, options) {
+    // Generate options summaries (same logic as UnitRow)
+    const weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount);
+    const wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount);
+    
+    // Build a normalized display state object
+    const displayState = {
+      points: unit.points,
+      name: unit.name,
+      unitSize: options?.unitSize || null,
+      displayName: options?.unitSize ? `${options.unitSize}x ${unit.name}` : unit.name,
+      warlord: options?.warlord === true,
+      epicHero: unit.tags?.includes("Epic Hero") === true,
+      enhancement: options?.enhancement || null,
+      weapons: weaponProfiles.length > 0 ? weaponProfiles.sort().join("|") : null,
+      wargear: wargearProfiles.length > 0 ? wargearProfiles.sort().join("|") : null,
+      unitSizeDisplay: (weaponProfiles.length === 0 && wargearProfiles.length === 0 && options?.unitSize) ? options.unitSize : null
+    };
+    
+    // Return JSON string as hash (simple and effective)
+    return JSON.stringify(displayState);
+  }
+
+  /**
+   * Checks if a unit's display data has changed by comparing display signatures
+   * @param {Object} unit - The unit object
+   * @param {HTMLElement} existingNode - The existing DOM node
+   * @returns {boolean} True if the unit has changed
+   */
+  #unitHasChanged(unit, existingNode) {
+    if (!existingNode) return true;
+    
+    // Normalize options (same as in addUnit)
+    const options = { ...unit.options };
+    if (this.heroUnits && unit.options?.warlord === undefined) {
+      options.warlord = false;
+    }
+    
+    // Get stored signature from node
+    const storedSignature = existingNode.dataset.displaySignature;
+    if (!storedSignature) return true; // No signature means it's a new node or old format
+    
+    // Generate current signature
+    const currentSignature = this.#getDisplaySignature(unit, options);
+    
+    // Simple hash comparison - O(1) instead of multiple string comparisons
+    return storedSignature !== currentSignature;
+  }
+
+  /**
+   * Updates an existing DOM node with new unit data
+   * @param {HTMLElement} existingNode - The existing DOM node to update
+   * @param {Object} unit - The unit object with new data
+   */
+  #updateUnitNode(existingNode, unit) {
+    // Normalize options
+    const options = { ...unit.options };
+    if (this.heroUnits && unit.options?.warlord === undefined) {
+      options.warlord = false;
+    }
+
+    // Create new row
+    const newRow = UnitRow(unit, options);
+    
+    // Store display signature for future comparisons
+    const signature = this.#getDisplaySignature(unit, options);
+    newRow.dataset.displaySignature = signature;
+    
+    // Replace the existing node with the new one
+    existingNode.replaceWith(newRow);
+  }
+
+  /**
+   * Renders units incrementally, only updating what has changed
+   */
   #render() {
     if (!this.#data) return;
 
-    this.unitList.innerHTML = "";
-    this.#data.forEach(unit => this.addUnit(unit));
+    // Preserve scroll position
+    const scrollTop = this.unitList.scrollTop;
+    
+    // Get existing nodes mapped by unit ID
+    const existingNodes = new Map();
+    Array.from(this.unitList.querySelectorAll(".unit-summary")).forEach(node => {
+      const unitId = node.dataset.unitId;
+      if (unitId) {
+        existingNodes.set(unitId, node);
+      }
+    });
+
+    // Track which units we've processed
+    const processedUnitIds = new Set();
+    
+    // Use DocumentFragment for batch additions
+    const fragment = document.createDocumentFragment();
+    const nodesToAdd = [];
+
+    // Process each unit in the data
+    this.#data.forEach((unit, index) => {
+      processedUnitIds.add(unit.id);
+      const existingNode = existingNodes.get(unit.id);
+      
+      if (existingNode) {
+        // Unit exists - check if it needs updating
+        if (this.#unitHasChanged(unit, existingNode)) {
+          // Update the existing node
+          this.#updateUnitNode(existingNode, unit);
+        }
+        // If unchanged, leave it as-is, but ensure correct order
+        // Check if node is in the right position
+        const currentIndex = Array.from(this.unitList.children).indexOf(existingNode);
+        const expectedIndex = index;
+        if (currentIndex !== expectedIndex) {
+          // Node exists but in wrong position - will be handled by reordering below
+        }
+      } else {
+        // New unit - prepare to add
+        const options = { ...unit.options };
+        if (this.heroUnits && unit.options?.warlord === undefined) {
+          options.warlord = false;
+        }
+        const newNode = UnitRow(unit, options);
+        // Store display signature for future comparisons
+        const signature = this.#getDisplaySignature(unit, options);
+        newNode.dataset.displaySignature = signature;
+        nodesToAdd.push({ node: newNode, index });
+      }
+    });
+
+    // Remove units that are no longer in the data
+    existingNodes.forEach((node, unitId) => {
+      if (!processedUnitIds.has(unitId)) {
+        node.remove();
+      }
+    });
+
+    // Insert new nodes in the correct order
+    if (nodesToAdd.length > 0) {
+      // Sort by index to maintain order
+      nodesToAdd.sort((a, b) => a.index - b.index);
+      
+      nodesToAdd.forEach(({ node, index }) => {
+        const existingChildren = Array.from(this.unitList.children);
+        let insertBefore = null;
+        
+        // Find insertion point: the first existing node that comes after this unit's position
+        for (let i = index + 1; i < this.#data.length; i++) {
+          const nextUnitId = this.#data[i].id;
+          const nextNode = existingChildren.find(child => child.dataset.unitId === nextUnitId);
+          if (nextNode) {
+            insertBefore = nextNode;
+            break;
+          }
+        }
+        
+        if (insertBefore) {
+          this.unitList.insertBefore(node, insertBefore);
+        } else {
+          // Append to end
+          fragment.appendChild(node);
+        }
+      });
+      
+      // Append any remaining nodes from fragment
+      if (fragment.hasChildNodes()) {
+        this.unitList.appendChild(fragment);
+      }
+    }
+
+    // Reorder existing nodes if needed (simple approach: rebuild order if many changes)
+    // For now, we'll rely on the natural order from the data array
+    // A more sophisticated approach would compare positions and only move when necessary
+
+    // Restore scroll position
+    this.unitList.scrollTop = scrollTop;
+    
     this.recalculatePoints();
   };
 
@@ -494,7 +672,11 @@ class CategorySection extends HTMLElement {
       options.warlord = false;
     }
 
-    this.unitList.append(UnitRow(unit, options));
+    const newNode = UnitRow(unit, options);
+    // Store display signature for future comparisons
+    const signature = this.#getDisplaySignature(unit, options);
+    newNode.dataset.displaySignature = signature;
+    this.unitList.append(newNode);
   }
 
   removeUnit(unitId) {

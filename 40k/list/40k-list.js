@@ -31,7 +31,7 @@ const getTotalPoints = (list) => {
   }
 }
 
-whenLoaded.then(() => {
+whenLoaded.then(async () => {
   // Set up update notification
   const updateNotification = document.querySelector('update-notification');
 
@@ -49,26 +49,29 @@ whenLoaded.then(() => {
 
   let armyList;
   let armyData;
+  let cachedDisplayUnits = null; // Cache display units as Map<unitId, displayUnit> for O(1) lookups
+  let isInitialized = false; // Flag to prevent double initialization
   
   // Load army data asynchronously
   if (factionName) {
-    get40kArmyData(factionName).then(data => {
-      armyData = data;
+    try {
+      armyData = await get40kArmyData(factionName);
 
       // populate detachment selector
       Object.keys(armyData.detachments).forEach(detachmentName => {
         detachmentSelector.append(h("option", { value: detachmentName, innerText: detachmentName }));
       });
       
-      // Initialize if armyList is already loaded
-      if (armyList) {
-        init();
+      // If armyList is already loaded but not yet initialized, initialize now
+      // This handles the case where armyData loads before DataStore fires "init" event
+      if (armyList && !isInitialized) {
+        await init();
         recalculatePoints();
       }
-    }).catch(error => {
+    } catch (error) {
       console.error('Failed to load army data:', error);
       alert(`Failed to load faction data: ${error.message}`);
-    });
+    }
   }
 
   // Initialize service worker
@@ -95,10 +98,20 @@ whenLoaded.then(() => {
   const recalculatePoints = () => {
     if (totalPoints && armyList && armyData) {
       if (armyList.units) {
-        // New format: build display units and sum their points
-        const displayUnits = armyList.units
-          .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
-          .filter(u => u !== null);
+        // New format: use cached display units if available, otherwise build them
+        let displayUnits;
+        if (cachedDisplayUnits instanceof Map) {
+          // Convert Map to array for reduce
+          displayUnits = Array.from(cachedDisplayUnits.values());
+        } else if (cachedDisplayUnits) {
+          // Legacy array format (shouldn't happen, but handle gracefully)
+          displayUnits = cachedDisplayUnits;
+        } else {
+          // Build display units
+          displayUnits = armyList.units
+            .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
+            .filter(u => u !== null);
+        }
         const total = displayUnits.reduce((acc, curr) => acc + curr.points, 0);
         totalPoints.innerText = total;
       } else {
@@ -145,6 +158,8 @@ whenLoaded.then(() => {
               armyList.units.forEach(u => {
                 if (u.id !== affectedItems.id && u.options?.enhancement === newEnhancement) {
                   u.options.enhancement = null;
+                  // Also update the cache for affected units
+                  updateSingleUnit(u.id);
                 }
               });
             }
@@ -154,15 +169,18 @@ whenLoaded.then(() => {
               armyList.units.forEach(u => {
                 if (u.id !== affectedItems.id && u.options?.warlord) {
                   u.options.warlord = false;
+                  // Also update the cache for affected units
+                  updateSingleUnit(u.id);
                 }
               });
             }
             
             // Update only the options, keeping id and name
             armyList.units[updateIndex].options = { ...affectedItems.options };
+            
+            // Update only this unit instead of rebuilding all units
+            updateSingleUnit(affectedItems.id);
           }
-          // Re-render to rebuild display units with updated options
-          render();
           break;
       }
     } else {
@@ -229,6 +247,14 @@ whenLoaded.then(() => {
   }
 
   const init = async () => {
+    // Prevent double initialization - set flag immediately to prevent race condition
+    if (isInitialized) {
+      return;
+    }
+    
+    // Set flag immediately to prevent concurrent initialization
+    isInitialized = true;
+    
     // Ensure armyData is loaded
     if (factionName && !armyData) {
       try {
@@ -236,6 +262,7 @@ whenLoaded.then(() => {
       } catch (error) {
         console.error('Failed to load army data:', error);
         alert(`Failed to load faction data: ${error.message}`);
+        isInitialized = false; // Reset flag on error to allow retry
         return;
       }
     }
@@ -250,7 +277,94 @@ whenLoaded.then(() => {
       armyNameInput.value = armyList.name;
       render();
       document.querySelector("body").classList.remove("loading");
+    } else {
+      // Reset flag if we can't initialize yet
+      isInitialized = false;
     }
+  }
+
+  /**
+   * Updates a single unit's display unit in the cache and its section
+   * @param {string} unitId - The ID of the unit to update
+   * @returns {boolean} - True if the unit was found and updated
+   */
+  const updateSingleUnit = (unitId) => {
+    if (!armyList || !armyData || !armyList.units || !cachedDisplayUnits) {
+      return false;
+    }
+
+    const unitInstance = armyList.units.find(u => u.id === unitId);
+    if (!unitInstance) {
+      return false;
+    }
+
+    // Rebuild only this unit's display unit
+    const updatedDisplayUnit = buildDisplayUnit(unitInstance, armyData, armyList.detachment);
+    if (!updatedDisplayUnit) {
+      return false;
+    }
+
+    // Get the old display unit from cache (O(1) lookup with Map)
+    const oldDisplayUnit = cachedDisplayUnits instanceof Map 
+      ? cachedDisplayUnits.get(unitId)
+      : cachedDisplayUnits.find(u => u.id === unitId);
+    
+    if (!oldDisplayUnit) {
+      // Unit not in cache, do full render
+      render();
+      return true;
+    }
+
+    const oldSection = getUnitSection(oldDisplayUnit);
+    const newSection = getUnitSection(updatedDisplayUnit);
+
+    // Update the cache (O(1) with Map)
+    if (cachedDisplayUnits instanceof Map) {
+      cachedDisplayUnits.set(unitId, updatedDisplayUnit);
+    } else {
+      // Legacy array format - find and update
+      const index = cachedDisplayUnits.findIndex(u => u.id === unitId);
+      if (index !== -1) {
+        cachedDisplayUnits[index] = updatedDisplayUnit;
+      }
+    }
+
+    // If unit moved sections, we need to do a full render
+    if (oldSection !== newSection) {
+      render();
+      return true;
+    }
+
+    // Update the appropriate section
+    let targetSection;
+    switch (newSection) {
+      case "characters":
+        targetSection = charactersSection;
+        break;
+      case "battleline":
+        targetSection = battlelineSection;
+        break;
+      case "otherUnits":
+        targetSection = otherSection;
+        break;
+      default:
+        return false;
+    }
+
+    // Get current units from the section
+    const sectionUnits = [...(targetSection.units || [])];
+    
+    const sectionIndex = sectionUnits.findIndex(u => u.id === unitId);
+    if (sectionIndex !== -1) {
+      // Update existing unit in section
+      sectionUnits[sectionIndex] = updatedDisplayUnit;
+      targetSection.units = sectionUnits; // Trigger CategorySection's setter which will re-render
+    } else {
+      // Unit not found in section, do full render
+      render();
+    }
+
+    return true;
   }
 
   const render = () => {
@@ -265,6 +379,12 @@ whenLoaded.then(() => {
         const displayUnits = armyList.units
           .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
           .filter(u => u !== null);
+        
+        // Cache display units as Map for O(1) lookups
+        cachedDisplayUnits = new Map();
+        displayUnits.forEach(unit => {
+          cachedDisplayUnits.set(unit.id, unit);
+        });
         
         // Categorize display units
         const characters = displayUnits.filter(u => getUnitSection(u) === "characters");
@@ -282,6 +402,7 @@ whenLoaded.then(() => {
         otherSection.availableUnits = modifiedUnits.filter(u => !u.tags?.includes("Character") && !u.tags?.includes("Battleline"));
       } else {
         // Old format: use existing structure (for migration)
+        cachedDisplayUnits = null; // Clear cache for old format
         charactersSection.units = armyList.characters || [];
         charactersSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes("Character"));
         charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
@@ -479,9 +600,20 @@ whenLoaded.then(() => {
     // Build display units for export if using new format
     let exportData = armyList;
     if (armyList.units && armyData) {
-      const displayUnits = armyList.units
-        .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
-        .filter(u => u !== null);
+      // Use cached display units if available, otherwise build them
+      let displayUnits;
+      if (cachedDisplayUnits instanceof Map) {
+        // Convert Map to array
+        displayUnits = Array.from(cachedDisplayUnits.values());
+      } else if (cachedDisplayUnits) {
+        // Legacy array format
+        displayUnits = cachedDisplayUnits;
+      } else {
+        // Build display units
+        displayUnits = armyList.units
+          .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
+          .filter(u => u !== null);
+      }
       
       // Categorize for export
       const characters = displayUnits.filter(u => getUnitSection(u) === "characters");
@@ -545,9 +677,9 @@ whenLoaded.then(() => {
       
       // Re-render to rebuild display units with new detachment (units will be re-categorized automatically)
       charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
-      recalculatePoints();
+      render(); // Rebuild cache with new detachment
+      recalculatePoints(); // Use cached display units
       save();
-      render();
     }
   });
 
