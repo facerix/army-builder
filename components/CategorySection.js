@@ -461,7 +461,11 @@ class CategorySection extends HTMLElement {
   }
 
   set availableUnits(availableUnits) {
-    this.#availableUnits = [ ...availableUnits ];
+    this.#availableUnits = [ ...availableUnits ].sort((a, b) => {
+      const nameA = a.name?.toLowerCase() || '';
+      const nameB = b.name?.toLowerCase() || '';
+      return nameA.localeCompare(nameB);
+    });
     if (!this.#ready) {
       this.#init();
     } else if (this.unitModal) {
