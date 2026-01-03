@@ -1,7 +1,6 @@
 // Consolidated points data for all 40k factions
 
 export const POINTS = {
-
   "Adepta Sororitas": {
     "units": {
       "Aestred Thurga and Agathae Dolan": 70,
@@ -567,10 +566,76 @@ export const POINTS = {
     "enhancements": {
     }
   },
-  "Grey Knights (TODO)": {
+  "Grey Knights": {
     "units": {
+      "Brother-Captain": 90,
+      "Brother-Captain Stern [Legends]": 90,
+      "Brotherhood Champion": 70,
+      "Brotherhood Chaplain": 65,
+      "Brotherhood Librarian": 80,
+      "Brotherhood Techmarine": 70,
+      "Brotherhood Terminator Squad": [160, 200, 320, 400],
+      "Castellan Crowe": 90,
+      "Grand Master": 95,
+      "Grand Master in Nemesis Dreadknight": 225,
+      "Grand Master Voldus": 110,
+      "Grey Knights Relic Razorback [Legends]": 95,
+      "Grey Knights Dreadnought [Legends]": 160,
+      "Grey Knights Thunderhawk Gunship": 805,
+      "Interceptor Squad": [125, 250],
+      "Kaldor Draigo [Legends]": 125,
+      "Land Raider": 220,
+      "Land Raider Crusader": 220,
+      "Land Raider Redeemer": 270,
+      "Nemesis Dreadknight": 210,
+      "Paladin Squad": [180, 225, 360, 450],
+      "Purgation Squad": [115, 230],
+      "Purifier Squad": [125, 250],
+      "Razorback": 85,
+      "Rhino": 80,
+      "Stormhawk Interceptor": 160,
+      "Stormraven Gunship": 280,
+      "Stormtalon Gunship": 170,
+      "Strike Squad": [120, 240],
+      "Venerable Dreadnought": 140,
     },
     "enhancements": {
+      "Augurium Task Force": {
+        "A Foot in the Future": 15,
+        "Doomseer's Amulet": 25,
+        "Grimoire of Conjunctions": 10,
+        "Shield of Prophecy": 20,
+      },
+      "Banishers": {
+        "Pyresoul (Psychic)": 20,
+        "Sigil of the Hunt": 10,
+        "The Ephemeral Tome": 15,
+        "The Sixty-sixth Seal": 25,
+      },
+      "Brotherhood Strike": {
+        "Banishing Wave (Psychic)": 20,
+        "Blinding Aura": 10,
+        "Purity of Purpose": 15,
+        "Tome of Forbidden Ways": 25,
+      },
+      "Hallowed Conclave": {
+        "Eye of the Augurium": 25,
+        "Inescapable Judgement (Psychic)": 20,
+        "Nemesis Rounds": 10,
+        "Sanctic Reaper": 15,
+      },
+      "Sanctic Spearhead": {
+        "Driven by Duty": 10,
+        "Quickening Foci": 15,
+        "Sigil of Exigence": 30,
+        "Spiritus Machina": 25,
+      },
+      "Warpbane Task Force": {
+        "Mandulian Reliquary": 20,
+        "Paragon of Sanctity": 10,
+        "Phial of the Abyss": 25,
+        "Radiant Champion": 15,
+      },
     }
   },
   "Imperial Agents (TODO)": {
@@ -587,34 +652,34 @@ export const POINTS = {
   },
   "Leagues of Votann": {
     "units": {
-      "Arkanyst Evaluator": 75,
+      "Arkanyst Evaluator": 65,
       "Brôkhyr Iron-master": 75,
-      "Buri Aegnirssen": 110,
-      "Einhyr Champion": 70,
-      "Grimnyr": 65,
-      "Kâhl": 70,
-      "Memnyr Strategist": 45,
-      "Ûthar the Destined": 95,
-      "Hearthkyn Warriors": 100,
       "Brôkhyr Thunderkyn": [80, 160],
+      "Buri Aegnirssen": 95,
       "Cthonian Beserks": [100, 200],
       "Cthonian Earthshakers": 110,
+      "Einhyr Champion": 70,
       "Einhyr Hearthguard": [135, 270],
+      "Grimnyr": 65,
+      "Hearthkyn Warriors": 100,
       "Hekaton Land Fortress": 240,
       "Hernkyn Pioneers": [80, 160],
       "Hernkyn Yaegirs": 90,
-      "Ironkin Steeljacks w/ Melee Weapons": [90, 180],
-      "Ironkin Steeljacks w/ Volkanite Disintegrators": [90, 180],
+      "Ironkin Steeljacks w/ Melee Weapons": [85, 170],
+      "Ironkin Steeljacks w/ Volkanite Disintegrators": [85, 170],
+      "Kâhl": 65,
       "Kapricus Carrier": 75,
       "Kapricus Defender": [70, 140],
-      "Sagitaur": 95
+      "Memnyr Strategist": 45,
+      "Sagitaur": 90,
+      "Ûthar the Destined": 95
     },
     "enhancements": {
       "Brandfast Oathband": {
         "Precursive Judgement": 15,
         "Signature Restoration": 5,
         "Tactical Alchemy": 10,
-        "Trivärg Cyber Implant": 30,
+        "Trivärg Cyber Implant": 40,
       },
       "Dêlve Assault Shift": {
         "Dêlvwerke Navigator": 25,

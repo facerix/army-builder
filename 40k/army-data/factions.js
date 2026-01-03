@@ -17,7 +17,7 @@ export const FACTION_NAMES_TO_CODES = {
   // "Drukhari": "drukhari", // No data yet
   // "Emperor's Children": "emperorsChildren", // No data yet
   // "Genestealer Cults": "gsc", // No data yet
-  // "Grey Knights": "greyKnights", // No data yet
+  "Grey Knights": "greyKnights", // No data yet
   // "Imperial Agents": "imperialAgents", // No data yet
   // "Imperial Fists": "imperialFists", // No data yet
   // "Imperial Knights": "imperialKnights", // No data yet
