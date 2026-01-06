@@ -106,7 +106,7 @@ const getPointsForUnit = (unit, points) => {
  * @returns {Object} Detachments with points added
  */
 const getPointsForDetachments = (detachmentData, pointsData) => {
-  let detachmentWithPoints = {};
+  const detachmentWithPoints = {};
   detachmentData.forEach(detachment => {
     const pointsForDetachment = pointsData[detachment.name] ?? {};
     detachmentWithPoints[detachment.name] = {

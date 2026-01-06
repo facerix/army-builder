@@ -15,11 +15,6 @@ const whenLoaded = Promise.all(
   ],
 );
 
-const getTotalPoints = (list) => {
-  // TODO
-  return 0;
-}
-
 whenLoaded.then(() => {
   // Set up update notification
   const updateNotification = document.querySelector('update-notification');
@@ -130,8 +125,8 @@ whenLoaded.then(() => {
     }
   }
 
-  btnDelete.addEventListener("click", evt => {
-    if (confirm("Delete this army list: are you sure?")) {
+  btnDelete.addEventListener("click", () => {
+    if (window.confirm("Delete this army list: are you sure?")) {
       DataStore.deleteItem(id);
     }
   });

@@ -185,7 +185,7 @@ export class ServiceWorkerManager {
     }
 
     return new Promise((resolve) => {
-      const messageChannel = new MessageChannel();
+      const messageChannel = new window.MessageChannel();
       messageChannel.port1.onmessage = (event) => {
         resolve(event.data);
       };

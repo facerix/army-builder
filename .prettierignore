@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+dist/
+build/
+*.min.js
+
+# Generated files
+*.xml
+
+# Images and assets
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.webp
+
+# Service worker cache files
+sw.js
+sw-dev.js
+sw-core.js
+
+# Large data files (optional - you may want to format these)
+# 40k/army-data/*.js
+# aos/aos-army-data.js
+
+# Markdown files
+*.md
+
+# ESLint and Prettier config files
+.eslintignore
+.eslintrc*
+eslint.config.js
+.prettierrc*
+.prettierignore
+

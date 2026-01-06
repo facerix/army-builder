@@ -198,11 +198,10 @@ class UnitModal extends HTMLElement {
         const btn = evt.target.closest("button");
         if (btn && btn.className === "add-unit") {
           const unitSummary = btn.closest(".unit-summary");
-          const { unitName: name, defaultModelCount } = unitSummary.dataset;
+          const { unitName: name } = unitSummary.dataset;
           // Unit definition :> name: string, points: number, tags?: string[], modelCount?: number | number[], unitOptions?: object
           const unitDef = this.#options.find(u => u.name === name);
           const { unitOptions = undefined } = unitDef;
-          const modelCount = parseInt(defaultModelCount, 10);
           
           // Store only instance-specific data: id, name, and options
           const unitToAdd = {

@@ -3,6 +3,8 @@ export { parseBattleScribeCatalogue } from "./battlescribe-parser.js";
 
 const nameAndPointsRE = /^([^(]+)\(([0-9]+).*\)$/im;
 const aosListNameLineRE = /^(.*) (\d+)\/(\d+) pts$/im;
+
+// eslint-disable-next-line no-unused-vars
 const aosUnitDefRE = /^([[\w\s-]+) \(([0-9]+).*\)(\n• .*)*/m;
 
 const parseUnitDef = (unitDef) => {
@@ -24,7 +26,7 @@ export const parseBattleForgeList = (exported) => {
   const lines = exported.split("\n");
   const armyNameAndPoints = nameAndPointsRE.exec(lines[0]);
   if (!armyNameAndPoints) return null;
-  let unitDefs = {
+  const unitDefs = {
     characters: [],
     battleline: [],
     transports: [],
@@ -93,7 +95,7 @@ export const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
         // Otherwise, use max or unitSize for single selections
         const isMultiSelectOption = Array.isArray(opt.name) && opt.max > 1;
         const count = isMultiSelectOption ? 1 : (opt.max || unitSize);
-        let upgrade = { ...opt, count, selected: selectedValue };
+        const upgrade = { ...opt, count, selected: selectedValue };
         if (opt.replaces) {
           const originalItem = actualItems.find(w => {
             if (Array.isArray(opt.replaces)) {
@@ -179,7 +181,7 @@ export const exportArmyList = (armyData) => {
 
   lines.push("CHARACTERS");
   // warload first
-  characters.sort((a, b) => a.options?.warlord ? -1 : 1).forEach(u => lines.push(printUnit(u)));
+  characters.sort((a, _b) => a.options?.warlord ? -1 : 1).forEach(u => lines.push(printUnit(u)));
   // characters.forEach(u => lines.push(printUnit(u)));
 
   lines.push("\nBATTLELINE");

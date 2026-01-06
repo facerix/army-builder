@@ -4,11 +4,19 @@
   "description": "Progressive web app to build army lists for tabletop wargames",
   "main": "index.html",
   "scripts": {
-    "start": "live-server --no-browser"
+    "start": "live-server --no-browser",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "author": "Rylee Corradini",
   "license": "MIT",
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.0",
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0"
   }
 }

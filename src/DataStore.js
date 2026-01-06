@@ -2,8 +2,6 @@
 
 import { v4WithTimestamp } from "./uuid.js";
 
-const APPNAME = 'ArmyBuilder';
-
 let instance;
 class DataStore extends EventTarget {
   #items = [];

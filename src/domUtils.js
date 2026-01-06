@@ -120,7 +120,7 @@ export const isDevelopmentMode = () => {
 		       location.hostname === '127.0.0.1' || 
 		       location.hostname.includes('local') ||
 		       location.search.includes('dev=true');
-	} catch (e) {
+	} catch (_error) {
 		// In case location is not available (e.g., in Service Worker context)
 		return false;
 	}

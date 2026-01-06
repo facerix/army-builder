@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnNew.disabled = !evt.target.value;
   });
 
-  btnNew.addEventListener("click", evt => {
+  btnNew.addEventListener("click", () => {
     const faction = factionSelector.value;
     DataStore.addItem({
       game: "aos",

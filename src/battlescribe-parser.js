@@ -99,6 +99,7 @@ const getMaxConstraint = (entry) => {
 /**
  * Extracts weapon options from a selectionEntryGroup
  */
+// eslint-disable-next-line no-unused-vars
 const extractGroupWeaponOptions = (group) => {
   const weaponOptions = [];
 
@@ -450,7 +451,7 @@ const enhancementFromBSEntry = (entry) => {
   const name = entry.getAttribute("name");
   const points = entry.querySelector('costs > cost[name="pts"]')?.getAttribute("value") ?? 0;
   const description = unescapeQuotes(entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? '');
-  let tags = []; // TODO
+  const tags = []; // TODO
   return {
     name,
     points,
@@ -465,7 +466,7 @@ const enhancementFromBSEntry = (entry) => {
  * @returns {Object} Object containing the faction name and an array of parsed unit data objects
  */
 export const parseBattleScribeCatalogue = (xmlString) => {
-  const parser = new DOMParser();
+  const parser = new window.DOMParser();
   const doc = parser.parseFromString(xmlString, 'text/xml');
 
   // Check for parsing errors

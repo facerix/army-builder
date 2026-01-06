@@ -11,7 +11,7 @@ const getCurrTimestampAsHex = () => {
 }
 
 const getRandomHexSequence = (digits) => {
-    let seq = [];
+    const seq = [];
     for (let i=0; i<digits; i++) {
         seq[i] = (Math.random() * 16 | 0).toString(16);
     }
@@ -23,7 +23,6 @@ const getRandomV4Var1Digit = () => {
 }
 
 export const v4 = () => {
-    const variant = getRandomV4Var1Digit();
     return [
         getRandomHexSequence(8),
         getRandomHexSequence(4),

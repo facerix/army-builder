@@ -1,26 +1,26 @@
 {
-    "name": "Personnel - Tabletop Army Builder",
-    "short_name": "Personnel",
-    "start_url": "/",
-    "description": "A simple web app to build army lists for tabletop gaming",
-    "theme_color": "#2EC6FE",
-    "background_color": "#f3f4f5",
-    "orientation": "any",
-    "display": "standalone",
-    "dir": "auto",
-    "lang": "en-US",
-    "icons": [
-        {
-            "purpose": "maskable",
-            "sizes": "512x512",
-            "src": "icon512_maskable.png",
-            "type": "image/png"
-        },
-        {
-            "purpose": "any",
-            "sizes": "512x512",
-            "src": "icon512_rounded.png",
-            "type": "image/png"
-        }
-    ]
+  "name": "Personnel - Tabletop Army Builder",
+  "short_name": "Personnel",
+  "start_url": "/",
+  "description": "A simple web app to build army lists for tabletop gaming",
+  "theme_color": "#2EC6FE",
+  "background_color": "#f3f4f5",
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+    }
+  ]
 }

@@ -520,7 +520,7 @@ class OptionsModal extends HTMLElement {
   }
 
   saveOptions() {
-    const formData = new FormData(this.form);
+    const formData = new window.FormData(this.form);
     const options = Object.fromEntries(formData);
     const { warlord, enhancement, unitSize, ...rest } = options;
     const { weapons = [], wargear = [] } = this.#options;

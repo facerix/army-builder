@@ -596,7 +596,7 @@ whenLoaded.then(async () => {
   }
 
 
-  btnExport.addEventListener("click", evt => {
+  btnExport.addEventListener("click", () => {
     // Build display units for export if using new format
     let exportData = armyList;
     if (armyList.units && armyData) {
@@ -633,8 +633,8 @@ whenLoaded.then(async () => {
     alert("Army list exported to clipboard");
   });
 
-  btnDelete.addEventListener("click", evt => {
-    if (confirm("Delete this army list: are you sure?")) {
+  btnDelete.addEventListener("click", () => {
+    if (window.confirm("Delete this army list: are you sure?")) {
       DataStore.deleteItem(id);
     }
   });

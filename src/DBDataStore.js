@@ -2,6 +2,7 @@
 
 import { v4WithTimestamp } from "./uuid.js";
 
+// eslint-disable-next-line no-unused-vars
 const normalize = (obj) => {
   if (Array.isArray(obj)) {
     return obj.map(normalize);
@@ -11,7 +12,7 @@ const normalize = (obj) => {
     obj.id = v4WithTimestamp();
   }
 
-  for (let k of Object.keys(obj)) {
+  for (const k of Object.keys(obj)) {
     switch (typeof obj[k]) {
       case "object":
         obj[k] = Array.isArray(obj[k]) ? obj[k].map(normalize) : normalize(obj[k]);
@@ -48,9 +49,9 @@ class DataStore extends EventTarget {
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      const rosterStore = db.createObjectStore("rosters", { keyPath: "id" });
+      // const rosterStore = db.createObjectStore("rosters", { keyPath: "id" });
       const unitsStore = db.createObjectStore("units", { keyPath: "id" });
-      const battlesStore = db.createObjectStore("battles", { keyPath: "id" });
+      // const battlesStore = db.createObjectStore("battles", { keyPath: "id" });
       // Create an index on rosterId in the units object store
       unitsStore.createIndex("rosterId", "rosterId", { unique: false });
     };
