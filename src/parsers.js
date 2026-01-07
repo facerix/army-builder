@@ -83,10 +83,126 @@ const calculatePoints = (units) => {
   );
 };
 
-export const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
+export const getOptionSummaries = (defaultItems, itemOptions, unitSize, fullOptionDefinitions = null) => {
   const actualItems = [ ...defaultItems ].map(w => ({ ...w, count: w.count || unitSize }));
   itemOptions?.forEach(opt => {
-    if (opt.selected && opt.selected !== "off") {
+    if (opt.selected !== false && opt.selected !== undefined && opt.selected !== "off") {
+      // Look up full option definition to check for per property
+      const fullOpt = fullOptionDefinitions?.find(full => {
+        if (Array.isArray(full.name)) {
+          if (Array.isArray(opt.name)) {
+            return full.name.length === opt.name.length && 
+                   full.name.every((val, idx) => val === opt.name[idx]);
+          }
+          return false;
+        } else {
+          return full.name === opt.name;
+        }
+      }) || opt;
+      
+      // Handle single-string options with per property (selected is an integer count)
+      if (typeof opt.name === 'string' && fullOpt.per && typeof opt.selected === 'number') {
+        const count = opt.selected;
+        const upgrade = { ...opt, count, selected: opt.name };
+        if (opt.replaces) {
+          const originalItem = actualItems.find(w => {
+            if (Array.isArray(opt.replaces)) {
+              return opt.replaces.includes(w.name);
+            }
+            return w.name === opt.replaces
+          });
+          const replaceCount = count;
+          if (replaceCount < originalItem?.count) {
+            originalItem.count -= replaceCount;
+            actualItems.push(upgrade);
+          } else {
+            actualItems.splice(actualItems.indexOf(originalItem), 1, {
+              ...upgrade,
+              count: originalItem?.count || unitSize
+            });
+          }
+        } else {
+          actualItems.push(upgrade);
+        }
+        return; // Skip the array handling below
+      }
+      
+      // Handle selectionType: "all" (selected is the option name string)
+      // Check both fullOpt and opt in case lookup failed
+      if ((fullOpt.selectionType === "all" || opt.selectionType === "all") && Array.isArray(opt.name) && typeof opt.selected === 'string') {
+        const selectedName = opt.selected;
+        // Verify the selected value is actually in the option name array
+        if (opt.name.includes(selectedName)) {
+          // Create upgrade with string name (not array) to ensure proper display
+          const upgrade = { 
+            name: selectedName,  // String, not array
+            count: unitSize, 
+            selected: selectedName 
+          };
+          if (opt.replaces) {
+            const originalItem = actualItems.find(w => {
+              if (Array.isArray(opt.replaces)) {
+                return opt.replaces.includes(w.name);
+              }
+              return w.name === opt.replaces
+            });
+            if (originalItem) {
+              if (unitSize < originalItem.count) {
+                originalItem.count -= unitSize;
+                actualItems.push(upgrade);
+              } else {
+                // Replace original item, ensuring name is a string
+                actualItems.splice(actualItems.indexOf(originalItem), 1, {
+                  name: selectedName,  // Explicitly set string name
+                  count: originalItem.count,
+                  selected: selectedName
+                });
+              }
+            } else {
+              actualItems.push(upgrade);
+            }
+          } else {
+            actualItems.push(upgrade);
+          }
+        }
+        return; // Skip the generic array handling below
+      }
+      
+      // Handle selectionType: "any" (array of strings, duplicates allowed - count them)
+      if (fullOpt.selectionType === "any" && Array.isArray(opt.selected)) {
+        // Count occurrences of each option name
+        const counts = {};
+        opt.selected.forEach(selectedValue => {
+          counts[selectedValue] = (counts[selectedValue] || 0) + 1;
+        });
+        
+        // Create one upgrade item per unique option name with its count
+        Object.entries(counts).forEach(([selectedValue, count]) => {
+          const upgrade = { ...opt, count, selected: selectedValue };
+          if (opt.replaces) {
+            const originalItem = actualItems.find(w => {
+              if (Array.isArray(opt.replaces)) {
+                return opt.replaces.includes(w.name);
+              }
+              return w.name === opt.replaces
+            });
+            const replaceCount = count;
+            if (replaceCount < originalItem?.count) {
+              originalItem.count -= replaceCount;
+              actualItems.push(upgrade);
+            } else {
+              actualItems.splice(actualItems.indexOf(originalItem), 1, {
+                ...upgrade,
+                count: originalItem?.count || unitSize
+              });
+            }
+          } else {
+            actualItems.push(upgrade);
+          }
+        });
+        return; // Skip the generic array handling below
+      }
+      
       // Handle array selections (for max > 1 with array name)
       const selectedValues = Array.isArray(opt.selected) ? opt.selected : [opt.selected];
       
@@ -128,7 +244,31 @@ export const getOptionSummaries = (defaultItems, itemOptions, unitSize) => {
     const shouldPrefixMax1 = unitSize > 1 && item.max === 1 && count === 1;
     const countStr = count > 1 || shouldPrefixMax1 ? `${count}x ` : "";
     // if item.name is an array, the "selected" value is the name of the selected option
-    const itemName = (Array.isArray(item.name) && item.selected) ? item.selected : item.name;
+    // For selectionType: "all", selected is the option name string (not an index)
+    let itemName;
+    if (Array.isArray(item.name)) {
+      // If selected is a string, it's the option name (selectionType: "all" or other string-based selection)
+      if (item.selected !== undefined && item.selected !== false && typeof item.selected === 'string') {
+        itemName = item.selected;
+      } else if (typeof item.selected === 'number' && item.selected >= 0 && item.selected < item.name.length) {
+        // Legacy support: if selected is a number, it's an index (old format)
+        itemName = item.name[item.selected];
+      } else {
+        // Fallback: use the first element of the array
+        itemName = item.name[0] || item.name.join(", ");
+      }
+    } else {
+      // item.name is a string, use it directly
+      itemName = item.name;
+    }
+    // Ensure itemName is a string (handle any edge cases)
+    if (Array.isArray(itemName)) {
+      itemName = itemName[0] || itemName.join(", ");
+    }
+    if (!itemName || itemName === 'null' || itemName === 'undefined') {
+      // Final fallback
+      itemName = Array.isArray(item.name) ? (item.name[0] || 'Unknown') : String(item.name || 'Unknown');
+    }
     return `${countStr}${itemName}`;
   });
   return summaries;
@@ -161,8 +301,9 @@ const printUnit = (unit) => {
   ["weapons", "wargear"].forEach(key => {
     const defaultItems = key === "weapons" ? (unit.weapons || []) : (unit.wargear || []);
     const selectedOptions = unit.options?.[key] || [];
+    const fullOptionDefinitions = unit.unitOptions?.[key] || null;
     if (defaultItems.length > 0 || selectedOptions.length > 0) {
-      const profiles = getOptionSummaries(defaultItems, selectedOptions, unitCount);
+      const profiles = getOptionSummaries(defaultItems, selectedOptions, unitCount, fullOptionDefinitions);
       profiles.forEach(profile => {
         lines.push(`  ◦ ${profile}`);
       });

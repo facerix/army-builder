@@ -517,8 +517,8 @@ export const factionData = {
       "unitOptions": {
         "unitSize": [ 5, 10 ],
         weapons: [
-          /* note that this isn't quite right but I'm not going to try to untangle it right now */
-          { name: ["Incinerator", "Psilencer", "Psycannon"], replaces: "Storm bolter", max: 4 },
+          /* Up to 4 Purgators can each have their storm bolter and Nemesis force weapon replaced with one of the following (these also replace the Nemesis force weapon with close combat weapon) */
+          { name: ["Incinerator", "Psilencer", "Psycannon"], replaces: "Storm bolter", max: 4, selectionType: "any" },
         ]
       }
     },

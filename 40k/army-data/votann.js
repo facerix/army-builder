@@ -112,15 +112,7 @@ export const factionData = {
           { name: "Theyn’s melee weapon", replaces: "Theyn’s close combat weapon", max: 1 },
           { name: "Ion blaster", replaces: "Autoch-pattern bolter", max: 9 },
           { name: "Plasma knife", replaces: ["Autoch-pattern bolter", "Ion blaster"], max: 2 },
-          /* whew no idea how to encode this:
-            Up to 2 Hearthkyn Warriors can each have their Autoch-pattern bolter or ion blaster replaced with one of the following (duplicates are not allowed):
-              1 HYLas auto rifle
-              1 HYLas rotary cannon
-              1 L7 missile launcher
-              1 EtaCarn plasma beamer
-              1 magna-rail rifle
-          */
-          { name: ["HYLas auto rifle", "HYLas rotary cannon", "L7 missile launcher", "EtaCarn plasma beamer", "Magna-rail rifle"], replaces: ["Autoch-pattern bolter", "Ion blaster"], max: 2 },
+          { name: ["HYLas auto rifle", "HYLas rotary cannon", "L7 missile launcher", "EtaCarn plasma beamer", "Magna-rail rifle"], replaces: ["Autoch-pattern bolter", "Ion blaster"], max: 2, selectionType: "anyNoDuplicates" },
         ]
       }
     },
@@ -164,7 +156,7 @@ export const factionData = {
       unitOptions: {
         unitSize: [3, 6],
         weapons: [
-          { name: ["Graviton blast cannon", "SP conversion beamer"], replaces: "Bolt cannon" },
+          { name: ["Graviton blast cannon", "SP conversion beamer"], replaces: "Bolt cannon", selectionType: "all" },
         ]
       },
     },
@@ -181,6 +173,7 @@ export const factionData = {
           {
             name: "Twin concussion gauntlets",
             max: 1,
+            per: 5,
             replaces: ["Heavy plasma axe", "Concussion maul"]
           },
           {
@@ -189,7 +182,8 @@ export const factionData = {
           },
           {
             name: "Mole grenade launcher",
-            max: 1
+            max: 1,
+            per: 5,
           }
         ]
       }
@@ -262,7 +256,7 @@ export const factionData = {
         unitSize: [3, 6],
         weapons: [
           // For every 3 models in this unit, 1 model can be equipped with one of the following:
-          { name: ["HYLas rotary cannon", "Ion beamer"], max: 1 },
+          { name: ["HYLas rotary cannon", "Ion beamer"], max: 1, per: 3, selectionType: "any" },
         ],
         wargear: [
           // 1 model that is not equipped with either a HYLas rotary cannon or an ion beamer can be equipped with...

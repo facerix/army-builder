@@ -190,6 +190,35 @@ const CSS = `
                 cursor: not-allowed;
               }
             }
+
+            .option-checkbox-group {
+              display: flex;
+              flex-direction: column;
+              gap: 0.25rem;
+              margin-bottom: 0.5rem;
+              
+              .option-group-label {
+                font-weight: 500;
+                margin-bottom: 0.25rem;
+              }
+              
+              .option-checkbox-row {
+                display: flex;
+                gap: 0.5rem;
+                flex-wrap: wrap;
+                
+                .option-checkbox {
+                  width: 1.2em;
+                  height: 1.2em;
+                  cursor: pointer;
+                  
+                  &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -247,139 +276,383 @@ const optionFieldsetName = (option) => {
   return (Array.isArray(option.name) ? option.name.join("-") : option.name).replace(/ /g, "_");
 };
 
-const OptionFieldset = (optionType, optionOptions, currentOptions, labelText) => {
-  const optionsKey = optionType; // "weapons" or "wargear"
-  
-  const optionsList = optionOptions.map(option => {
-    // two kinds of options:
-    // if it has a "replaces" and no "max", then it's a choice for the whole unit: show both with radio buttons
-    // if it has a "max", then it doesn't matter if it has a "replaces": it should be a checkbox per max value
-    // if "name" is an array instead of a single string, there are multiple upgrade options: show radio buttons for each
-    const currentOption = currentOptions[optionsKey]?.find(w => {
-      // Match by name, handling arrays
-      if (Array.isArray(option.name)) {
-        // If option.name is an array, check if w.name matches (also array) or if w.selected is in the array
-        if (Array.isArray(w.name)) {
-          // Compare arrays by checking if they have the same length and same elements
-          return w.name.length === option.name.length && 
-                 w.name.every((val, idx) => val === option.name[idx]);
-        }
-        // If w.name is not an array but w.selected is set, check if selected value is in option.name array
-        return w.selected && option.name.includes(w.selected);
-      } else {
-        // If option.name is a string, check if w.name matches (string or array containing it)
-        if (Array.isArray(w.name)) {
-          return w.name.includes(option.name);
-        }
-        return w.name === option.name;
-      }
-    });
-
-    const fieldsetName = optionFieldsetName(option);
-    if (option.replaces && !option.max) {
-      const upgradeOptions = Array.isArray(option.name) ? option.name : [option.name];
-      const isInactive = !currentOption?.selected || currentOption?.selected === "off"; 
-      return h("div", { className: "option-item" }, [
-        h("div", { className: "option-value" }, [
-          h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
-          h("label", { innerText: option.replaces, className: "option-value" }),
-        ]),
-        ...upgradeOptions.map(upgradeName => {
-          return h("div", { className: "option-value" }, [
-            h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: currentOption?.selected === upgradeName }),
-            h("label", { innerText: upgradeName, className: "option-value" }),
-          ]);
-        }),
-      ]);
+// Helper function: Match two options by name (handles arrays and strings)
+const matchOptionsByName = (option1, option2) => {
+  if (Array.isArray(option1.name)) {
+    if (Array.isArray(option2.name)) {
+      // Both are arrays - compare element by element
+      return option1.name.length === option2.name.length && 
+             option1.name.every((val, idx) => val === option2.name[idx]);
     }
+    // option1 is array, option2 is string - check if option2.name is in array or matches selected
+    return option1.name.includes(option2.name) || 
+           (option2.selected && option1.name.includes(option2.selected));
+  } else {
+    if (Array.isArray(option2.name)) {
+      // option1 is string, option2 is array - check if option1.name is in array
+      return option2.name.includes(option1.name);
+    }
+    // Both are strings - direct comparison
+    return option1.name === option2.name;
+  }
+};
 
-    if (option.max) {
-      // If name is an array, handle based on max value
-      if (Array.isArray(option.name)) {
-        const upgradeOptions = option.name;
-        // If max is 1, show radio buttons only if there's a replaces property, otherwise show checkbox
-        if (option.max === 1) {
-          // If there's a replaces property, use radio buttons (mutually exclusive choice)
-          if (option.replaces) {
-            const isInactive = !currentOption?.selected || currentOption?.selected === "off" || 
-                              (Array.isArray(currentOption?.selected) && currentOption.selected.length === 0);
-            return h("div", { className: "option-item" }, [
-              h("div", { className: "option-value" }, [
-                h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
-                h("label", { innerText: "None", className: "option-value" }),
-              ]),
-              ...upgradeOptions.map(upgradeName => {
-                const isSelected = Array.isArray(currentOption?.selected) 
-                  ? currentOption.selected.includes(upgradeName)
-                  : currentOption?.selected === upgradeName;
-                return h("div", { className: "option-value" }, [
-                  h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: isSelected }),
-                  h("label", { innerText: upgradeName, className: "option-value" }),
-                ]);
-              }),
-            ]);
-          }
-          // If no replaces property, use checkboxes (optional selection, max 1)
-          const selectedArray = Array.isArray(currentOption?.selected) 
-            ? currentOption.selected 
-            : (currentOption?.selected && currentOption.selected !== "off" ? [currentOption.selected] : []);
-          
-          return h("div", { className: "option-item" }, [
-            ...upgradeOptions.map(upgradeName => {
-              const isChecked = selectedArray.includes(upgradeName);
-              const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
-              return h("div", { className: "option-checkbox-item", style: "display: flex; gap: 0.5rem; align-items: center;" }, [
-                h("input", { 
-                  type: "checkbox", 
-                  id: checkboxId, 
-                  name: fieldsetName, 
-                  value: upgradeName,
-                  checked: isChecked
-                }),
-                h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
-              ]);
-            }),
-          ]);
-        }
-        // If max > 1, show checkboxes with counter (choose up to max)
-        const selectedArray = Array.isArray(currentOption?.selected) 
-          ? currentOption.selected 
-          : (currentOption?.selected && currentOption.selected !== "off" ? [currentOption.selected] : []);
-        const selectedCount = selectedArray.length;
-        const isMaxReached = selectedCount >= option.max;
-        
-        return h("div", { className: "option-item option-item-multi" }, [
-          h("div", { className: "option-header" }, [
-            h("span", { className: "option-legend-max", innerText: `Select up to ${option.max}` }),
-            h("span", { className: "option-counter", innerText: `${selectedCount} / ${option.max} selected` }),
-          ]),
-          h("div", { className: "option-checkboxes" }, [
-            ...upgradeOptions.map(upgradeName => {
-              const isChecked = selectedArray.includes(upgradeName);
-              const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
-              return h("div", { className: "option-checkbox-item" }, [
-                h("input", { 
-                  type: "checkbox", 
-                  id: checkboxId, 
-                  name: fieldsetName, 
-                  value: upgradeName,
-                  checked: isChecked,
-                  disabled: !isChecked && isMaxReached
-                }),
-                h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
-              ]);
+// Helper function: Find current option state from saved options
+const findCurrentOption = (option, currentOptions, optionsKey) => {
+  return currentOptions[optionsKey]?.find(w => matchOptionsByName(option, w));
+};
+
+// Helper function: Find corresponding available option from saved option
+const findAvailableOption = (savedOption, availableOptions) => {
+  return availableOptions?.find(opt => matchOptionsByName(opt, savedOption));
+};
+
+// Helper function: Validate option configuration
+const validateOption = (option) => {
+  if (option.selectionType && !Array.isArray(option.name)) {
+    throw new Error(`selectionType is only valid when name is an array. Option: ${JSON.stringify(option)}`);
+  }
+};
+
+// Helper function: Calculate effective max based on per property
+const calculateEffectiveMax = (option, unitSize) => {
+  if (option.per && unitSize) {
+    return Math.floor(unitSize / option.per) * option.max;
+  }
+  return option.max || 0;
+};
+
+// Helper function: Normalize selected value to array for easier processing
+const normalizeSelectedToArray = (selected) => {
+  if (Array.isArray(selected)) {
+    return selected;
+  }
+  if (selected && selected !== "off" && selected !== false) {
+    return [selected];
+  }
+  return [];
+};
+
+// Helper function: Truncate selections when unit size decreases
+const truncateSelectionsForUnitSize = (option, selected, unitSize) => {
+  if (!option.per || !option.max) return selected;
+  
+  const effectiveMax = calculateEffectiveMax(option, unitSize);
+  
+  // Handle array selections (selectionType: "any" or "anyNoDuplicates")
+  if ((option.selectionType === "any" || option.selectionType === "anyNoDuplicates") && Array.isArray(selected)) {
+    return selected.length > effectiveMax ? selected.slice(0, effectiveMax) : selected;
+  }
+  
+  // Handle single-string with per (integer count)
+  if (typeof option.name === 'string' && option.per && typeof selected === 'number') {
+    return Math.min(selected, effectiveMax);
+  }
+  
+  // Handle selectionType: "all" (string value) - no truncation needed, value is still valid
+  // (though the option might not exist if array was changed, but that's handled elsewhere)
+  
+  return selected;
+};
+
+// Renderer for: replaces without max (whole unit choice)
+const renderReplacesWithoutMax = (option, currentOption, fieldsetName) => {
+  const upgradeOptions = Array.isArray(option.name) ? option.name : [option.name];
+  const isInactive = !currentOption?.selected || currentOption?.selected === "off";
+  
+  return h("div", { className: "option-item" }, [
+    h("div", { className: "option-value" }, [
+      h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
+      h("label", { innerText: option.replaces, className: "option-value" }),
+    ]),
+    ...upgradeOptions.map(upgradeName => {
+      return h("div", { className: "option-value" }, [
+        h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: currentOption?.selected === upgradeName }),
+        h("label", { innerText: upgradeName, className: "option-value" }),
+      ]);
+    }),
+  ]);
+};
+
+// Renderer for: array name, max === 1, with replaces
+const renderArrayMaxOneWithReplaces = (option, currentOption, fieldsetName) => {
+  const upgradeOptions = option.name;
+  const isInactive = !currentOption?.selected || currentOption?.selected === "off" || 
+                    (Array.isArray(currentOption?.selected) && currentOption.selected.length === 0);
+  
+  return h("div", { className: "option-item" }, [
+    h("div", { className: "option-value" }, [
+      h("input", { type: "radio", name: fieldsetName, value: "off", checked: isInactive }),
+      h("label", { innerText: "None", className: "option-value" }),
+    ]),
+    ...upgradeOptions.map(upgradeName => {
+      const isSelected = Array.isArray(currentOption?.selected) 
+        ? currentOption.selected.includes(upgradeName)
+        : currentOption?.selected === upgradeName;
+      return h("div", { className: "option-value" }, [
+        h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: isSelected }),
+        h("label", { innerText: upgradeName, className: "option-value" }),
+      ]);
+    }),
+  ]);
+};
+
+// Renderer for: array name, max === 1, without replaces
+const renderArrayMaxOneWithoutReplaces = (option, currentOption, fieldsetName) => {
+  const upgradeOptions = option.name;
+  const selectedArray = normalizeSelectedToArray(currentOption?.selected);
+  
+  return h("div", { className: "option-item" }, [
+    ...upgradeOptions.map(upgradeName => {
+      const isChecked = selectedArray.includes(upgradeName);
+      const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
+      return h("div", { className: "option-checkbox-item", style: "display: flex; gap: 0.5rem; align-items: center;" }, [
+        h("input", { 
+          type: "checkbox", 
+          id: checkboxId, 
+          name: fieldsetName, 
+          value: upgradeName,
+          checked: isChecked
+        }),
+        h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
+      ]);
+    }),
+  ]);
+};
+
+// Renderer for: array name, max > 1 (standard multi-select)
+const renderArrayMaxMulti = (option, currentOption, fieldsetName) => {
+  const upgradeOptions = option.name;
+  const selectedArray = normalizeSelectedToArray(currentOption?.selected);
+  const selectedCount = selectedArray.length;
+  const isMaxReached = selectedCount >= option.max;
+  
+  return h("div", { className: "option-item option-item-multi" }, [
+    h("div", { className: "option-header" }, [
+      h("span", { className: "option-legend-max", innerText: `Select up to ${option.max}` }),
+      h("span", { className: "option-counter", innerText: `${selectedCount} / ${option.max} selected` }),
+    ]),
+    h("div", { className: "option-checkboxes" }, [
+      ...upgradeOptions.map(upgradeName => {
+        const isChecked = selectedArray.includes(upgradeName);
+        const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
+        return h("div", { className: "option-checkbox-item" }, [
+          h("input", { 
+            type: "checkbox", 
+            id: checkboxId, 
+            name: fieldsetName, 
+            value: upgradeName,
+            checked: isChecked,
+            disabled: !isChecked && isMaxReached
+          }),
+          h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
+        ]);
+      }),
+    ]),
+  ]);
+};
+
+// Renderer for: single string with max (standard checkbox)
+const renderSingleStringWithMax = (option, currentOption, fieldsetName) => {
+  return h("div", { className: "option-item" }, [
+    h("label", { innerText: option.name, className: "option-value" }),
+    h("input", { type: "checkbox", id: fieldsetName, name: fieldsetName, checked: currentOption?.selected }),
+  ]);
+};
+
+// Renderer for: selectionType: "all"
+const renderSelectionTypeAll = (option, currentOption, fieldsetName, effectiveMax) => {
+  const upgradeOptions = option.name;
+  // selected is now the actual option name string, not an index
+  const selectedValue = typeof currentOption?.selected === 'string' ? currentOption.selected : null;
+  
+  return h("div", { className: "option-item" }, [
+    h("div", { className: "option-value" }, [
+      h("input", { type: "radio", name: fieldsetName, value: "off", checked: !selectedValue || selectedValue === "off" }),
+      h("label", { innerText: "None", className: "option-value" }),
+    ]),
+    ...upgradeOptions.map((upgradeName) => {
+      return h("div", { className: "option-value" }, [
+        h("input", { type: "radio", name: fieldsetName, value: upgradeName, checked: selectedValue === upgradeName }),
+        h("label", { innerText: upgradeName, className: "option-value" }),
+      ]);
+    }),
+  ]);
+};
+
+// Renderer for: selectionType: "any"
+const renderSelectionTypeAny = (option, currentOption, fieldsetName, effectiveMax) => {
+  const upgradeOptions = option.name;
+  
+  // Count selections per option
+  const selectionsByOption = {};
+  upgradeOptions.forEach(optName => {
+    selectionsByOption[optName] = (currentOption?.selected || []).filter(s => s === optName).length;
+  });
+  
+  const totalSelected = (currentOption?.selected || []).length;
+  const isMaxReached = totalSelected >= effectiveMax;
+  
+  return h("div", { className: "option-item option-item-multi" }, [
+    h("div", { className: "option-header" }, [
+      h("span", { className: "option-legend-max", innerText: `Select up to ${effectiveMax}` }),
+      h("span", { className: "option-counter", innerText: `${totalSelected} / ${effectiveMax} selected` }),
+    ]),
+    h("div", { className: "option-checkboxes" }, [
+      ...upgradeOptions.map((upgradeName, optionIndex) => {
+        return h("div", { className: "option-checkbox-group" }, [
+          h("label", { className: "option-group-label", innerText: upgradeName }),
+          h("div", { className: "option-checkbox-row" }, [
+            ...Array.from({ length: effectiveMax }, (_, checkboxIndex) => {
+              const checkboxId = `${fieldsetName}-${optionIndex}-${checkboxIndex}`;
+              const checkboxName = `${fieldsetName}-${optionIndex}`;
+              const isChecked = checkboxIndex < selectionsByOption[upgradeName];
+              const isDisabled = !isChecked && isMaxReached;
+              
+              return h("input", {
+                type: "checkbox",
+                id: checkboxId,
+                name: checkboxName,
+                value: upgradeName,
+                checked: isChecked,
+                disabled: isDisabled,
+                className: "option-checkbox"
+              });
             }),
           ]),
         ]);
-      }
-      // If name is a string, show checkbox (can select/deselect)
-      return h("div", { className: "option-item" }, [
-        h("label", { innerText: option.name, className: "option-value" }),
-        h("input", { type: "checkbox", id: fieldsetName, name: fieldsetName, checked: currentOption?.selected }),
-      ]);
-    }
+      }),
+    ]),
+  ]);
+};
 
-    // return empty fragment for now until I know if this is a thing (no "max" and no "replaces")
+// Renderer for: selectionType: "anyNoDuplicates"
+const renderSelectionTypeAnyNoDuplicates = (option, currentOption, fieldsetName, effectiveMax) => {
+  const upgradeOptions = option.name;
+  const selectedArray = normalizeSelectedToArray(currentOption?.selected);
+  const selectedCount = selectedArray.length;
+  const isMaxReached = selectedCount >= effectiveMax;
+  
+  return h("div", { className: "option-item option-item-multi" }, [
+    h("div", { className: "option-header" }, [
+      h("span", { className: "option-legend-max", innerText: `Select up to ${effectiveMax}` }),
+      h("span", { className: "option-counter", innerText: `${selectedCount} / ${effectiveMax} selected` }),
+    ]),
+    h("div", { className: "option-checkboxes" }, [
+      ...upgradeOptions.map(upgradeName => {
+        const isChecked = selectedArray.includes(upgradeName);
+        const checkboxId = `${fieldsetName}-${upgradeName.replace(/ /g, "_")}`;
+        return h("div", { className: "option-checkbox-item" }, [
+          h("input", { 
+            type: "checkbox", 
+            id: checkboxId, 
+            name: fieldsetName, 
+            value: upgradeName,
+            checked: isChecked,
+            disabled: !isChecked && isMaxReached
+          }),
+          h("label", { htmlFor: checkboxId, innerText: upgradeName, className: "option-value" }),
+        ]);
+      }),
+    ]),
+  ]);
+};
+
+// Renderer for: single string with per
+const renderSingleStringWithPer = (option, currentOption, fieldsetName, effectiveMax) => {
+  const selectedCount = typeof currentOption?.selected === 'number' ? currentOption.selected : 0;
+  const isMaxReached = selectedCount >= effectiveMax;
+  
+  return h("div", { className: "option-item option-item-multi" }, [
+    h("div", { className: "option-header" }, [
+      h("span", { className: "option-legend-max", innerText: `Select up to ${effectiveMax}` }),
+      h("span", { className: "option-counter", innerText: `${selectedCount} / ${effectiveMax} selected` }),
+    ]),
+    h("div", { className: "option-checkboxes" }, [
+      ...Array.from({ length: effectiveMax }, (_, index) => {
+        const checkboxId = `${fieldsetName}-${index}`;
+        const isChecked = index < selectedCount;
+        const isDisabled = !isChecked && isMaxReached;
+        
+        return h("div", { className: "option-checkbox-item" }, [
+          h("input", {
+            type: "checkbox",
+            id: checkboxId,
+            name: fieldsetName,
+            value: "1",
+            checked: isChecked,
+            disabled: isDisabled
+          }),
+          h("label", { htmlFor: checkboxId, innerText: option.name, className: "option-value" }),
+        ]);
+      }),
+    ]),
+  ]);
+};
+
+const OptionFieldset = (optionType, optionOptions, currentOptions, labelText) => {
+  const optionsKey = optionType; // "weapons" or "wargear"
+  const unitSize = currentOptions.unitSize;
+  
+  const optionsList = optionOptions.map(option => {
+    // Validate option
+    validateOption(option);
+    
+    // Find current option state
+    const currentOption = findCurrentOption(option, currentOptions, optionsKey);
+    const fieldsetName = optionFieldsetName(option);
+    
+    // Calculate effective max
+    const effectiveMax = option.max ? calculateEffectiveMax(option, unitSize) : 0;
+    
+    // Route to appropriate renderer based on option properties
+    // Priority order matters here
+    
+    // 1. Has replaces but no max
+    if (option.replaces && !option.max) {
+      return renderReplacesWithoutMax(option, currentOption, fieldsetName);
+    }
+    
+    // 2. Has max
+    if (option.max) {
+      // Array name with selectionType
+      if (Array.isArray(option.name) && option.selectionType) {
+        switch (option.selectionType) {
+          case "all":
+            return renderSelectionTypeAll(option, currentOption, fieldsetName, effectiveMax);
+          case "any":
+            return renderSelectionTypeAny(option, currentOption, fieldsetName, effectiveMax);
+          case "anyNoDuplicates":
+            return renderSelectionTypeAnyNoDuplicates(option, currentOption, fieldsetName, effectiveMax);
+          default:
+            throw new Error(`Unknown selectionType: ${option.selectionType}`);
+        }
+      }
+      
+      // Array name without selectionType
+      if (Array.isArray(option.name)) {
+        if (option.max === 1) {
+          if (option.replaces) {
+            return renderArrayMaxOneWithReplaces(option, currentOption, fieldsetName);
+          } else {
+            return renderArrayMaxOneWithoutReplaces(option, currentOption, fieldsetName);
+          }
+        } else {
+          return renderArrayMaxMulti(option, currentOption, fieldsetName);
+        }
+      }
+      
+      // Single string name
+      if (typeof option.name === 'string') {
+        if (option.per) {
+          return renderSingleStringWithPer(option, currentOption, fieldsetName, effectiveMax);
+        } else {
+          return renderSingleStringWithMax(option, currentOption, fieldsetName);
+        }
+      }
+    }
+    
+    // 3. No max and no replaces (fallback)
     return document.createDocumentFragment();
   });
 
@@ -431,7 +704,12 @@ class OptionsModal extends HTMLElement {
       
       // Add change listeners for checkboxes to update counters dynamically and enforce max: 1
       this.form.addEventListener("change", (evt) => {
-        if (evt.target.type === "checkbox" && evt.target.name) {
+        if (evt.target.name === "unitSize") {
+          // Unit size changed, update options first then truncate and re-render to update effectiveMax
+          this.#options.unitSize = parseInt(evt.target.value, 10);
+          this.#truncateAllSelections();
+          this.render();
+        } else if (evt.target.type === "checkbox" && evt.target.name) {
           // Check if this is a max: 1 checkbox option (no counter header, just checkboxes)
           const optionItem = evt.target.closest(".option-item");
           if (optionItem && !optionItem.classList.contains("option-item-multi")) {
@@ -446,8 +724,13 @@ class OptionsModal extends HTMLElement {
               });
             }
           } else {
-            // Multi-select with counter
-            this.updateMultiSelectCounter(evt.target.name);
+            // Multi-select with counter - need to find the base fieldset name
+            const checkboxName = evt.target.name;
+            // For selectionType: "any", checkbox names are like "fieldsetName-0", extract base name
+            // Check if name ends with a pattern like "-N" where N is a number
+            const match = checkboxName.match(/^(.+)-(\d+)$/);
+            const baseName = match ? match[1] : checkboxName;
+            this.updateMultiSelectCounter(baseName);
           }
         }
       });
@@ -461,9 +744,14 @@ class OptionsModal extends HTMLElement {
     const shadow = this.shadowRoot;
     if (!shadow) return;
     
-    const checkboxes = shadow.querySelectorAll(`input[type="checkbox"][name="${fieldsetName}"]`);
+    // Find all checkboxes that match this fieldset (including indexed names for selectionType: "any")
+    const checkboxes = shadow.querySelectorAll(
+      `input[type="checkbox"][name="${fieldsetName}"], input[type="checkbox"][name^="${fieldsetName}-"]`
+    );
     const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-    const firstCheckbox = shadow.querySelector(`input[type="checkbox"][name="${fieldsetName}"]`);
+    const firstCheckbox = shadow.querySelector(
+      `input[type="checkbox"][name="${fieldsetName}"], input[type="checkbox"][name^="${fieldsetName}-"]`
+    );
     if (!firstCheckbox) return;
     
     const optionItem = firstCheckbox.closest(".option-item-multi");
@@ -489,12 +777,101 @@ class OptionsModal extends HTMLElement {
     }
   }
 
+  // Helper: Read current form state for an option type and update this.#options
+  #syncOptionsFromForm(optionType) {
+    const formData = new window.FormData(this.form);
+    const options = Object.fromEntries(formData);
+    const { warlord, enhancement, unitSize, ...rest } = options;
+    const savedOptions = this.#options[optionType] || [];
+    const availableOptions = this.#availableOptions[optionType];
+    
+    if (!savedOptions || !availableOptions) return;
+    
+    // Helper: Get form values for a fieldset name, filtering out "off"
+    const getFormValues = (name) => formData.getAll(name).filter(v => v !== "off");
+    
+    // Helper: Return array if non-empty, otherwise false
+    const arrayOrFalse = (arr) => arr.length > 0 ? arr : false;
+    
+    savedOptions.forEach(savedOption => {
+      const availableOption = findAvailableOption(savedOption, availableOptions);
+      const option = availableOption || savedOption;
+      const fieldsetName = optionFieldsetName(savedOption);
+      
+      // Read current form state based on option type
+      if (option.selectionType === "all" && Array.isArray(option.name)) {
+        if (fieldsetName in rest) {
+          const value = rest[fieldsetName];
+          savedOption.selected = value === "off" ? false : value;
+        }
+      } else if (option.selectionType === "any" && Array.isArray(option.name)) {
+        const selectedArray = [];
+        option.name.forEach((optionName, optionIndex) => {
+          const checkboxName = `${fieldsetName}-${optionIndex}`;
+          const checkedCount = getFormValues(checkboxName).length;
+          for (let i = 0; i < checkedCount; i++) {
+            selectedArray.push(optionName);
+          }
+        });
+        savedOption.selected = arrayOrFalse(selectedArray);
+      } else if (option.selectionType === "anyNoDuplicates" && Array.isArray(option.name)) {
+        savedOption.selected = arrayOrFalse(getFormValues(fieldsetName));
+      } else if (typeof option.name === 'string' && option.per) {
+        savedOption.selected = getFormValues(fieldsetName).length;
+      } else {
+        // For other types, read from form if present
+        const isMultiSelect = Array.isArray(option.name) && option.max > 1;
+        if (isMultiSelect) {
+          savedOption.selected = arrayOrFalse(getFormValues(fieldsetName));
+        } else if (fieldsetName in rest) {
+          savedOption.selected = rest[fieldsetName];
+        }
+      }
+    });
+  }
+
+  // Helper: Truncate selections for a single option type (weapons or wargear)
+  #truncateSelectionsForOptionType(savedOptions, availableOptions, unitSize) {
+    if (!savedOptions || !availableOptions) return;
+    
+    savedOptions.forEach(savedOption => {
+      const unitOption = findAvailableOption(savedOption, availableOptions);
+      if (unitOption && savedOption.selected !== false && savedOption.selected !== undefined) {
+        savedOption.selected = truncateSelectionsForUnitSize(unitOption, savedOption.selected, unitSize);
+      }
+    });
+  }
+
+  // Truncate selections for all options based on current unit size
+  // Reads current form state first to preserve unsaved changes
+  #truncateAllSelections() {
+    const unitSize = this.#options.unitSize;
+    if (!unitSize) return;
+    
+    // Sync current form state to this.#options before truncating
+    this.#syncOptionsFromForm("weapons");
+    this.#syncOptionsFromForm("wargear");
+    
+    this.#truncateSelectionsForOptionType(
+      this.#options.weapons, 
+      this.#availableOptions.weapons, 
+      unitSize
+    );
+    this.#truncateSelectionsForOptionType(
+      this.#options.wargear, 
+      this.#availableOptions.wargear, 
+      unitSize
+    );
+  }
+
   get options() {
     return { ...this.#options };
   }
 
   set options(obj) {
     this.#options = { ...obj };
+    // Truncate selections if unit size is set
+    this.#truncateAllSelections();
     this.render();
   }
 
@@ -525,45 +902,83 @@ class OptionsModal extends HTMLElement {
     const { warlord, enhancement, unitSize, ...rest } = options;
     const { weapons = [], wargear = [] } = this.#options;
 
-    // interpret weapons form data back into the unit options format
-    weapons?.forEach(weaponOption => {
-      const fieldsetName = optionFieldsetName(weaponOption);
+    // Helper: Get form values for a fieldset name, filtering out "off"
+    const getFormValues = (name) => formData.getAll(name).filter(v => v !== "off");
+    
+    // Helper: Return array if non-empty, otherwise false
+    const arrayOrFalse = (arr) => arr.length > 0 ? arr : false;
+
+    // Helper function to parse weapon/wargear option
+    const parseOption = (savedOption, availableOption) => {
+      const fieldsetName = optionFieldsetName(savedOption);
+      
+      // Use availableOption for property checks since it has the full definition
+      const option = availableOption || savedOption;
+      
+      // Handle selectionType: "all"
+      if (option.selectionType === "all" && Array.isArray(option.name)) {
+        if (fieldsetName in rest) {
+          const value = rest[fieldsetName];
+          return value === "off" ? false : value;
+        }
+        return false;
+      }
+      
+      // Handle selectionType: "any"
+      if (option.selectionType === "any" && Array.isArray(option.name)) {
+        const selectedArray = [];
+        option.name.forEach((optionName, optionIndex) => {
+          const checkboxName = `${fieldsetName}-${optionIndex}`;
+          const checkedCount = getFormValues(checkboxName).length;
+          for (let i = 0; i < checkedCount; i++) {
+            selectedArray.push(optionName);
+          }
+        });
+        return arrayOrFalse(selectedArray);
+      }
+      
+      // Handle selectionType: "anyNoDuplicates"
+      if (option.selectionType === "anyNoDuplicates" && Array.isArray(option.name)) {
+        return arrayOrFalse(getFormValues(fieldsetName));
+      }
+      
+      // Handle single string with per
+      if (typeof option.name === 'string' && option.per) {
+        return getFormValues(fieldsetName).length;
+      }
+      
+      // Existing logic for other cases
       // Check if this is a multi-select option (array name with max > 1)
-      const isMultiSelect = Array.isArray(weaponOption.name) && weaponOption.max > 1;
+      const isMultiSelect = Array.isArray(option.name) && option.max > 1;
       
       if (isMultiSelect) {
-        // Use getAll to get all checkbox values
-        const selectedValues = formData.getAll(fieldsetName).filter(v => v !== "off");
-        weaponOption.selected = selectedValues.length > 0 ? selectedValues : false;
+        return arrayOrFalse(getFormValues(fieldsetName));
       } else if (fieldsetName in rest) {
         // Single select: radio buttons or single checkbox
-        // weapon option radio buttons all have a value equal to their name, except the default / "replaces" weapon, which has a value of "off",
-        // rest[fieldsetName] will reflect both states
-        weaponOption.selected = rest[fieldsetName];
+        return rest[fieldsetName];
       } else {
-        weaponOption.selected = false;
+        return false;
       }
-    });
+    };
 
-    // interpret wargear form data back into the unit options format
-    wargear?.forEach(wargearOption => {
-      const fieldsetName = optionFieldsetName(wargearOption);
-      // Check if this is a checkbox option (array name with max, regardless of max value)
-      const isCheckboxOption = Array.isArray(wargearOption.name) && wargearOption.max && !wargearOption.replaces;
-      
-      if (isCheckboxOption) {
-        // Use getAll to get all checkbox values
-        const selectedValues = formData.getAll(fieldsetName).filter(v => v !== "off");
-        wargearOption.selected = selectedValues.length > 0 ? selectedValues : false;
-      } else if (fieldsetName in rest) {
-        // Single select: radio buttons or single checkbox
-        // wargear option radio buttons all have a value equal to their name, except the default / "replaces" wargear, which has a value of "off",
-        // rest[fieldsetName] will reflect both states
-        wargearOption.selected = rest[fieldsetName];
-      } else {
-        wargearOption.selected = false;
-      }
-    });
+    // Helper: Process and parse options for a single option type
+    const processOptionType = (savedOptions, availableOptions) => {
+      savedOptions?.forEach(savedOption => {
+        const availableOption = findAvailableOption(savedOption, availableOptions);
+        savedOption.selected = parseOption(savedOption, availableOption);
+      });
+    };
+
+    // Interpret weapons and wargear form data back into the unit options format
+    processOptionType(weapons, this.#availableOptions.weapons);
+    processOptionType(wargear, this.#availableOptions.wargear);
+
+    // Truncate selections before saving to ensure validity
+    const currentUnitSize = unitSize ? parseInt(unitSize, 10) : this.#options.unitSize;
+    if (currentUnitSize) {
+      this.#truncateSelectionsForOptionType(weapons, this.#availableOptions.weapons, currentUnitSize);
+      this.#truncateSelectionsForOptionType(wargear, this.#availableOptions.wargear, currentUnitSize);
+    }
 
     this.options = {
       ...(warlord ? { warlord: warlord === "on" } : {}),
@@ -605,16 +1020,22 @@ class OptionsModal extends HTMLElement {
       // Initialize counters for multi-select options
       if (this.#availableOptions.weapons) {
         this.#availableOptions.weapons.forEach(opt => {
-          if (Array.isArray(opt.name) && opt.max > 1) {
-            const fieldsetName = optionFieldsetName(opt);
+          const fieldsetName = optionFieldsetName(opt);
+          // Initialize counter if it's a multi-select option (max > 1, or has per property, or has selectionType)
+          if ((Array.isArray(opt.name) && opt.max > 1) || 
+              (opt.per && opt.max) || 
+              (opt.selectionType && Array.isArray(opt.name))) {
             this.updateMultiSelectCounter(fieldsetName);
           }
         });
       }
       if (this.#availableOptions.wargear) {
         this.#availableOptions.wargear.forEach(opt => {
-          if (Array.isArray(opt.name) && opt.max > 1) {
-            const fieldsetName = optionFieldsetName(opt);
+          const fieldsetName = optionFieldsetName(opt);
+          // Initialize counter if it's a multi-select option (max > 1, or has per property, or has selectionType)
+          if ((Array.isArray(opt.name) && opt.max > 1) || 
+              (opt.per && opt.max) || 
+              (opt.selectionType && Array.isArray(opt.name))) {
             this.updateMultiSelectCounter(fieldsetName);
           }
         });

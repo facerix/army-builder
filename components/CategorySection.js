@@ -23,14 +23,14 @@ const UnitRow = (unit, options = null) => {
 
   // if there are weapon options, show e.g. "5x Plasma Axe" or whatever; otherwise just show "unit size N"
   let weaponProfiles = [];
-  weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount);
+  weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount, unit.unitOptions?.weapons);
   if (weaponProfiles.length > 0) {
     optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Weapons</em>: ${weaponProfiles.join(", ")}` }));
   }
 
   // if there are wargear options, show e.g. "5x Preymark crest" or whatever
   let wargearProfiles = [];
-  wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount);
+  wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount, unit.unitOptions?.wargear);
   if (wargearProfiles.length > 0) {
     optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Wargear</em>: ${wargearProfiles.join(", ")}` }));
   }
@@ -244,6 +244,55 @@ const matchesTagRequirement = (tagRequirements, unitTags, unitName) => {
   return matchesSingleTagRequirement(tagRequirements, unitTags, unitName);
 };
 
+// Helper function: Match option by name (handles arrays and strings)
+const matchOptionByName = (optionName, savedOptionName) => {
+  if (Array.isArray(optionName)) {
+    if (Array.isArray(savedOptionName)) {
+      // Compare arrays by checking if they have the same length and same elements
+      return optionName.length === savedOptionName.length && 
+             optionName.every((val, idx) => val === savedOptionName[idx]);
+    }
+    // If savedOptionName is not an array but selected is set, check if selected value is in optionName array
+    return false; // We'll check selected separately
+  } else {
+    // If optionName is a string, check if savedOptionName matches (string or array containing it)
+    if (Array.isArray(savedOptionName)) {
+      return savedOptionName.includes(optionName);
+    }
+    return savedOptionName === optionName;
+  }
+};
+
+// Helper function: Calculate effective max based on per property
+const calculateEffectiveMax = (option, unitSize) => {
+  if (option.per && unitSize) {
+    return Math.floor(unitSize / option.per) * option.max;
+  }
+  return option.max || 0;
+};
+
+// Helper function: Truncate selections when unit size decreases
+const truncateSelectionsForUnitSize = (option, selected, newUnitSize) => {
+  if (!option.per || !option.max) return selected;
+  
+  const newEffectiveMax = calculateEffectiveMax(option, newUnitSize);
+  
+  // Handle array selections (selectionType: "any" or "anyNoDuplicates")
+  if ((option.selectionType === "any" || option.selectionType === "anyNoDuplicates") && Array.isArray(selected)) {
+    return selected.length > newEffectiveMax ? selected.slice(0, newEffectiveMax) : selected;
+  }
+  
+  // Handle single-string with per (integer count)
+  if (typeof option.name === 'string' && option.per && typeof selected === 'number') {
+    return Math.min(selected, newEffectiveMax);
+  }
+  
+  // Handle selectionType: "all" (string value) - no truncation needed, value is still valid
+  // (though the option might not exist if array was changed, but that's handled elsewhere)
+  
+  return selected;
+};
+
 const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   const availableOptions = {};
   if (!unit.tags?.includes("Epic Hero") && includeEnhancements) {
@@ -267,14 +316,15 @@ const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
     if (unit.unitOptions.weapons) {
       availableOptions.weapons = unit.unitOptions.weapons.map(opt => {
         const savedOption = unit.options?.weapons?.find(w => {
-          if (Array.isArray(opt.name)) {
-            return opt.name.includes(w.name);
-          }
-          return w.name === opt.name;
+          return matchOptionByName(opt.name, w.name);
         });
+        const selected = savedOption?.selected || false;
+        // Truncate selections if unit size has decreased
+        const unitSize = unit.options?.unitSize || unit.modelCount;
+        const truncatedSelected = truncateSelectionsForUnitSize(opt, selected, unitSize);
         return {
           ...opt,
-          selected: savedOption?.selected || false,
+          selected: truncatedSelected,
         };
       });
     }
@@ -283,14 +333,15 @@ const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
     if (unit.unitOptions.wargear) {
       availableOptions.wargear = unit.unitOptions.wargear.map(opt => {
         const savedOption = unit.options?.wargear?.find(w => {
-          if (Array.isArray(opt.name)) {
-            return opt.name.includes(w.name);
-          }
-          return w.name === opt.name;
+          return matchOptionByName(opt.name, w.name);
         });
+        const selected = savedOption?.selected || false;
+        // Truncate selections if unit size has decreased
+        const unitSize = unit.options?.unitSize || unit.modelCount;
+        const truncatedSelected = truncateSelectionsForUnitSize(opt, selected, unitSize);
         return {
           ...opt,
-          selected: savedOption?.selected || false,
+          selected: truncatedSelected,
         };
       });
     }
@@ -430,7 +481,8 @@ class CategorySection extends HTMLElement {
 
         // unit size
         if (options.unitSize && options.unitSize != this.activeUnit.modelCount) {
-          this.activeUnit.modelCount = parseInt(options.unitSize, 10);
+          const newUnitSize = parseInt(options.unitSize, 10);
+          this.activeUnit.modelCount = newUnitSize;
           this.activeUnit.points = this.activeUnit.unitOptions.unitSize.find(opts => opts.modelCount === options.unitSize).points;
         }
 
