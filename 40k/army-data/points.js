@@ -716,9 +716,9 @@ export const POINTS = {
   "Necrons": {
     "units": {
       "Annihilation Barge": 105,
-      "C'tan Shard of the Deceiver": 265,
-      "C'tan Shard of the Nightbringer": 305,
-      "C'tan Shard of the Void Dragon": 300,
+      "C'tan Shard of the Deceiver": 285,
+      "C'tan Shard of the Nightbringer": 315,
+      "C'tan Shard of the Void Dragon": 310,
       "Canoptek Doomstalker": 140,
       "Canoptek Macrocytes": 85,
       "Canoptek Reanimator": 75,
@@ -745,6 +745,7 @@ export const POINTS = {
       "Lokhust Lord": 80,
       "Lychguard": [85, 170],
       "Monolith": 400,
+      "Nekrosor Ammentar": 165,
       "Necron Warriors": [90, 200],
       "Night Scythe": 145,
       "Obelisk": 300,
@@ -761,7 +762,7 @@ export const POINTS = {
       "Tesseract Vault": 425,
       "The Silent King": 400,
       "Tomb Blades": [75, 150],
-      "Transcendent C'tan": 295,
+      "Transcendent C'tan": 305,
       "Trazyn the Infinite": 75,
       "Triarch Praetorians": [90, 180],
       "Triarch Stalker": 110,
@@ -833,6 +834,7 @@ export const POINTS = {
       "Captain in Terminator Armour": 95,
       "Captain Sicarius": 85,
       "Captain with Jump Pack": 75,
+      "Captain Titus": 90,
       "Centurion Assault Squad": [150, 300],
       "Centurion Devastator Squad": [165, 330],
       "Chaplain": 60,
@@ -906,8 +908,10 @@ export const POINTS = {
       "Tor Garadon": 90,
       "Uriel Ventris": 95,
       "Vanguard Veteran Squad with Jump Packs": [95, 190],
+      "Victrix Honour Guard": [110, 220],
       "Vindicator": 185,
       "Vulkan He'stan": 100,
+      "Wardens of Ultramar": 90,
       "Whirlwind": 190,
 
       /* imperial armour (forge world models) */
