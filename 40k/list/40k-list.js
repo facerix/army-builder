@@ -1,6 +1,6 @@
 import DataStore from '/src/DataStore.js';
 import { h } from '/src/domUtils.js';
-import '/components/CategorySection.js';
+import '/components/CategorySection/index.js';
 import '/components/UpdateNotification.js';
 import { get40kArmyData } from '../army-data-loader.js';
 import { FACTION_NAMES } from '/40k/army-data/factions.js';

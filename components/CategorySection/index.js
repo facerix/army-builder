@@ -1,68 +1,11 @@
-import './UnitModal.js';
-import './OptionsModal.js';
-import { h } from '../src/domUtils.js';
-import { getOptionSummaries } from '../src/parsers.js';
-
-const UnitRow = (unit, options = null) => {
-  const buttons = [
-    h("button", { className: "remove-unit", title: "remove unit" }, [
-      h("img", { src: "/images/circle-minus.svg", alt: "circle minus" })
-    ])
-  ];
-  if (Object.keys(options).length > 0) {
-    buttons.unshift(h("button", { className: "options", title: "unit options" }, [
-      h("img", { src: "/images/gear.svg", alt: "gear" })
-    ]));
-  }
-
-  // options
-  const optionsList = [];
-  if (options?.enhancement) {
-    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Enhancement</em>: ${options.enhancement}` }));
-  }
-
-  // if there are weapon options, show e.g. "5x Plasma Axe" or whatever; otherwise just show "unit size N"
-  let weaponProfiles = [];
-  weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount, unit.unitOptions?.weapons);
-  if (weaponProfiles.length > 0) {
-    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Weapons</em>: ${weaponProfiles.join(", ")}` }));
-  }
-
-  // if there are wargear options, show e.g. "5x Preymark crest" or whatever
-  let wargearProfiles = [];
-  wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount, unit.unitOptions?.wargear);
-  if (wargearProfiles.length > 0) {
-    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Wargear</em>: ${wargearProfiles.join(", ")}` }));
-  }
-
-  if (weaponProfiles.length === 0 && wargearProfiles.length === 0 && options?.unitSize) {
-    optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Unit Size</em>: ${options.unitSize}` }));
-  }
-
-  // tags
-  const tags = [];
-  if (options?.warlord) {
-    tags.push(h("span", { className: "unit-tag", innerText: "Warlord" }));
-  }
-  if (unit.tags?.includes("Epic Hero")) {
-    tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
-  }
-
-  const unitNamePlusCount = unit.options?.unitSize ? `${unit.options.unitSize}x ${unit.name}` : unit.name;
-  const row = h("div", { className: "unit-summary" }, [
-    h("div", { className: "unit-details" }, [
-      h("span", { className: "unit-name-line" }, [
-        h("span", { className: "unit-name", innerText: unitNamePlusCount }),
-        ...tags
-      ]),
-      h("span", { className: "unit-options" }, [ ...optionsList ]),
-    ]),
-    h("span", { className: "unit-pts points", innerText: `${unit.points} Points` }),
-    ...buttons,
-  ]);
-  row.dataset.unitId = unit.id;
-  return row;
-}
+import '../UnitModal.js';
+import '../OptionsModal.js';
+import './UnitRow.js';
+import { getOptionSummaries } from '/src/option-summaries.js';
+import {
+  optionsForUnit,
+  getUnitCurrentOptions
+} from './helpers.js';
 
 const CSS = `
 :host {
@@ -116,48 +59,6 @@ const CSS = `
     }
   }
 
-  .unit-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 1rem;
-
-    .unit-details {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      max-width: 70%;
-
-      .unit-name-line {
-        display: inline-flex;
-      }
-
-      .points {
-        margin: 0;
-      }
-    }
-
-    .unit-options {
-      font-size: small;
-      color: #666;
-      display: flex;
-      flex-direction: column;
-    }
-  }
-
-  .unit-tag {
-    background: #274764;
-    color: white;
-    margin-left: 0.5rem;
-    font-size: x-small;
-    padding: 4px;
-    border-radius: 4px;
-  }
-
-  .unit-pts {
-    font-size: small;
-    margin: 0 0.75rem 0 auto;
-  }
 }
 `;
 
@@ -177,186 +78,6 @@ const TEMPLATE = `
 <!--confirmation-modal></confirmation-modal-->
 `;
 
-/**
- * Matches a single tag requirement against unit tags.
- * Supports:
- * - Simple tags: "Tag1" - unit must have Tag1
- * - Negated tags: "!Tag2" - unit must NOT have Tag2
- * - Compound tags: "Tag1+!Tag2" - unit must have Tag1 AND NOT Tag2
- * 
- * @param {string} tagRequirement - Single tag requirement to match
- * @param {string[]} unitTags - Tags that the unit has
- * @param {string} unitName - Name of the unit (for exact name matching)
- * @returns {boolean} True if the unit matches the tag requirement
- */
-const matchesSingleTagRequirement = (tagRequirement, unitTags, unitName) => {
-  // Handle compound tags (AND logic) - e.g., "Tag1+!Tag2"
-  if (tagRequirement.includes('+')) {
-    const parts = tagRequirement.split('+').map(p => p.trim());
-    return parts.every(part => matchesSingleTagRequirement(part, unitTags, unitName));
-  }
-
-  // Handle negated tags/names - e.g., "!Tag2" or "!UnitName"
-  if (tagRequirement.startsWith('!')) {
-    const tag = tagRequirement.substring(1);
-    // Check if negated tag matches unit name
-    if (tag === unitName) {
-      return false;
-    }
-    // Check if negated tag matches any unit tag
-    return !unitTags?.includes(tag);
-  }
-
-  // Check for exact unit name match
-  if (tagRequirement === unitName) {
-    return true;
-  }
-
-  // Handle simple positive tags
-  return unitTags?.includes(tagRequirement) || false;
-};
-
-/**
- * Matches a unit against tag requirements.
- * Supports:
- * - Simple tags: "Tag1" - unit must have Tag1
- * - Negated tags: "!Tag2" - unit must NOT have Tag2
- * - Compound tags: "Tag1+!Tag2" - unit must have Tag1 AND NOT Tag2
- * - Array of tags: ["Tag1+!Tag2", "Tag3"] - (Tag1 AND NOT Tag2) OR Tag3
- * 
- * @param {string|string[]} tagRequirements - Tag requirement(s) to match (can be array for OR logic)
- * @param {string[]} unitTags - Tags that the unit has
- * @param {string} unitName - Name of the unit (for exact name matching)
- * @returns {boolean} True if the unit matches the tag requirements
- */
-const matchesTagRequirement = (tagRequirements, unitTags, unitName) => {
-  // If no tags requirement, always match
-  if (!tagRequirements) {
-    return true;
-  }
-
-  // Handle array of tag requirements (OR logic)
-  if (Array.isArray(tagRequirements)) {
-    return tagRequirements.some(req => matchesSingleTagRequirement(req, unitTags, unitName));
-  }
-
-  // Handle single tag requirement
-  return matchesSingleTagRequirement(tagRequirements, unitTags, unitName);
-};
-
-// Helper function: Match option by name (handles arrays and strings)
-const matchOptionByName = (optionName, savedOptionName) => {
-  if (Array.isArray(optionName)) {
-    if (Array.isArray(savedOptionName)) {
-      // Compare arrays by checking if they have the same length and same elements
-      return optionName.length === savedOptionName.length && 
-             optionName.every((val, idx) => val === savedOptionName[idx]);
-    }
-    // If savedOptionName is not an array but selected is set, check if selected value is in optionName array
-    return false; // We'll check selected separately
-  } else {
-    // If optionName is a string, check if savedOptionName matches (string or array containing it)
-    if (Array.isArray(savedOptionName)) {
-      return savedOptionName.includes(optionName);
-    }
-    return savedOptionName === optionName;
-  }
-};
-
-// Helper function: Calculate effective max based on per property
-const calculateEffectiveMax = (option, unitSize) => {
-  if (option.per && unitSize) {
-    return Math.floor(unitSize / option.per) * option.max;
-  }
-  return option.max || 0;
-};
-
-// Helper function: Truncate selections when unit size decreases
-const truncateSelectionsForUnitSize = (option, selected, newUnitSize) => {
-  if (!option.per || !option.max) return selected;
-  
-  const newEffectiveMax = calculateEffectiveMax(option, newUnitSize);
-  
-  // Handle array selections (selectionType: "any" or "anyNoDuplicates")
-  if ((option.selectionType === "any" || option.selectionType === "anyNoDuplicates") && Array.isArray(selected)) {
-    return selected.length > newEffectiveMax ? selected.slice(0, newEffectiveMax) : selected;
-  }
-  
-  // Handle single-string with per (integer count)
-  if (typeof option.name === 'string' && option.per && typeof selected === 'number') {
-    return Math.min(selected, newEffectiveMax);
-  }
-  
-  // Handle selectionType: "all" (string value) - no truncation needed, value is still valid
-  // (though the option might not exist if array was changed, but that's handled elsewhere)
-  
-  return selected;
-};
-
-const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
-  const availableOptions = {};
-  if (!unit.tags?.includes("Epic Hero") && includeEnhancements) {
-    // filter enhancements to either match unit name or tags (e.g. "exo-armor")
-    availableOptions.enhancements = categoryOptions?.enhancements?.filter(o => {
-      // Check if enhancement matches tag requirements (handles arrays, compound tags, negation)
-      return matchesTagRequirement(o.tags, unit.tags || [], unit.name);
-    }) ?? [];
-  }
-  // other options
-  if (unit.unitOptions) {
-    // unitSize
-    if (unit.unitOptions.unitSize) {
-      availableOptions.unitSize = unit.unitOptions.unitSize.map(opt => ({
-        ...opt,
-        selected: opt.modelCount === (unit.options?.unitSize || unit.modelCount),
-      }));
-    }
-
-    // weapons
-    if (unit.unitOptions.weapons) {
-      availableOptions.weapons = unit.unitOptions.weapons.map(opt => {
-        const savedOption = unit.options?.weapons?.find(w => {
-          return matchOptionByName(opt.name, w.name);
-        });
-        const selected = savedOption?.selected || false;
-        // Truncate selections if unit size has decreased
-        const unitSize = unit.options?.unitSize || unit.modelCount;
-        const truncatedSelected = truncateSelectionsForUnitSize(opt, selected, unitSize);
-        return {
-          ...opt,
-          selected: truncatedSelected,
-        };
-      });
-    }
-
-    // wargear
-    if (unit.unitOptions.wargear) {
-      availableOptions.wargear = unit.unitOptions.wargear.map(opt => {
-        const savedOption = unit.options?.wargear?.find(w => {
-          return matchOptionByName(opt.name, w.name);
-        });
-        const selected = savedOption?.selected || false;
-        // Truncate selections if unit size has decreased
-        const unitSize = unit.options?.unitSize || unit.modelCount;
-        const truncatedSelected = truncateSelectionsForUnitSize(opt, selected, unitSize);
-        return {
-          ...opt,
-          selected: truncatedSelected,
-        };
-      });
-    }
-  }
-  return availableOptions;
-}
-
-const getUnitCurrentOptions = (unit, isHeroUnit = false) => {
-  const sizeOption = unit.options?.unitSize ?? unit.modelCount ? { unitSize: unit.options?.unitSize || unit.modelCount } : {};
-  return {
-    ...(isHeroUnit ? { warlord: false } : {}),
-    ...(unit.options ? unit.options : {}),
-    ...sizeOption,
-  };
-}
 
 
 class CategorySection extends HTMLElement {
@@ -424,23 +145,21 @@ class CategorySection extends HTMLElement {
         this.#emit("add", unitToAdd);
       });
 
-      this.unitList.addEventListener("click", evt => {
-        const btn = evt.target.closest("button");
-        const unitSummary = btn?.closest(".unit-summary");
-        const { unitId } = unitSummary?.dataset || {};
-        if (btn) {
-          switch (btn.className) {
-            case "remove-unit":
-              this.removeUnit(unitId);    
-              break;
-            case "options":
-              this.activeUnit = this.#data.find(u => u.id === unitId);
-              this.optionsModal.options = getUnitCurrentOptions(this.activeUnit, this.heroUnits);
-              this.optionsModal.availableOptions = optionsForUnit(this.#options, this.activeUnit, this.heroUnits);
-              this.optionsModal.showModal();
-              break;
-          }
-        }
+      // Listen for custom events from unit-row components
+      this.unitList.addEventListener("remove-unit", (evt) => {
+        const { unitId } = evt.detail;
+        this.removeUnit(unitId);
+      });
+
+      this.unitList.addEventListener("options-clicked", (evt) => {
+        const { unitId } = evt.detail;
+        this.activeUnit = this.#data.find(u => u.id === unitId);
+        this.optionsModal.options = getUnitCurrentOptions(this.activeUnit, this.heroUnits);
+        this.optionsModal.availableOptions = optionsForUnit(this.#options, this.activeUnit, this.heroUnits);
+        this.optionsModal.defaultWeapons = this.activeUnit.weapons || [];
+        this.optionsModal.defaultWargear = this.activeUnit.wargear || [];
+        this.optionsModal.importedWargear = this.activeUnit.options?.importedWargear || null;
+        this.optionsModal.showModal();
       });
 
       this.optionsModal.addEventListener("optionsSaved", (evt) => {
@@ -486,7 +205,23 @@ class CategorySection extends HTMLElement {
           this.activeUnit.points = this.activeUnit.unitOptions.unitSize.find(opts => opts.modelCount === options.unitSize).points;
         }
 
+        // Preserve importedWargear if it exists and user hasn't set wargear options yet
+        const hadImportedWargear = !!this.activeUnit?.options?.importedWargear;
+        // Check if any wargear option is actually selected (not just that the array exists)
+        const hasWargearOptions = options.wargear && options.wargear.some(w => 
+          w.selected && w.selected !== false && w.selected !== "off"
+        );
+        const importedWargearValue = hadImportedWargear ? this.activeUnit.options.importedWargear : undefined;
+        
+        // Assign the new options
         this.activeUnit.options = options;
+        
+        // Only preserve importedWargear if user hasn't mapped wargear options yet
+        if (hadImportedWargear && !hasWargearOptions) {
+          this.activeUnit.options.importedWargear = importedWargearValue;
+        }
+        // If hasWargearOptions is true, importedWargear is intentionally not preserved (user has mapped it)
+        
         this.#emit("update", this.activeUnit);
         this.#render();
       });
@@ -544,8 +279,8 @@ class CategorySection extends HTMLElement {
    */
   #getDisplaySignature(unit, options) {
     // Generate options summaries (same logic as UnitRow)
-    const weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount);
-    const wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount);
+    const weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount, unit.unitOptions?.weapons);
+    const wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount, unit.unitOptions?.wargear);
     
     // Build a normalized display state object
     const displayState = {
@@ -603,15 +338,25 @@ class CategorySection extends HTMLElement {
       options.warlord = false;
     }
 
-    // Create new row
-    const newRow = UnitRow(unit, options);
-    
-    // Store display signature for future comparisons
-    const signature = this.#getDisplaySignature(unit, options);
-    newRow.dataset.displaySignature = signature;
-    
-    // Replace the existing node with the new one
-    existingNode.replaceWith(newRow);
+    // Update the unit-row component
+    if (existingNode.tagName === 'UNIT-ROW') {
+      existingNode.unit = unit;
+      existingNode.options = options;
+      
+      // Store display signature for future comparisons
+      const signature = this.#getDisplaySignature(unit, options);
+      existingNode.dataset.displaySignature = signature;
+    } else {
+      // Fallback: create new row if not a unit-row element
+      const newRow = document.createElement('unit-row');
+      newRow.unit = unit;
+      newRow.options = options;
+      
+      const signature = this.#getDisplaySignature(unit, options);
+      newRow.dataset.displaySignature = signature;
+      
+      existingNode.replaceWith(newRow);
+    }
   }
 
   /**
@@ -625,8 +370,8 @@ class CategorySection extends HTMLElement {
     
     // Get existing nodes mapped by unit ID
     const existingNodes = new Map();
-    Array.from(this.unitList.querySelectorAll(".unit-summary")).forEach(node => {
-      const unitId = node.dataset.unitId;
+    Array.from(this.unitList.querySelectorAll("unit-row")).forEach(node => {
+      const unitId = node.getAttribute('unit-id') || node.unit?.id;
       if (unitId) {
         existingNodes.set(unitId, node);
       }
@@ -663,7 +408,9 @@ class CategorySection extends HTMLElement {
         if (this.heroUnits && unit.options?.warlord === undefined) {
           options.warlord = false;
         }
-        const newNode = UnitRow(unit, options);
+        const newNode = document.createElement('unit-row');
+        newNode.unit = unit;
+        newNode.options = options;
         // Store display signature for future comparisons
         const signature = this.#getDisplaySignature(unit, options);
         newNode.dataset.displaySignature = signature;
@@ -690,7 +437,10 @@ class CategorySection extends HTMLElement {
         // Find insertion point: the first existing node that comes after this unit's position
         for (let i = index + 1; i < this.#data.length; i++) {
           const nextUnitId = this.#data[i].id;
-          const nextNode = existingChildren.find(child => child.dataset.unitId === nextUnitId);
+          const nextNode = existingChildren.find(child => {
+            const childUnitId = child.getAttribute('unit-id') || child.unit?.id;
+            return childUnitId === nextUnitId;
+          });
           if (nextNode) {
             insertBefore = nextNode;
             break;
@@ -728,7 +478,9 @@ class CategorySection extends HTMLElement {
       options.warlord = false;
     }
 
-    const newNode = UnitRow(unit, options);
+    const newNode = document.createElement('unit-row');
+    newNode.unit = unit;
+    newNode.options = options;
     // Store display signature for future comparisons
     const signature = this.#getDisplaySignature(unit, options);
     newNode.dataset.displaySignature = signature;
@@ -736,7 +488,10 @@ class CategorySection extends HTMLElement {
   }
 
   removeUnit(unitId) {
-    const foundNode = Array.from(this.unitList.querySelectorAll(".unit-summary")).find(u => u.dataset.unitId === unitId);
+    const foundNode = Array.from(this.unitList.querySelectorAll("unit-row")).find(u => {
+      const nodeUnitId = u.getAttribute('unit-id') || u.unit?.id;
+      return nodeUnitId === unitId;
+    });
     if (foundNode) {
       foundNode.remove();
       this.#data = this.#data.filter(u => u.id !== unitId);
