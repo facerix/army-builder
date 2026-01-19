@@ -174,7 +174,7 @@ export const factionData = {
             name: "Twin concussion gauntlets",
             max: 1,
             per: 5,
-            replaces: ["Heavy plasma axe", "Concussion maul"]
+            replaces: ["|", "Heavy plasma axe", "Concussion maul"]
           },
           {
             name: "Concussion maul",
