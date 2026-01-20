@@ -56,4 +56,25 @@ whenLoaded.then(async () => {
       serviceWorkerManager.checkForUpdates();
     }
   });
+
+  const btnClearCache = document.getElementById('btnClearCache');
+  const clearCacheStatus = document.getElementById('clearCacheStatus');
+
+  btnClearCache.addEventListener('click', async () => {
+    if (!confirm('This will clear all cached data and reload the page. Continue?')) {
+      return;
+    }
+
+    btnClearCache.disabled = true;
+    clearCacheStatus.innerText = 'Clearing caches...';
+
+    try {
+      await serviceWorkerManager.clearAllCaches();
+      // Page will reload, so we won't reach here
+    } catch (error) {
+      console.error('Failed to clear caches:', error);
+      clearCacheStatus.innerText = 'Failed to clear caches';
+      btnClearCache.disabled = false;
+    }
+  });
 });

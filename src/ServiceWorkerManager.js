@@ -465,6 +465,43 @@ export class ServiceWorkerManager {
   }
 
   /**
+   * Clear all service worker caches
+   * This will force a fresh download of all cached resources
+   * @returns {Promise<void>}
+   */
+  async clearAllCaches() {
+    if (!('caches' in window)) {
+      console.warn(`[Personnel] Cache API not supported`);
+      return;
+    }
+
+    try {
+      const cacheNames = await caches.keys();
+      const personnelCaches = cacheNames.filter(name => name.startsWith('personnel-cache-'));
+
+      console.log(`[Personnel] Clearing ${personnelCaches.length} cache(s):`, personnelCaches);
+
+      await Promise.all(personnelCaches.map(cacheName => caches.delete(cacheName)));
+
+      console.log(`[Personnel] Successfully cleared all caches`);
+
+      // Unregister service worker to force fresh registration
+      if (this.#registration) {
+        await this.#registration.unregister();
+        console.log(`[Personnel] Service worker unregistered`);
+        this.#isRegistered = false;
+        this.#registration = null;
+      }
+
+      // Reload page to re-register service worker with fresh cache
+      window.location.reload();
+    } catch (error) {
+      console.error(`[Personnel] Failed to clear caches:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * Handle update now request from UpdateNotification component
    * @param {ServiceWorker} pendingWorker - The pending service worker
    * @returns {Promise<void>}
