@@ -1,6 +1,6 @@
-import { FACTION_NAMES_TO_CODES, FACTION_NAMES } from "../40k/army-data/factions.js";
-import { getOptionSummaries } from "./option-summaries.js";
-export { parseBattleScribeCatalogue } from "./battlescribe-parser.js";
+import { FACTION_NAMES_TO_CODES, FACTION_NAMES } from '../40k/army-data/factions.js';
+import { getOptionSummaries } from './option-summaries.js';
+export { parseBattleScribeCatalogue } from './battlescribe-parser.js';
 
 const nameAndPointsRE = /^([^(]+)\(([0-9]+).*\)$/im;
 const aosListNameLineRE = /^(.*) (\d+)\/(\d+) pts$/im;
@@ -8,23 +8,26 @@ const aosListNameLineRE = /^(.*) (\d+)\/(\d+) pts$/im;
 // eslint-disable-next-line no-unused-vars
 const aosUnitDefRE = /^([[\w\s-]+) \(([0-9]+).*\)(\n• .*)*/m;
 
-const parseUnitDef = (unitDef) => {
-  const lines = unitDef.split("\n");
+const parseUnitDef = unitDef => {
+  const lines = unitDef.split('\n');
   const unitNameAndPoints = nameAndPointsRE.exec(lines[0]);
   return {
     name: unitNameAndPoints[1].trim(),
     points: unitNameAndPoints[2],
-    wargear: lines.slice(1).map(l => l.trim()).join('\n')
-  }
-}
+    wargear: lines
+      .slice(1)
+      .map(l => l.trim())
+      .join('\n'),
+  };
+};
 
 /**
  * Parses an army list exported from the official 40k app, BattleForge
- * @param {string} exported 
+ * @param {string} exported
  * @returns ArmyList struct
  */
-export const parseBattleForgeList = (exported) => {
-  const lines = exported.split("\n");
+export const parseBattleForgeList = exported => {
+  const lines = exported.split('\n');
   const armyNameAndPoints = nameAndPointsRE.exec(lines[0]);
   if (!armyNameAndPoints) return null;
   const unitDefs = {
@@ -34,37 +37,37 @@ export const parseBattleForgeList = (exported) => {
     otherUnits: [],
   };
   let currentSection = null;
-  let currentUnitDef = "";
+  let currentUnitDef = '';
 
   for (let line = 5; line < lines.length; line++) {
     switch (lines[line].trim()) {
-      case "CHARACTERS":
-        currentSection = "characters";
+      case 'CHARACTERS':
+        currentSection = 'characters';
         break;
-      case "BATTLELINE":
-        currentSection = "battleline";
+      case 'BATTLELINE':
+        currentSection = 'battleline';
         break;
-      case "DEDICATED TRANSPORTS":
-        currentSection = "transports";
+      case 'DEDICATED TRANSPORTS':
+        currentSection = 'transports';
         break;
-      case "OTHER DATASHEETS":
-        currentSection = "otherUnits";
+      case 'OTHER DATASHEETS':
+        currentSection = 'otherUnits';
         break;
-      case "":  // empty lines indicate the end of the current unit definition
+      case '': // empty lines indicate the end of the current unit definition
         if (unitDefs[currentSection] && currentUnitDef.length) {
           unitDefs[currentSection].push(parseUnitDef(currentUnitDef.trim()));
         }
-        currentUnitDef = "";
+        currentUnitDef = '';
         break;
       default:
-        if (lines[line].startsWith("Exported with App Version")) {
+        if (lines[line].startsWith('Exported with App Version')) {
           // EOF
           break;
         }
         currentUnitDef += lines[line].trimEnd() + '\n';
-        // if (unitDefs[currentSection]) {
-        //   unitDefs[currentSection].push(lines[line]);
-        // }
+      // if (unitDefs[currentSection]) {
+      //   unitDefs[currentSection].push(lines[line]);
+      // }
     }
   }
 
@@ -72,34 +75,35 @@ export const parseBattleForgeList = (exported) => {
     armyName: armyNameAndPoints[1].trim(),
     points: armyNameAndPoints[2].trim(),
     faction: FACTION_NAMES_TO_CODES[lines[2].trim()],
-    detachment: lines[3].trim(),  // might be lines[4] --- my two exported files have it differently
-    units: [...unitDefs.characters, ...unitDefs.battleline, ...unitDefs.transports, ...unitDefs.otherUnits]
+    detachment: lines[3].trim(), // might be lines[4] --- my two exported files have it differently
+    units: [
+      ...unitDefs.characters,
+      ...unitDefs.battleline,
+      ...unitDefs.transports,
+      ...unitDefs.otherUnits,
+    ],
   };
 };
 
-const calculatePoints = (units) => {
-  return units.reduce(
-    (acc, curr) => acc + parseInt(curr.points, 10),
-    0,
-  );
+const calculatePoints = units => {
+  return units.reduce((acc, curr) => acc + parseInt(curr.points, 10), 0);
 };
 
-
-const printUnit = (unit) => {
-  const isWarlord = !!unit.options?.warlord ? " [Warlord]" : "";
+const printUnit = unit => {
+  const isWarlord = !!unit.options?.warlord ? ' [Warlord]' : '';
   const modelCount = unit.options?.unitSize ?? 1; // we don't care about denoting single units that have multiple models
-  const modelCountStr = modelCount > 1 ? `${modelCount}x ` : "";
+  const modelCountStr = modelCount > 1 ? `${modelCount}x ` : '';
   const lines = [`• ${modelCountStr}${unit.name}${isWarlord} (${unit.points})`];
   if (unit.options) {
     Object.entries(unit.options).forEach(([key, value]) => {
       if (!value) return;
       switch (key) {
-        case "unitSize":
-        case "warlord":
+        case 'unitSize':
+        case 'warlord':
           // skip these since we already noted them above
           break;
-        case "weapons":
-        case "wargear":
+        case 'weapons':
+        case 'wargear':
           // skip these since we'll do them regardless of selected options
           break;
         default:
@@ -109,45 +113,59 @@ const printUnit = (unit) => {
   }
   // print weapons/wargear including both defaults and selected options
   const unitCount = unit.options?.unitSize || unit.modelCount || 1;
-  ["weapons", "wargear"].forEach(key => {
-    const defaultItems = key === "weapons" ? (unit.weapons || []) : (unit.wargear || []);
+  ['weapons', 'wargear'].forEach(key => {
+    const defaultItems = key === 'weapons' ? unit.weapons || [] : unit.wargear || [];
     const selectedOptions = unit.options?.[key] || [];
     const fullOptionDefinitions = unit.unitOptions?.[key] || null;
     if (defaultItems.length > 0 || selectedOptions.length > 0) {
-      const profiles = getOptionSummaries(defaultItems, selectedOptions, unitCount, fullOptionDefinitions);
+      const profiles = getOptionSummaries(
+        defaultItems,
+        selectedOptions,
+        unitCount,
+        fullOptionDefinitions
+      );
       profiles.forEach(profile => {
         lines.push(`  ◦ ${profile}`);
       });
     }
   });
-  return lines.join("\n");
-}
+  return lines.join('\n');
+};
 
-export const exportArmyList = (armyData) => {
+export const exportArmyList = armyData => {
   const lines = [];
-  const { name: armyName, points, faction, detachment, characters, battleline, otherUnits } = armyData;
-  const actualPoints = points || calculatePoints(characters) + calculatePoints(battleline) + calculatePoints(otherUnits);
+  const {
+    name: armyName,
+    points,
+    faction,
+    detachment,
+    characters,
+    battleline,
+    otherUnits,
+  } = armyData;
+  const actualPoints =
+    points ||
+    calculatePoints(characters) + calculatePoints(battleline) + calculatePoints(otherUnits);
 
   lines.push(`${armyName} (${actualPoints} Points)\n`);
   lines.push(`${FACTION_NAMES[faction]}\n${detachment}\n`);
 
-  lines.push("CHARACTERS");
+  lines.push('CHARACTERS');
   // warload first
-  characters.sort((a, _b) => a.options?.warlord ? -1 : 1).forEach(u => lines.push(printUnit(u)));
+  characters.sort((a, _b) => (a.options?.warlord ? -1 : 1)).forEach(u => lines.push(printUnit(u)));
   // characters.forEach(u => lines.push(printUnit(u)));
 
-  lines.push("\nBATTLELINE");
+  lines.push('\nBATTLELINE');
   battleline.forEach(u => lines.push(printUnit(u)));
-  
-  lines.push("\nOTHER DATASHEETS");
+
+  lines.push('\nOTHER DATASHEETS');
   otherUnits.forEach(u => lines.push(printUnit(u)));
 
-  return lines.join("\n");
-}
+  return lines.join('\n');
+};
 
-
-export const parseAOSlist = (exported) => {
-/*
+export const parseAOSlist = exported => {
+  /*
 Clan Skryre 1000/1000 pts
 -----
 Grand Alliance Chaos | Skaven | Warpcog Convocation
@@ -184,6 +202,9 @@ App: v1.17.0 (3) | Data: v310
       total: nameAndPoints[2],
       limit: nameAndPoints[3],
     },
-    regiments: sections[2].trim().split('---').map(s => s.trim().split('\n'))
+    regiments: sections[2]
+      .trim()
+      .split('---')
+      .map(s => s.trim().split('\n')),
   };
-}
+};

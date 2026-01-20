@@ -1,9 +1,9 @@
 // singleton class to manage the user's data
 
-import { v4WithTimestamp } from "./uuid.js";
+import { v4WithTimestamp } from './uuid.js';
 
 // eslint-disable-next-line no-unused-vars
-const normalize = (obj) => {
+const normalize = obj => {
   if (Array.isArray(obj)) {
     return obj.map(normalize);
   }
@@ -14,7 +14,7 @@ const normalize = (obj) => {
 
   for (const k of Object.keys(obj)) {
     switch (typeof obj[k]) {
-      case "object":
+      case 'object':
         obj[k] = Array.isArray(obj[k]) ? obj[k].map(normalize) : normalize(obj[k]);
         break;
       default:
@@ -36,7 +36,7 @@ class DataStore extends EventTarget {
 
   constructor() {
     if (instance) {
-      throw new Error("New instance cannot be created!!");
+      throw new Error('New instance cannot be created!!');
     }
     super();
     instance = this;
@@ -45,24 +45,24 @@ class DataStore extends EventTarget {
 
   // Initialize IndexedDB
   async #initDB() {
-    const request = indexedDB.open("CrusaderDB", 1);
+    const request = indexedDB.open('CrusaderDB', 1);
 
-    request.onupgradeneeded = (event) => {
+    request.onupgradeneeded = event => {
       const db = event.target.result;
       // const rosterStore = db.createObjectStore("rosters", { keyPath: "id" });
-      const unitsStore = db.createObjectStore("units", { keyPath: "id" });
+      const unitsStore = db.createObjectStore('units', { keyPath: 'id' });
       // const battlesStore = db.createObjectStore("battles", { keyPath: "id" });
       // Create an index on rosterId in the units object store
-      unitsStore.createIndex("rosterId", "rosterId", { unique: false });
+      unitsStore.createIndex('rosterId', 'rosterId', { unique: false });
     };
 
-    request.onsuccess = (event) => {
+    request.onsuccess = event => {
       this.#db = event.target.result;
       this.loadData();
     };
 
-    request.onerror = (event) => {
-      console.error("Database error: " + event.target.errorCode);
+    request.onerror = event => {
+      console.error('Database error: ' + event.target.errorCode);
     };
   }
 
@@ -77,29 +77,29 @@ class DataStore extends EventTarget {
   }
 
   async loadData() {
-    const transaction = this.#db.transaction(["rosters", "battles"], "readonly");
-    const rosterStore = transaction.objectStore("rosters");
-    const battleStore = transaction.objectStore("battles");
+    const transaction = this.#db.transaction(['rosters', 'battles'], 'readonly');
+    const rosterStore = transaction.objectStore('rosters');
+    const battleStore = transaction.objectStore('battles');
     const getRosters = rosterStore.getAll();
     const getBattles = battleStore.getAll();
 
-    getRosters.onsuccess = (event) => {
+    getRosters.onsuccess = event => {
       this.#rosters = event.target.result;
       this.#indexRosters();
-      this.#emit("init", "rosters", ["*"]);
+      this.#emit('init', 'rosters', ['*']);
     };
-    getBattles.onsuccess = (event) => {
+    getBattles.onsuccess = event => {
       this.#battles = event.target.result;
       this.#indexBattles();
-      this.#emit("init", "battles", ["*"]);
+      this.#emit('init', 'battles', ['*']);
     };
   }
 
   async #saveRoster(record) {
-    const transaction = this.#db.transaction(["rosters", "units"], "readwrite");
+    const transaction = this.#db.transaction(['rosters', 'units'], 'readwrite');
 
-    const rosterStore = transaction.objectStore("rosters");
-    const unitsStore = transaction.objectStore("units");
+    const rosterStore = transaction.objectStore('rosters');
+    const unitsStore = transaction.objectStore('units');
 
     const recToSave = {
       id: record.id ?? v4WithTimestamp(),
@@ -136,23 +136,23 @@ class DataStore extends EventTarget {
 
     // Handle transaction completion
     transaction.oncomplete = () => {
-      const eventType = record.id ? "update" : "add";
-      this.#emit(eventType, "roster", {
+      const eventType = record.id ? 'update' : 'add';
+      this.#emit(eventType, 'roster', {
         ...recToSave,
         units: record.units,
       });
-      console.log("Record and units saved successfully");
+      console.log('Record and units saved successfully');
     };
 
-    transaction.onerror = (event) => {
-      console.error("Transaction failed: ", event.target.error);
+    transaction.onerror = event => {
+      console.error('Transaction failed: ', event.target.error);
     };
   }
 
   async #saveUnit(unit, rosterId) {
     return new Promise((resolve, reject) => {
-      const transaction = this.#db.transaction(["units"], "readwrite");
-      const unitsStore = transaction.objectStore("units");
+      const transaction = this.#db.transaction(['units'], 'readwrite');
+      const unitsStore = transaction.objectStore('units');
 
       const unitData = {
         id: unit.id || v4WithTimestamp(), // Ensure each unit has an id
@@ -166,16 +166,16 @@ class DataStore extends EventTarget {
         resolve(unit);
       };
 
-      transaction.onerror = (event) => {
-        reject("Transaction failed: ", event.target.error);
+      transaction.onerror = event => {
+        reject('Transaction failed: ', event.target.error);
       };
     });
   }
 
   async #deleteUnit(unitId) {
     return new Promise((resolve, reject) => {
-      const transaction = this.#db.transaction(["units"], "readwrite");
-      const unitsStore = transaction.objectStore("units");
+      const transaction = this.#db.transaction(['units'], 'readwrite');
+      const unitsStore = transaction.objectStore('units');
 
       unitsStore.delete(unitId);
 
@@ -184,41 +184,41 @@ class DataStore extends EventTarget {
         resolve(unitId);
       };
 
-      transaction.onerror = (event) => {
-        reject("Transaction failed: ", event.target.error);
+      transaction.onerror = event => {
+        reject('Transaction failed: ', event.target.error);
       };
     });
   }
 
   async #removeStorageForRoster(id) {
     return new Promise((resolve, reject) => {
-      const transaction = this.#db.transaction(["rosters", "units"], "readwrite");
-      const recordStore = transaction.objectStore("rosters");
-      const unitsStore = transaction.objectStore("units");
-  
+      const transaction = this.#db.transaction(['rosters', 'units'], 'readwrite');
+      const recordStore = transaction.objectStore('rosters');
+      const unitsStore = transaction.objectStore('units');
+
       // Delete the roster record
       recordStore.delete(id);
-  
+
       // Delete associated units
-      const index = unitsStore.index("rosterId");
+      const index = unitsStore.index('rosterId');
       const unitsRequest = index.getAll(id);
-  
-      unitsRequest.onsuccess = async (event) => {
+
+      unitsRequest.onsuccess = async event => {
         const units = event.target.result;
         const deletePromises = units.map(unit => unitsStore.delete(unit.id));
         try {
           await Promise.all(deletePromises); // Wait for all deletions to complete
         } catch (error) {
-          reject("Failed to delete one or more units: ", error);
+          reject('Failed to delete one or more units: ', error);
         }
       };
-  
+
       transaction.oncomplete = () => {
         resolve();
       };
-  
-      transaction.onerror = (event) => {
-        reject("Error removing roster and units: ", event.target.error);
+
+      transaction.onerror = event => {
+        reject('Error removing roster and units: ', event.target.error);
       };
     });
   }
@@ -229,7 +229,7 @@ class DataStore extends EventTarget {
       this.#rostersById.set(roster.id, roster);
     });
   }
-  
+
   #indexBattles() {
     this.#battlesById = new Map();
     this.#battles.forEach(battle => {
@@ -252,55 +252,57 @@ class DataStore extends EventTarget {
     const newBattle = {
       date,
       mission,
-      location: battleData.location ?? "TBD",
+      location: battleData.location ?? 'TBD',
       teams: battleData.teams ?? [
         {
           ...attacker,
-          player: "",
+          player: '',
           score: -1,
         },
         {
           ...defender,
-          player: "",
+          player: '',
           score: -1,
         },
       ],
       attacker: 0,
       rounds: battleData.rounds ?? [],
-      scars: battleData.scars ?? []
+      scars: battleData.scars ?? [],
     };
     await this.#saveBattle(newBattle);
   }
 
   async deleteBattle(id) {
     if (this.#battlesById.has(id)) {
-      const transaction = this.#db.transaction(["battles"], "readwrite");
-      const battleStore = transaction.objectStore("battles");
-  
+      const transaction = this.#db.transaction(['battles'], 'readwrite');
+      const battleStore = transaction.objectStore('battles');
+
       // Delete the battle record
       battleStore.delete(id);
-  
+
       transaction.oncomplete = () => {
-        this.#battles = this.#battles.filter((r) => r.id !== id);
+        this.#battles = this.#battles.filter(r => r.id !== id);
         this.#battlesById.delete(id);
 
-        this.#emit("delete", "battle", { id });
+        this.#emit('delete', 'battle', { id });
       };
-  
-      transaction.onerror = (event) => {
-        throw new Error("Error removing battle: ", event.target.error);
+
+      transaction.onerror = event => {
+        throw new Error('Error removing battle: ', event.target.error);
       };
     }
   }
 
   async #saveBattle(battle) {
-    const transaction = this.#db.transaction("battles", "readwrite");
-    const battleStore = transaction.objectStore("battles");
+    const transaction = this.#db.transaction('battles', 'readwrite');
+    const battleStore = transaction.objectStore('battles');
 
-    const toSave = battle.id ? battle : {
-      id: v4WithTimestamp(),
-      ...battle
-    };
+    const toSave = battle.id
+      ? battle
+      : {
+          id: v4WithTimestamp(),
+          ...battle,
+        };
     if (battle.id) {
       // updating existing
       this.#battles.forEach((rec, idx) => {
@@ -317,12 +319,12 @@ class DataStore extends EventTarget {
 
     // Handle transaction completion
     transaction.oncomplete = () => {
-      const eventType = battle.id ? "update" : "add";
-      this.#emit(eventType, "battle", toSave);
+      const eventType = battle.id ? 'update' : 'add';
+      this.#emit(eventType, 'battle', toSave);
     };
 
-    transaction.onerror = (event) => {
-      console.error("Transaction failed: ", event.target.error);
+    transaction.onerror = event => {
+      console.error('Transaction failed: ', event.target.error);
     };
   }
 
@@ -341,19 +343,19 @@ class DataStore extends EventTarget {
     return new Promise((resolve, reject) => {
       const roster = this.#rostersById.get(id);
       if (roster) {
-        const transaction = this.#db.transaction("units", "readonly");
-        const unitsStore = transaction.objectStore("units");
-        const index = unitsStore.index("rosterId");
+        const transaction = this.#db.transaction('units', 'readonly');
+        const unitsStore = transaction.objectStore('units');
+        const index = unitsStore.index('rosterId');
         const request = index.getAll(id);
 
-        request.onsuccess = (event) => {
+        request.onsuccess = event => {
           roster.units = event.target.result || [];
           this.#unitsById.set(id, roster.units);
           resolve(roster);
         };
 
-        request.onerror = (event) => {
-          reject("Error retrieving units: " + event.target.error);
+        request.onerror = event => {
+          reject('Error retrieving units: ' + event.target.error);
         };
       } else {
         reject(`Roster '${id}' not found`);
@@ -373,12 +375,13 @@ class DataStore extends EventTarget {
     if (this.#rostersById.has(id)) {
       this.#removeStorageForRoster(id)
         .then(() => {
-          this.#rosters = this.#rosters.filter((r) => r.id !== id);
+          this.#rosters = this.#rosters.filter(r => r.id !== id);
           this.#unitsById.delete(id);
 
-          this.#emit("delete", "roster", { id });
-        }).catch(e => {
-          throw new Error("Failed to delete roster: " + e);
+          this.#emit('delete', 'roster', { id });
+        })
+        .catch(e => {
+          throw new Error('Failed to delete roster: ' + e);
         });
     }
   }
@@ -395,7 +398,7 @@ class DataStore extends EventTarget {
       if (!roster.units.some(u => u.id === unit.id)) {
         roster.units.push(unit);
       } else {
-        console.warn("Attempted to add duplicate unit:", unit);
+        console.warn('Attempted to add duplicate unit:', unit);
       }
       roster.unitCount = roster.units.length;
       await this.updateRoster(roster);
@@ -410,18 +413,20 @@ class DataStore extends EventTarget {
       const unitToSave = {
         ...unit,
         id: unitId,
-        rosterId
+        rosterId,
       };
-      this.#saveUnit(unitToSave, rosterId).then(savedUnit => {
-        roster.units.forEach((u, idx, array) => {
-          if (u.id === unitId) {
-            array[idx] = savedUnit;
-          }
+      this.#saveUnit(unitToSave, rosterId)
+        .then(savedUnit => {
+          roster.units.forEach((u, idx, array) => {
+            if (u.id === unitId) {
+              array[idx] = savedUnit;
+            }
+          });
+          this.#saveRoster(roster);
+        })
+        .catch(err => {
+          throw new Error(err);
         });
-        this.#saveRoster(roster);
-      }).catch(err => {
-        throw new Error(err);
-      });
     } else {
       throw new Error(`Roster '${rosterId}' not found`);
     }

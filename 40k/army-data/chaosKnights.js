@@ -1,4 +1,4 @@
 export const factionData = {
-  "units": [],
-      "detachments": []
+  units: [],
+  detachments: [],
 };

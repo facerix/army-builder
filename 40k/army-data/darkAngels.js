@@ -1,7 +1,7 @@
 export const factionData = {
-  "chapterInfo": {
-        parentFaction: "Space Marines",
-      },
-      "units": [],
-      "detachments": []
+  chapterInfo: {
+    parentFaction: 'Space Marines',
+  },
+  units: [],
+  detachments: [],
 };

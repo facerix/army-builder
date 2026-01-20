@@ -1,146 +1,146 @@
 export const factionData = {
-  "units": [
-        /* characters */
-        { name: "Abaddon the Despoiler", tags: ["Character", "Epic Hero"] },
-        { name: "Chaos Lord", tags: ["Character", "Chaos Lord"] },
-        { name: "Chaos Lord in Terminator Armour", tags: ["Character", "Chaos Lord"] },
-        { name: "Chaos Lord with Jump Pack", tags: ["Character", "Chaos Lord"] },
-        { name: "Cultist Firebrand", tags: ["Character", "Damned"] },
-        { name: "Cypher", tags: ["Character", "Epic Hero", "Fallen"] },
-        { name: "Dark Apostle", tags: ["Character"] },
-        { name: "Dark Commune", tags: ["Character", "Damned"] },
-        { name: "Fabius Bile", tags: ["Character", "Epic Hero"] },
-        { name: "Haarken Worldclaimer", tags: ["Character", "Epic Hero"] },
-        { name: "Heretic Astartes Daemon Prince", tags: ["Character", "Daemon Prince"] },
-        { name: "Heretic Astartes Daemon Prince with Wings", tags: ["Character", "Daemon Prince"] },
-        { name: "Huron Blackheart", tags: ["Character", "Epic Hero"] },
-        { name: "Lord Discordant on Helstalker", tags: ["Character"] },
-        { name: "Master of Executions", tags: ["Character"] },
-        { name: "Master of Possession", tags: ["Character"] },
-        { name: "Sorcerer", tags: ["Character"] },
-        { name: "Sorcerer in Terminator Armour", tags: ["Character"] },
-        { name: "Traitor Enforcer", tags: ["Character", "Damned"] },
-        { name: "Vashtorr the Arkifane", tags: ["Character", "Epic Hero"] },
-        { name: "Warpsmith", tags: ["Character"] },
-        /* battleline */
-        { name: "Cultist Mob", tags: ["Battleline", "Damned"], unitOptions: { unitSize: [10, 20] } },
-        { name: "Legionaries", tags: ["Battleline"], unitOptions: { unitSize: [5, 10] } },
-        { name: "Accursed Cultists", tags: ["Damned"], unitOptions: { unitSize: [8, 16] } },
-        { name: "Chaos Bikers", unitOptions: { unitSize: [3, 6] } },
-        { name: "Chaos Land Raider" },
-        { name: "Chaos Predator Annihilator" },
-        { name: "Chaos Predator Destructor" },
-        { name: "Chaos Rhino" },
-        { name: "Chaos Spawn" },
-        { name: "Chaos Terminator Squad", unitOptions: { unitSize: [5, 10] } },
-        { name: "Chaos Vindicator" },
-        { name: "Chosen", unitOptions: { unitSize: [5, 10] } },
-        { name: "Defiler" },
-        { name: "Fellgor Beastmen", tags: ["Damned"] },
-        { name: "Forgefiend" },
-        { name: "Havocs" },
-        { name: "Helbrute" },
-        { name: "Heldrake" },
-        { name: "Khorne Lord of Skulls" },
-        { name: "Maulerfiend" },
-        { name: "Nemesis Claw", unitOptions: { unitSize: [5, 10] } },
-        { name: "Obliterators" },
-        { name: "Possessed", unitOptions: { unitSize: [5, 10] } },
-        { name: "Raptors", unitOptions: { unitSize: [5, 10] } },
-        { name: "Traitor Guardsmen Squad", tags: ["Damned"], modelCount: 10 },
-        { name: "Venomcrawler" },
-        { name: "Warp Talons", unitOptions: { unitSize: [5, 10] } },
+  units: [
+    /* characters */
+    { name: 'Abaddon the Despoiler', tags: ['Character', 'Epic Hero'] },
+    { name: 'Chaos Lord', tags: ['Character', 'Chaos Lord'] },
+    { name: 'Chaos Lord in Terminator Armour', tags: ['Character', 'Chaos Lord'] },
+    { name: 'Chaos Lord with Jump Pack', tags: ['Character', 'Chaos Lord'] },
+    { name: 'Cultist Firebrand', tags: ['Character', 'Damned'] },
+    { name: 'Cypher', tags: ['Character', 'Epic Hero', 'Fallen'] },
+    { name: 'Dark Apostle', tags: ['Character'] },
+    { name: 'Dark Commune', tags: ['Character', 'Damned'] },
+    { name: 'Fabius Bile', tags: ['Character', 'Epic Hero'] },
+    { name: 'Haarken Worldclaimer', tags: ['Character', 'Epic Hero'] },
+    { name: 'Heretic Astartes Daemon Prince', tags: ['Character', 'Daemon Prince'] },
+    { name: 'Heretic Astartes Daemon Prince with Wings', tags: ['Character', 'Daemon Prince'] },
+    { name: 'Huron Blackheart', tags: ['Character', 'Epic Hero'] },
+    { name: 'Lord Discordant on Helstalker', tags: ['Character'] },
+    { name: 'Master of Executions', tags: ['Character'] },
+    { name: 'Master of Possession', tags: ['Character'] },
+    { name: 'Sorcerer', tags: ['Character'] },
+    { name: 'Sorcerer in Terminator Armour', tags: ['Character'] },
+    { name: 'Traitor Enforcer', tags: ['Character', 'Damned'] },
+    { name: 'Vashtorr the Arkifane', tags: ['Character', 'Epic Hero'] },
+    { name: 'Warpsmith', tags: ['Character'] },
+    /* battleline */
+    { name: 'Cultist Mob', tags: ['Battleline', 'Damned'], unitOptions: { unitSize: [10, 20] } },
+    { name: 'Legionaries', tags: ['Battleline'], unitOptions: { unitSize: [5, 10] } },
+    { name: 'Accursed Cultists', tags: ['Damned'], unitOptions: { unitSize: [8, 16] } },
+    { name: 'Chaos Bikers', unitOptions: { unitSize: [3, 6] } },
+    { name: 'Chaos Land Raider' },
+    { name: 'Chaos Predator Annihilator' },
+    { name: 'Chaos Predator Destructor' },
+    { name: 'Chaos Rhino' },
+    { name: 'Chaos Spawn' },
+    { name: 'Chaos Terminator Squad', unitOptions: { unitSize: [5, 10] } },
+    { name: 'Chaos Vindicator' },
+    { name: 'Chosen', unitOptions: { unitSize: [5, 10] } },
+    { name: 'Defiler' },
+    { name: 'Fellgor Beastmen', tags: ['Damned'] },
+    { name: 'Forgefiend' },
+    { name: 'Havocs' },
+    { name: 'Helbrute' },
+    { name: 'Heldrake' },
+    { name: 'Khorne Lord of Skulls' },
+    { name: 'Maulerfiend' },
+    { name: 'Nemesis Claw', unitOptions: { unitSize: [5, 10] } },
+    { name: 'Obliterators' },
+    { name: 'Possessed', unitOptions: { unitSize: [5, 10] } },
+    { name: 'Raptors', unitOptions: { unitSize: [5, 10] } },
+    { name: 'Traitor Guardsmen Squad', tags: ['Damned'], modelCount: 10 },
+    { name: 'Venomcrawler' },
+    { name: 'Warp Talons', unitOptions: { unitSize: [5, 10] } },
+  ],
+  detachments: [
+    {
+      name: 'Cabal of Chaos',
+      enhancements: [
+        { name: 'Eye of Z’desh' },
+        { name: 'Infernal Avatar', tags: ['Daemon Prince'] },
+        { name: 'Mind Blade', tags: ['Psyker'] },
+        { name: 'Touched by the Warp', tags: ['!Khorne'] },
       ],
-      "detachments": [
-        {
-          "name": "Cabal of Chaos",
-          "enhancements": [
-            { name: "Eye of Z’desh" },
-            { name: "Infernal Avatar", tags: ["Daemon Prince"] },
-            { name: "Mind Blade", tags: ["Psyker"] },
-            { name: "Touched by the Warp", tags: ["!Khorne"] },
-          ]
-        },
-        {
-          "name": "Chaos Cult",
-          "enhancements": [
-            { name: "Amulet of Tainted Vigour", tags: ["Dark Apostle"] },
-            { name: "Cultist’s Brand", tags: ["Dark Apostle", "Damned"] },
-            { name: "Incendiary Goad", tags: ["Dark Apostle", "Damned"] },
-            { name: "Warped Foresight", tags: ["Dark Apostle", "Damned"] }
-          ]
-        },
-        {
-          "name": "Creations of Bile",
-          "enhancements": [
-            { name: "Helm of All-seeing", tags: ["Infantry"] },
-            { name: "Living Carapace", tags: ["Chaos Lord"] },
-            { name: "Prime Test Subject", tags: ["Infantry"] },
-            { name: "Surgical Precision", tags: ["!Damned"] },
-          ]
-        },
-        {
-          "name": "Deceptors",
-          "enhancements": [
-            { "name": "Cursed Fang", tags: ["Infantry"] },
-            { "name": "Falsehood", tags: ["Chaos Lord+!Terminator+!Jump Pack"] },
-            { "name": "Shroud of Obfuscation", tags: ["Infantry"] },
-            { "name": "Soul Link", tags: ["Infantry"] },
-          ]
-        },
-        {
-          "name": "Dread Talons",
-          "enhancements": [
-            { "name": "Eater of Dread" },
-            { "name": "Night’s Shroud", tags: ["Chaos Lord+!Terminator"] },
-            { "name": "Warp-fuelled Thrusters", tags: ["Chaos Lord with Jump Pack"] },
-            { "name": "Willbreaker" }
-          ]
-        },
-        {
-          "name": "Fellhammer Siege-host",
-          "enhancements": [
-            { "name": "Bastion Plate", tags: ["Chaos Lord+!Jump Pack"] },
-            { "name": "Iron Artifice", tags: ["Infantry"] },
-            { "name": "Ironbound Enmity" },
-            { "name": "Warp Tracer" }
-          ]
-        },
-        {
-          "name": "Pactbound Zealots",
-          "enhancements": [
-            { name: "Eye of Tzeentch", tags: ["Tzeentch"] },
-            { name: "Intoxicating Elixir", tags: ["Slaanesh"] },
-            { name: "Orbs of Unlife", tags: ["Nurgle"] },
-            { name: "Talisman of Burning Blood", tags: ["Khorne"] },
-          ]
-        },
-        {
-          "name": "Renegade Raiders",
-          "enhancements": [
-            { "name": "Despot’s Claim" },
-            { "name": "Dread Reaver" },
-            { "name": "Mark of the Hound" },
-            { "name": "Tyrant’s Lash" }
-          ]
-        },
-        {
-          "name": "Soulforged Warpack",
-          "enhancements": [
-            { name: "Forge’s Blessing" },
-            { name: "Invigorated Mechatendrils", tags: ["Warpsmith"] },
-            { name: "Tempting Addendum" },
-            { name: "Soul Harvester" },
-          ]
-        },
-        {
-          "name": "Veterans of the Long War",
-          "enhancements": [
-            { "name": "Eager for Vengeance", tags: ["!Damned"] },
-            { "name": "Eye of Abaddon", tags: ["!Damned"] },
-            { "name": "Mark of Legend", tags: ["!Damned"] },
-            { "name": "Warmaster’s Gift", tags: ["Chaos Lord"] },
-          ]
-        }
-      ]
+    },
+    {
+      name: 'Chaos Cult',
+      enhancements: [
+        { name: 'Amulet of Tainted Vigour', tags: ['Dark Apostle'] },
+        { name: 'Cultist’s Brand', tags: ['Dark Apostle', 'Damned'] },
+        { name: 'Incendiary Goad', tags: ['Dark Apostle', 'Damned'] },
+        { name: 'Warped Foresight', tags: ['Dark Apostle', 'Damned'] },
+      ],
+    },
+    {
+      name: 'Creations of Bile',
+      enhancements: [
+        { name: 'Helm of All-seeing', tags: ['Infantry'] },
+        { name: 'Living Carapace', tags: ['Chaos Lord'] },
+        { name: 'Prime Test Subject', tags: ['Infantry'] },
+        { name: 'Surgical Precision', tags: ['!Damned'] },
+      ],
+    },
+    {
+      name: 'Deceptors',
+      enhancements: [
+        { name: 'Cursed Fang', tags: ['Infantry'] },
+        { name: 'Falsehood', tags: ['Chaos Lord+!Terminator+!Jump Pack'] },
+        { name: 'Shroud of Obfuscation', tags: ['Infantry'] },
+        { name: 'Soul Link', tags: ['Infantry'] },
+      ],
+    },
+    {
+      name: 'Dread Talons',
+      enhancements: [
+        { name: 'Eater of Dread' },
+        { name: 'Night’s Shroud', tags: ['Chaos Lord+!Terminator'] },
+        { name: 'Warp-fuelled Thrusters', tags: ['Chaos Lord with Jump Pack'] },
+        { name: 'Willbreaker' },
+      ],
+    },
+    {
+      name: 'Fellhammer Siege-host',
+      enhancements: [
+        { name: 'Bastion Plate', tags: ['Chaos Lord+!Jump Pack'] },
+        { name: 'Iron Artifice', tags: ['Infantry'] },
+        { name: 'Ironbound Enmity' },
+        { name: 'Warp Tracer' },
+      ],
+    },
+    {
+      name: 'Pactbound Zealots',
+      enhancements: [
+        { name: 'Eye of Tzeentch', tags: ['Tzeentch'] },
+        { name: 'Intoxicating Elixir', tags: ['Slaanesh'] },
+        { name: 'Orbs of Unlife', tags: ['Nurgle'] },
+        { name: 'Talisman of Burning Blood', tags: ['Khorne'] },
+      ],
+    },
+    {
+      name: 'Renegade Raiders',
+      enhancements: [
+        { name: 'Despot’s Claim' },
+        { name: 'Dread Reaver' },
+        { name: 'Mark of the Hound' },
+        { name: 'Tyrant’s Lash' },
+      ],
+    },
+    {
+      name: 'Soulforged Warpack',
+      enhancements: [
+        { name: 'Forge’s Blessing' },
+        { name: 'Invigorated Mechatendrils', tags: ['Warpsmith'] },
+        { name: 'Tempting Addendum' },
+        { name: 'Soul Harvester' },
+      ],
+    },
+    {
+      name: 'Veterans of the Long War',
+      enhancements: [
+        { name: 'Eager for Vengeance', tags: ['!Damned'] },
+        { name: 'Eye of Abaddon', tags: ['!Damned'] },
+        { name: 'Mark of Legend', tags: ['!Damned'] },
+        { name: 'Warmaster’s Gift', tags: ['Chaos Lord'] },
+      ],
+    },
+  ],
 };

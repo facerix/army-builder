@@ -2,10 +2,7 @@ import '../UnitModal.js';
 import '../OptionsModal.js';
 import './UnitRow.js';
 import { getOptionSummaries } from '/src/option-summaries.js';
-import {
-  optionsForUnit,
-  getUnitCurrentOptions
-} from './helpers.js';
+import { optionsForUnit, getUnitCurrentOptions } from './helpers.js';
 
 const CSS = `
 :host {
@@ -78,8 +75,6 @@ const TEMPLATE = `
 <!--confirmation-modal></confirmation-modal-->
 `;
 
-
-
 class CategorySection extends HTMLElement {
   #ready = false;
   #data = null;
@@ -102,69 +97,73 @@ class CategorySection extends HTMLElement {
 
   connectedCallback() {
     // Create shadow root
-    const shadow = this.attachShadow({ mode: "open" });
-    const styles = document.createElement("style");
+    const shadow = this.attachShadow({ mode: 'open' });
+    const styles = document.createElement('style');
     styles.innerHTML = CSS;
     shadow.appendChild(styles);
 
-    const section = document.createElement("section");
+    const section = document.createElement('section');
     section.innerHTML = TEMPLATE;
     shadow.appendChild(section);
   }
 
   #init() {
     if (!this.#ready) {
-      this.sectionTitle = this.shadowRoot.querySelector("#sectionTitle");
-      this.pointsLabel = this.shadowRoot.querySelector("#pointsLabel");
-      this.unitList = this.shadowRoot.querySelector(".unit-list");
-      this.btnAddUnit = this.shadowRoot.querySelector("#btnAddUnit");
-      this.unitModal = this.shadowRoot.querySelector("#unitModal");
-      this.optionsModal = this.shadowRoot.querySelector("#optionsModal");
+      this.sectionTitle = this.shadowRoot.querySelector('#sectionTitle');
+      this.pointsLabel = this.shadowRoot.querySelector('#pointsLabel');
+      this.unitList = this.shadowRoot.querySelector('.unit-list');
+      this.btnAddUnit = this.shadowRoot.querySelector('#btnAddUnit');
+      this.unitModal = this.shadowRoot.querySelector('#unitModal');
+      this.optionsModal = this.shadowRoot.querySelector('#optionsModal');
       // this.confirmModal = this.shadowRoot.querySelector("confirmation-modal");
-  
+
       // populate attrs
-      const title = this.getAttribute("sectionTitle");
-      this.heroUnits = this.hasAttribute("heroUnits") && this.getAttribute("heroUnits") !== "false";
+      const title = this.getAttribute('sectionTitle');
+      this.heroUnits = this.hasAttribute('heroUnits') && this.getAttribute('heroUnits') !== 'false';
       this.sectionTitle.innerText = title;
-      
+
       // Set up the modal title and options
       this.unitModal.title = title;
       this.unitModal.options = this.#availableUnits;
-  
+
       // set up event handlers
-      this.btnAddUnit.addEventListener("click", () => {
+      this.btnAddUnit.addEventListener('click', () => {
         this.activeUnit = null;
         this.unitModal.showModal();
       });
 
       // Listen for unit added events from the modal
-      this.unitModal.addEventListener("unitAdded", (evt) => {
+      this.unitModal.addEventListener('unitAdded', evt => {
         const unitToAdd = evt.detail.unit;
         this.#data.push(unitToAdd);
         this.#render();
-        this.#emit("add", unitToAdd);
+        this.#emit('add', unitToAdd);
       });
 
       // Listen for custom events from unit-row components
-      this.unitList.addEventListener("remove-unit", (evt) => {
+      this.unitList.addEventListener('remove-unit', evt => {
         const { unitId } = evt.detail;
         this.removeUnit(unitId);
       });
 
-      this.unitList.addEventListener("options-clicked", (evt) => {
+      this.unitList.addEventListener('options-clicked', evt => {
         const { unitId } = evt.detail;
         this.activeUnit = this.#data.find(u => u.id === unitId);
         this.optionsModal.options = getUnitCurrentOptions(this.activeUnit, this.heroUnits);
-        this.optionsModal.availableOptions = optionsForUnit(this.#options, this.activeUnit, this.heroUnits);
+        this.optionsModal.availableOptions = optionsForUnit(
+          this.#options,
+          this.activeUnit,
+          this.heroUnits
+        );
         this.optionsModal.defaultWeapons = this.activeUnit.weapons || [];
         this.optionsModal.defaultWargear = this.activeUnit.wargear || [];
         this.optionsModal.importedWargear = this.activeUnit.options?.importedWargear || null;
         this.optionsModal.showModal();
       });
 
-      this.optionsModal.addEventListener("optionsSaved", (evt) => {
+      this.optionsModal.addEventListener('optionsSaved', evt => {
         const options = evt.detail.options;
-        
+
         // if this unit is newly promoted to warlord, remove warlord tag from all other units
         if (options.warlord && !this.activeUnit?.options?.warlord) {
           this.#data.forEach(u => {
@@ -176,9 +175,14 @@ class CategorySection extends HTMLElement {
 
         // if unit's enhancement has changed or been removed, update the unit and any others that may be affected
         if (options.enhancement !== this.activeUnit.options?.enhancement) {
-          const prevEnhancementPoints = this.activeUnit.options?.enhancement ? this.#options.enhancements.find(e => e.name === this.activeUnit.options?.enhancement).points : 0;
+          const prevEnhancementPoints = this.activeUnit.options?.enhancement
+            ? this.#options.enhancements.find(e => e.name === this.activeUnit.options?.enhancement)
+                .points
+            : 0;
           if (options.enhancement) {
-            const enhancementPoints = options.enhancement ? this.#options.enhancements.find(e => e.name === options.enhancement).points : 0;
+            const enhancementPoints = options.enhancement
+              ? this.#options.enhancements.find(e => e.name === options.enhancement).points
+              : 0;
             // remove this enhancement from any other unit that has it
             this.#data.forEach(u => {
               if (u.id !== this.activeUnit.id && u.options?.enhancement === options.enhancement) {
@@ -202,27 +206,31 @@ class CategorySection extends HTMLElement {
         if (options.unitSize && options.unitSize != this.activeUnit.modelCount) {
           const newUnitSize = parseInt(options.unitSize, 10);
           this.activeUnit.modelCount = newUnitSize;
-          this.activeUnit.points = this.activeUnit.unitOptions.unitSize.find(opts => opts.modelCount === options.unitSize).points;
+          this.activeUnit.points = this.activeUnit.unitOptions.unitSize.find(
+            opts => opts.modelCount === options.unitSize
+          ).points;
         }
 
         // Preserve importedWargear if it exists and user hasn't set wargear options yet
         const hadImportedWargear = !!this.activeUnit?.options?.importedWargear;
         // Check if any wargear option is actually selected (not just that the array exists)
-        const hasWargearOptions = options.wargear && options.wargear.some(w => 
-          w.selected && w.selected !== false && w.selected !== "off"
-        );
-        const importedWargearValue = hadImportedWargear ? this.activeUnit.options.importedWargear : undefined;
-        
+        const hasWargearOptions =
+          options.wargear &&
+          options.wargear.some(w => w.selected && w.selected !== false && w.selected !== 'off');
+        const importedWargearValue = hadImportedWargear
+          ? this.activeUnit.options.importedWargear
+          : undefined;
+
         // Assign the new options
         this.activeUnit.options = options;
-        
+
         // Only preserve importedWargear if user hasn't mapped wargear options yet
         if (hadImportedWargear && !hasWargearOptions) {
           this.activeUnit.options.importedWargear = importedWargearValue;
         }
         // If hasWargearOptions is true, importedWargear is intentionally not preserved (user has mapped it)
-        
-        this.#emit("update", this.activeUnit);
+
+        this.#emit('update', this.activeUnit);
         this.#render();
       });
 
@@ -231,15 +239,17 @@ class CategorySection extends HTMLElement {
   }
 
   #emit(changeType, units) {
-    const changeEvent = new CustomEvent("change", { detail: {
-      changeType,
-      units
-    }});
+    const changeEvent = new CustomEvent('change', {
+      detail: {
+        changeType,
+        units,
+      },
+    });
     this.dispatchEvent(changeEvent);
   }
 
   set units(units) {
-    this.#data = [ ...units ];
+    this.#data = [...units];
 
     if (!this.#ready) {
       this.#init();
@@ -248,7 +258,7 @@ class CategorySection extends HTMLElement {
   }
 
   set availableUnits(availableUnits) {
-    this.#availableUnits = [ ...availableUnits ].sort((a, b) => {
+    this.#availableUnits = [...availableUnits].sort((a, b) => {
       const nameA = a.name?.toLowerCase() || '';
       const nameB = b.name?.toLowerCase() || '';
       return nameA.localeCompare(nameB);
@@ -279,9 +289,19 @@ class CategorySection extends HTMLElement {
    */
   #getDisplaySignature(unit, options) {
     // Generate options summaries (same logic as UnitRow)
-    const weaponProfiles = getOptionSummaries(unit.weapons || [], options.weapons, options.unitSize || unit.modelCount, unit.unitOptions?.weapons);
-    const wargearProfiles = getOptionSummaries(unit.wargear || [], options.wargear, options.unitSize || unit.modelCount, unit.unitOptions?.wargear);
-    
+    const weaponProfiles = getOptionSummaries(
+      unit.weapons || [],
+      options.weapons,
+      options.unitSize || unit.modelCount,
+      unit.unitOptions?.weapons
+    );
+    const wargearProfiles = getOptionSummaries(
+      unit.wargear || [],
+      options.wargear,
+      options.unitSize || unit.modelCount,
+      unit.unitOptions?.wargear
+    );
+
     // Build a normalized display state object
     const displayState = {
       points: unit.points,
@@ -289,13 +309,16 @@ class CategorySection extends HTMLElement {
       unitSize: options?.unitSize || null,
       displayName: options?.unitSize ? `${options.unitSize}x ${unit.name}` : unit.name,
       warlord: options?.warlord === true,
-      epicHero: unit.tags?.includes("Epic Hero") === true,
+      epicHero: unit.tags?.includes('Epic Hero') === true,
       enhancement: options?.enhancement || null,
-      weapons: weaponProfiles.length > 0 ? weaponProfiles.sort().join("|") : null,
-      wargear: wargearProfiles.length > 0 ? wargearProfiles.sort().join("|") : null,
-      unitSizeDisplay: (weaponProfiles.length === 0 && wargearProfiles.length === 0 && options?.unitSize) ? options.unitSize : null
+      weapons: weaponProfiles.length > 0 ? weaponProfiles.sort().join('|') : null,
+      wargear: wargearProfiles.length > 0 ? wargearProfiles.sort().join('|') : null,
+      unitSizeDisplay:
+        weaponProfiles.length === 0 && wargearProfiles.length === 0 && options?.unitSize
+          ? options.unitSize
+          : null,
     };
-    
+
     // Return JSON string as hash (simple and effective)
     return JSON.stringify(displayState);
   }
@@ -308,20 +331,20 @@ class CategorySection extends HTMLElement {
    */
   #unitHasChanged(unit, existingNode) {
     if (!existingNode) return true;
-    
+
     // Normalize options (same as in addUnit)
     const options = { ...unit.options };
     if (this.heroUnits && unit.options?.warlord === undefined) {
       options.warlord = false;
     }
-    
+
     // Get stored signature from node
     const storedSignature = existingNode.dataset.displaySignature;
     if (!storedSignature) return true; // No signature means it's a new node or old format
-    
+
     // Generate current signature
     const currentSignature = this.#getDisplaySignature(unit, options);
-    
+
     // Simple hash comparison - O(1) instead of multiple string comparisons
     return storedSignature !== currentSignature;
   }
@@ -342,7 +365,7 @@ class CategorySection extends HTMLElement {
     if (existingNode.tagName === 'UNIT-ROW') {
       existingNode.unit = unit;
       existingNode.options = options;
-      
+
       // Store display signature for future comparisons
       const signature = this.#getDisplaySignature(unit, options);
       existingNode.dataset.displaySignature = signature;
@@ -351,10 +374,10 @@ class CategorySection extends HTMLElement {
       const newRow = document.createElement('unit-row');
       newRow.unit = unit;
       newRow.options = options;
-      
+
       const signature = this.#getDisplaySignature(unit, options);
       newRow.dataset.displaySignature = signature;
-      
+
       existingNode.replaceWith(newRow);
     }
   }
@@ -367,10 +390,10 @@ class CategorySection extends HTMLElement {
 
     // Preserve scroll position
     const scrollTop = this.unitList.scrollTop;
-    
+
     // Get existing nodes mapped by unit ID
     const existingNodes = new Map();
-    Array.from(this.unitList.querySelectorAll("unit-row")).forEach(node => {
+    Array.from(this.unitList.querySelectorAll('unit-row')).forEach(node => {
       const unitId = node.getAttribute('unit-id') || node.unit?.id;
       if (unitId) {
         existingNodes.set(unitId, node);
@@ -379,7 +402,7 @@ class CategorySection extends HTMLElement {
 
     // Track which units we've processed
     const processedUnitIds = new Set();
-    
+
     // Use DocumentFragment for batch additions
     const fragment = document.createDocumentFragment();
     const nodesToAdd = [];
@@ -388,7 +411,7 @@ class CategorySection extends HTMLElement {
     this.#data.forEach((unit, index) => {
       processedUnitIds.add(unit.id);
       const existingNode = existingNodes.get(unit.id);
-      
+
       if (existingNode) {
         // Unit exists - check if it needs updating
         if (this.#unitHasChanged(unit, existingNode)) {
@@ -429,11 +452,11 @@ class CategorySection extends HTMLElement {
     if (nodesToAdd.length > 0) {
       // Sort by index to maintain order
       nodesToAdd.sort((a, b) => a.index - b.index);
-      
+
       nodesToAdd.forEach(({ node, index }) => {
         const existingChildren = Array.from(this.unitList.children);
         let insertBefore = null;
-        
+
         // Find insertion point: the first existing node that comes after this unit's position
         for (let i = index + 1; i < this.#data.length; i++) {
           const nextUnitId = this.#data[i].id;
@@ -446,7 +469,7 @@ class CategorySection extends HTMLElement {
             break;
           }
         }
-        
+
         if (insertBefore) {
           this.unitList.insertBefore(node, insertBefore);
         } else {
@@ -454,7 +477,7 @@ class CategorySection extends HTMLElement {
           fragment.appendChild(node);
         }
       });
-      
+
       // Append any remaining nodes from fragment
       if (fragment.hasChildNodes()) {
         this.unitList.appendChild(fragment);
@@ -467,9 +490,9 @@ class CategorySection extends HTMLElement {
 
     // Restore scroll position
     this.unitList.scrollTop = scrollTop;
-    
+
     this.recalculatePoints();
-  };
+  }
 
   addUnit(unit) {
     // normalize options
@@ -488,7 +511,7 @@ class CategorySection extends HTMLElement {
   }
 
   removeUnit(unitId) {
-    const foundNode = Array.from(this.unitList.querySelectorAll("unit-row")).find(u => {
+    const foundNode = Array.from(this.unitList.querySelectorAll('unit-row')).find(u => {
       const nodeUnitId = u.getAttribute('unit-id') || u.unit?.id;
       return nodeUnitId === unitId;
     });
@@ -496,8 +519,8 @@ class CategorySection extends HTMLElement {
       foundNode.remove();
       this.#data = this.#data.filter(u => u.id !== unitId);
       this.recalculatePoints();
-      this.#emit("delete", unitId);
-    };
+      this.#emit('delete', unitId);
+    }
   }
 
   recalculatePoints() {
@@ -519,6 +542,6 @@ class CategorySection extends HTMLElement {
   //     DataStore.addUnitToRoster(this.unitCard.unit, this.#data.id);
   //   }
   // }
-};
+}
 
 window.customElements.define('category-section', CategorySection);

@@ -1,136 +1,139 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Personnel: View 40k list</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://personnel.facerix.com/" />
+    <meta property="og:title" content="Personnel" />
+    <meta
+      property="og:description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta property="og:url" content="https://personnel.facerix.com/" />
+    <meta property="og:type" content="website" />
 
-<head>
-  <title>Personnel: View 40k list</title>
-  <meta charset="utf-8" />
-  <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" href="https://personnel.facerix.com/" />
-  <meta property="og:title" content="Personnel" />
-  <meta property="og:description"
-    content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-  <meta property="og:url" content="https://personnel.facerix.com/" />
-  <meta property="og:type" content="website" />
+    <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
+    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
 
-  <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
-  <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
-  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="modulepreload" href="/index.js" />
 
-  <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="modulepreload" href="/index.js" />
+    <style>
+      header.top {
+        background-color: #274764;
+        color: white;
 
-  <style>
-    header.top {
-      background-color: #274764;
-      color: white;
+        img {
+          filter: invert(1);
+          height: 30px;
+        }
 
-      img {
-        filter: invert(1);
-        height: 30px;
-      }
+        .actions {
+          display: flex;
+          margin-left: auto;
 
-      .actions {
-        display: flex;
-        margin-left: auto;
-
-        button {
-          border-color: transparent;
-          padding: 0.25em;
-          margin-left: 0.5em;
+          button {
+            border-color: transparent;
+            padding: 0.25em;
+            margin-left: 0.5em;
+          }
         }
       }
-    }
 
-    body {
-      .loader {
-        height: 0;
-        opacity: 0;
-      }
-
-      &.loading {
-        main {
+      body {
+        .loader {
           height: 0;
           opacity: 0;
         }
 
-        .loader {
-          height: 200px;
-          opacity: 1;
-          transition: all 250ms ease-out;
+        &.loading {
+          main {
+            height: 0;
+            opacity: 0;
+          }
+
+          .loader {
+            height: 200px;
+            opacity: 1;
+            transition: all 250ms ease-out;
+          }
         }
       }
-    }
 
-    main {
-      gap: 0.25rem;
+      main {
+        gap: 0.25rem;
 
-      height: auto;
-      opacity: 1;
-      transition: all 250ms ease-in;
-    }
-
-    #armyMetadata {
-      display: flex;
-      gap: 0.5rem;
-
-      input {
-        border-width: 0 0 1px 0;
-        flex: 1 1 auto;
-        font-size: larger;
-        padding-left: 1rem;
+        height: auto;
+        opacity: 1;
+        transition: all 250ms ease-in;
       }
 
-      select {
-        font-size: medium;
+      #armyMetadata {
+        display: flex;
+        gap: 0.5rem;
+
+        input {
+          border-width: 0 0 1px 0;
+          flex: 1 1 auto;
+          font-size: larger;
+          padding-left: 1rem;
+        }
+
+        select {
+          font-size: medium;
+        }
       }
-    }
 
-    .category-container {
-      max-width: 98vw;
-      width: 760px;
-      margin: 0 auto;
-    }
-  </style>
-</head>
+      .category-container {
+        max-width: 98vw;
+        width: 760px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
 
-<body class="u-fill-height loading">
-  <header class="top">
-    <a href="/40k">
-      <img src="/images/back.svg" alt="back arrow" />
-    </a>
-    <img src="/images/aquila.svg" alt="Warhammer logo" />
-    <h1>40k Army List</h1>
-    <span class="actions">
-       <button id="btnExport" title="Export this army list">
-        <img src="/images/clipboard-copy.svg" alt="clipboard icon" />
-      </button>
-      <button id="btnDelete" title="Delete this army list">
-        <img src="/images/trash.svg" alt="trash icon" />
-      </button>
-    </span>
-  </header>
-  <img src="/images/40k-gear-spinner.svg" alt="spinning gear placeholder" class="loader" />
-  <main>
-    <div id="armyMetadata">
-      <input id="armyName" placeholder="Name your army" />
-      <select id="detachment">
-        <option value="" disabled selected>Select a detachment</option>
-      </select>
-      <p class="points">Total points: <span id="totalPoints"></span></p>
-    </div>
-    <div class="category-container">
-      <category-section sectionTitle="Characters" heroUnits id="characters"></category-section>
-      <category-section sectionTitle="Battleline" id="battleline"></category-section>
-      <category-section sectionTitle="Other Units" id="otherUnits"></category-section>
-    </div>
-  </main>
+  <body class="u-fill-height loading">
+    <header class="top">
+      <a href="/40k">
+        <img src="/images/back.svg" alt="back arrow" />
+      </a>
+      <img src="/images/aquila.svg" alt="Warhammer logo" />
+      <h1>40k Army List</h1>
+      <span class="actions">
+        <button id="btnExport" title="Export this army list">
+          <img src="/images/clipboard-copy.svg" alt="clipboard icon" />
+        </button>
+        <button id="btnDelete" title="Delete this army list">
+          <img src="/images/trash.svg" alt="trash icon" />
+        </button>
+      </span>
+    </header>
+    <img src="/images/40k-gear-spinner.svg" alt="spinning gear placeholder" class="loader" />
+    <main>
+      <div id="armyMetadata">
+        <input id="armyName" placeholder="Name your army" />
+        <select id="detachment">
+          <option value="" disabled selected>Select a detachment</option>
+        </select>
+        <p class="points">Total points: <span id="totalPoints"></span></p>
+      </div>
+      <div class="category-container">
+        <category-section sectionTitle="Characters" heroUnits id="characters"></category-section>
+        <category-section sectionTitle="Battleline" id="battleline"></category-section>
+        <category-section sectionTitle="Other Units" id="otherUnits"></category-section>
+      </div>
+    </main>
 
-  <update-notification></update-notification>
-</body>
-<script src="40k-list.js" type="module"></script>
-
+    <update-notification></update-notification>
+  </body>
+  <script src="40k-list.js" type="module"></script>
 </html>

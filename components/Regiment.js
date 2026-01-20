@@ -2,21 +2,30 @@ import './UnitModal.js';
 import { h } from '../src/domUtils.js';
 
 const UnitRow = (unit, isLeader) => {
-  const row = h("div", { className: "unit-summary" }, [
-    h("span", { className: "unit-name", innerText: isLeader ? unit.leader : unit.name }),
-    h("span", { className: "unit-pts points", innerText: `${isLeader ? unit.leaderPoints : unit.points} Points` }),
-    ...(isLeader ? [h("button", { className: "options", title: "unit options" }, [
-      h("img", { src: "/images/gear.svg", alt: "gear" })
-    ])] : []),
-    ...(isLeader ? [] : [
-      h("button", { className: "remove-unit", title: "remove unit" }, [
-        h("img", { src: "/images/circle-minus.svg", alt: "circle minus" })
-      ])
-    ]),
+  const row = h('div', { className: 'unit-summary' }, [
+    h('span', { className: 'unit-name', innerText: isLeader ? unit.leader : unit.name }),
+    h('span', {
+      className: 'unit-pts points',
+      innerText: `${isLeader ? unit.leaderPoints : unit.points} Points`,
+    }),
+    ...(isLeader
+      ? [
+          h('button', { className: 'options', title: 'unit options' }, [
+            h('img', { src: '/images/gear.svg', alt: 'gear' }),
+          ]),
+        ]
+      : []),
+    ...(isLeader
+      ? []
+      : [
+          h('button', { className: 'remove-unit', title: 'remove unit' }, [
+            h('img', { src: '/images/circle-minus.svg', alt: 'circle minus' }),
+          ]),
+        ]),
   ]);
   row.dataset.unitId = unit.id;
   return row;
-}
+};
 
 const CSS = `
 :host {
@@ -171,12 +180,12 @@ class Regiment extends HTMLElement {
   connectedCallback() {
     // console.log("connectedCallback", this.#regimentData?.name);
     // Create shadow root
-    const shadow = this.attachShadow({ mode: "open" });
-    const styles = document.createElement("style");
+    const shadow = this.attachShadow({ mode: 'open' });
+    const styles = document.createElement('style');
     styles.innerHTML = CSS;
     shadow.appendChild(styles);
 
-    const regiment = document.createElement("div");
+    const regiment = document.createElement('div');
     regiment.innerHTML = TEMPLATE;
     shadow.appendChild(regiment);
 
@@ -189,12 +198,12 @@ class Regiment extends HTMLElement {
     // console.log("init", this.#regimentData?.name);
 
     // Get references to elements
-    this.#leaderUnitElement = this.shadowRoot.querySelector("#leaderUnit");
-    this.#regimentUnitsElement = this.shadowRoot.querySelector("#regimentUnits");
-    this.#regimentTitleElement = this.shadowRoot.querySelector("#regimentTitle");
-    this.#regimentModal = this.shadowRoot.querySelector("#regimentModal");
-    this.#regimentPointsElement = this.shadowRoot.querySelector(".regiment-points");
-    
+    this.#leaderUnitElement = this.shadowRoot.querySelector('#leaderUnit');
+    this.#regimentUnitsElement = this.shadowRoot.querySelector('#regimentUnits');
+    this.#regimentTitleElement = this.shadowRoot.querySelector('#regimentTitle');
+    this.#regimentModal = this.shadowRoot.querySelector('#regimentModal');
+    this.#regimentPointsElement = this.shadowRoot.querySelector('.regiment-points');
+
     // Set up event listeners
     this.#setupEventListeners();
     this.#ready = true;
@@ -202,48 +211,48 @@ class Regiment extends HTMLElement {
 
   #setupEventListeners() {
     // Remove regiment button
-    const removeRegimentBtn = this.shadowRoot.querySelector(".remove-regiment");
-    removeRegimentBtn.addEventListener("click", () => {
-      this.#emit("removeRegiment", this.#regimentData.id);
+    const removeRegimentBtn = this.shadowRoot.querySelector('.remove-regiment');
+    removeRegimentBtn.addEventListener('click', () => {
+      this.#emit('removeRegiment', this.#regimentData.id);
     });
 
     // Add unit button
-    const addUnitBtn = this.shadowRoot.querySelector(".add-unit");
-    addUnitBtn.addEventListener("click", () => {
+    const addUnitBtn = this.shadowRoot.querySelector('.add-unit');
+    addUnitBtn.addEventListener('click', () => {
       this.#regimentModal.options = this.#options;
       this.#regimentModal.showModal();
     });
 
-    this.#regimentModal.addEventListener("unitAdded", (evt) => {
+    this.#regimentModal.addEventListener('unitAdded', evt => {
       const unitToAdd = evt.detail.unit;
       this.#addUnit(unitToAdd);
     });
 
     // Delegate events for unit actions
-    this.shadowRoot.addEventListener("click", (evt) => {
-      const btn = evt.target.closest("button");
+    this.shadowRoot.addEventListener('click', evt => {
+      const btn = evt.target.closest('button');
       if (!btn) return;
 
       switch (btn.className) {
-        case "remove-unit":
-          const unitSummary = btn.closest(".unit-summary");
+        case 'remove-unit':
+          const unitSummary = btn.closest('.unit-summary');
           const { unitId } = unitSummary.dataset;
           this.#removeUnit(unitId);
           break;
-        case "options":
-          const optionsUnitSummary = btn.closest(".unit-summary");
+        case 'options':
+          const optionsUnitSummary = btn.closest('.unit-summary');
           const { unitId: optionsUnitId } = optionsUnitSummary.dataset;
-          this.#emit("unitOptions", optionsUnitId);
+          this.#emit('unitOptions', optionsUnitId);
           break;
       }
     });
   }
 
   #emit(eventType, data) {
-    const event = new CustomEvent(eventType, { 
+    const event = new CustomEvent(eventType, {
       detail: data,
       bubbles: true,
-      composed: true
+      composed: true,
     });
     this.dispatchEvent(event);
   }
@@ -258,13 +267,13 @@ class Regiment extends HTMLElement {
 
     // Render leader unit
     if (this.#leaderUnitElement) {
-      this.#leaderUnitElement.innerHTML = "";
+      this.#leaderUnitElement.innerHTML = '';
       this.#leaderUnitElement.appendChild(UnitRow(this.#regimentData, true));
     }
 
     // Render regiment units
     if (this.#regimentUnitsElement) {
-      this.#regimentUnitsElement.innerHTML = "";
+      this.#regimentUnitsElement.innerHTML = '';
       if (this.#regimentData?.units) {
         this.#regimentData.units.forEach(unit => {
           this.#regimentUnitsElement.appendChild(UnitRow(unit, false));
@@ -284,11 +293,11 @@ class Regiment extends HTMLElement {
   }
 
   #addUnit(unit) {
-    this.#emit("addUnit", { unit, regimentId: this.#regimentData.id });
+    this.#emit('addUnit', { unit, regimentId: this.#regimentData.id });
   }
 
   #removeUnit(unitId) {
-    this.#emit("removeUnit", { unitId, regimentId: this.#regimentData.id });
+    this.#emit('removeUnit', { unitId, regimentId: this.#regimentData.id });
   }
 
   set regimentData(data) {

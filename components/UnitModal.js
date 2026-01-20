@@ -11,13 +11,15 @@ import { v4WithTimestamp } from '../src/uuid.js';
  */
 
 const multipleUnitPoints = (unitSizes, pointValues) => {
-  return Object.values(unitSizes).map((count, idx) => `${count}x ${pointValues[idx]}`).join(", ");
-}
+  return Object.values(unitSizes)
+    .map((count, idx) => `${count}x ${pointValues[idx]}`)
+    .join(', ');
+};
 
 /**
- * 
- * @param {Unit} unit 
- * @returns 
+ *
+ * @param {Unit} unit
+ * @returns
  */
 const UnitListing = unit => {
   const { name, unitOptions, modelCount = 1 } = unit;
@@ -25,20 +27,20 @@ const UnitListing = unit => {
   if (unitOptions?.unitSize) {
     points = `(${multipleUnitPoints(unitOptions.unitSize, unit.points)})`;
   }
-  const row = h("div", { className: "unit-summary" }, [
-    h("div", { className: "unit-info" }, [
-      h("span", { className: "unit-name", innerText: name }),
-      h("span", { className: "unit-pts points", innerText: `${points} Points` }),
+  const row = h('div', { className: 'unit-summary' }, [
+    h('div', { className: 'unit-info' }, [
+      h('span', { className: 'unit-name', innerText: name }),
+      h('span', { className: 'unit-pts points', innerText: `${points} Points` }),
     ]),
-    h("button", { className: "add-unit", title: "add unit" }, [
-      h("img", { src: "/images/plus.svg", alt: "add unit" })
+    h('button', { className: 'add-unit', title: 'add unit' }, [
+      h('img', { src: '/images/plus.svg', alt: 'add unit' }),
     ]),
   ]);
   row.dataset.unitName = name;
   row.dataset.defaultModelCount = modelCount;
-  row.dataset.unitTags = unit.tags?.join(", ") ?? "";
+  row.dataset.unitTags = unit.tags?.join(', ') ?? '';
   return row;
-}
+};
 
 const CSS = `
 :host {
@@ -170,12 +172,12 @@ class UnitModal extends HTMLElement {
 
   connectedCallback() {
     // Create shadow root
-    const shadow = this.attachShadow({ mode: "open" });
-    const styles = document.createElement("style");
+    const shadow = this.attachShadow({ mode: 'open' });
+    const styles = document.createElement('style');
     styles.innerHTML = CSS;
     shadow.appendChild(styles);
 
-    const modal = document.createElement("div");
+    const modal = document.createElement('div');
     modal.innerHTML = TEMPLATE;
     shadow.appendChild(modal);
 
@@ -184,44 +186,44 @@ class UnitModal extends HTMLElement {
 
   #init() {
     if (!this.#ready) {
-      this.#modalTitle = this.shadowRoot.querySelector("#modalTitle");
-      this.#unitModal = this.shadowRoot.querySelector("#unit-modal");
-      this.#unitList = this.shadowRoot.querySelector("#unitList");
-      this.#btnClose = this.shadowRoot.querySelector("#btnClose");
+      this.#modalTitle = this.shadowRoot.querySelector('#modalTitle');
+      this.#unitModal = this.shadowRoot.querySelector('#unit-modal');
+      this.#unitList = this.shadowRoot.querySelector('#unitList');
+      this.#btnClose = this.shadowRoot.querySelector('#btnClose');
 
       // Set up event handlers
-      this.#btnClose.addEventListener("click", () => {
+      this.#btnClose.addEventListener('click', () => {
         this.close();
       });
 
-      this.#unitList.addEventListener("click", evt => {
-        const btn = evt.target.closest("button");
-        if (btn && btn.className === "add-unit") {
-          const unitSummary = btn.closest(".unit-summary");
+      this.#unitList.addEventListener('click', evt => {
+        const btn = evt.target.closest('button');
+        if (btn && btn.className === 'add-unit') {
+          const unitSummary = btn.closest('.unit-summary');
           const { unitName: name } = unitSummary.dataset;
           // Unit definition :> name: string, points: number, tags?: string[], modelCount?: number | number[], unitOptions?: object
           const unitDef = this.#options.find(u => u.name === name);
           const { unitOptions = undefined } = unitDef;
-          
+
           // Store only instance-specific data: id, name, and options
           const unitToAdd = {
             id: v4WithTimestamp(),
             name,
-            options: {}
+            options: {},
           };
-          
+
           if (unitOptions) {
             // populate options object for unit's defaults
             Object.keys(unitOptions).forEach(option => {
               switch (option) {
-                case "unitSize":
+                case 'unitSize':
                   // pick smallest unit size as default
-                  const sizeOptions = [ ...unitOptions.unitSize ];
+                  const sizeOptions = [...unitOptions.unitSize];
                   const selectedSize = sizeOptions[0];
                   unitToAdd.options.unitSize = selectedSize;
                   break;
-                case "weapons":
-                  const weaponOptions = [ ...unitOptions.weapons ];
+                case 'weapons':
+                  const weaponOptions = [...unitOptions.weapons];
                   unitToAdd.options.weapons = weaponOptions.map(weapon => {
                     const max = weapon.max;
                     const replaces = weapon.replaces;
@@ -233,8 +235,8 @@ class UnitModal extends HTMLElement {
                     };
                   });
                   break;
-                case "wargear":
-                  const wargearOptions = [ ...unitOptions.wargear ];
+                case 'wargear':
+                  const wargearOptions = [...unitOptions.wargear];
                   unitToAdd.options.wargear = wargearOptions.map(wargear => {
                     const max = wargear.max;
                     const replaces = wargear.replaces;
@@ -252,13 +254,13 @@ class UnitModal extends HTMLElement {
               }
             });
           }
-          
+
           // Dispatch custom event for unit addition
-          const addEvent = new CustomEvent("unitAdded", { 
-            detail: { unit: unitToAdd }
+          const addEvent = new CustomEvent('unitAdded', {
+            detail: { unit: unitToAdd },
           });
           this.dispatchEvent(addEvent);
-          
+
           this.close();
         }
       });
@@ -280,8 +282,8 @@ class UnitModal extends HTMLElement {
 
   #render() {
     if (!this.#unitList) return;
-    
-    this.#unitList.innerHTML = "";
+
+    this.#unitList.innerHTML = '';
     this.#options.forEach(unit => {
       this.#unitList.append(UnitListing(unit));
     });

@@ -7,18 +7,16 @@ import { FACTION_NAMES } from '/40k/army-data/factions.js';
 import { exportArmyList } from '/src/parsers.js';
 import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
 
-const whenLoaded = Promise.all(
-  [
-    customElements.whenDefined("category-section"),
-    customElements.whenDefined("update-notification"),
-  ],
-);
+const whenLoaded = Promise.all([
+  customElements.whenDefined('category-section'),
+  customElements.whenDefined('update-notification'),
+]);
 
 const reducer = (acc, curr) => {
   return acc + parseInt(curr.points, 10);
 };
 
-const getTotalPoints = (list) => {
+const getTotalPoints = list => {
   if (list.units) {
     // New format: single units array
     return list.units.reduce(reducer, 0);
@@ -29,14 +27,14 @@ const getTotalPoints = (list) => {
     const other = (list.otherUnits || []).reduce(reducer, 0);
     return chars + bl + other;
   }
-}
+};
 
 whenLoaded.then(async () => {
   // Set up update notification
   const updateNotification = document.querySelector('update-notification');
 
   // Listen for service worker updates
-  window.addEventListener('sw-update-available', (event) => {
+  window.addEventListener('sw-update-available', event => {
     console.log('Service worker update available, showing notification');
     updateNotification.show(event.detail.pendingWorker);
   });
@@ -45,13 +43,13 @@ whenLoaded.then(async () => {
   const id = urlParams.get('id');
   const faction = urlParams.get('faction');
   const factionName = FACTION_NAMES[faction];
-  const detachmentSelector = document.querySelector("select#detachment");
+  const detachmentSelector = document.querySelector('select#detachment');
 
   let armyList;
   let armyData;
   let cachedDisplayUnits = null; // Cache display units as Map<unitId, displayUnit> for O(1) lookups
   let isInitialized = false; // Flag to prevent double initialization
-  
+
   // Load army data asynchronously
   if (factionName) {
     try {
@@ -59,9 +57,11 @@ whenLoaded.then(async () => {
 
       // populate detachment selector
       Object.keys(armyData.detachments).forEach(detachmentName => {
-        detachmentSelector.append(h("option", { value: detachmentName, innerText: detachmentName }));
+        detachmentSelector.append(
+          h('option', { value: detachmentName, innerText: detachmentName })
+        );
       });
-      
+
       // If armyList is already loaded but not yet initialized, initialize now
       // This handles the case where armyData loads before DataStore fires "init" event
       if (armyList && !isInitialized) {
@@ -76,24 +76,24 @@ whenLoaded.then(async () => {
 
   // Initialize service worker
   serviceWorkerManager.register();
-  
-  const btnDelete = document.querySelector("#btnDelete");
-  const btnExport = document.querySelector("#btnExport");
-  const armyNameInput = document.querySelector("#armyName");
-  const charactersSection = document.querySelector("#characters");
-  const battlelineSection = document.querySelector("#battleline");
-  const otherSection = document.querySelector("#otherUnits");
-  const totalPoints = document.querySelector("#totalPoints");
+
+  const btnDelete = document.querySelector('#btnDelete');
+  const btnExport = document.querySelector('#btnExport');
+  const armyNameInput = document.querySelector('#armyName');
+  const charactersSection = document.querySelector('#characters');
+  const battlelineSection = document.querySelector('#battleline');
+  const otherSection = document.querySelector('#otherUnits');
+  const totalPoints = document.querySelector('#totalPoints');
 
   const newArmy = () => {
     return {
       id,
       faction,
-      game: "40k",
+      game: '40k',
       totalPoints: 0,
-      units: []
+      units: [],
     };
-  }
+  };
 
   const recalculatePoints = () => {
     if (totalPoints && armyList && armyData) {
@@ -123,20 +123,20 @@ whenLoaded.then(async () => {
 
   const save = () => {
     DataStore.updateItem(armyList);
-  }
+  };
 
   const onUpdate = (section, eventType, affectedItems, categorySection) => {
     if (armyList.units) {
       // New format: work with single units array
       switch (eventType) {
-        case "add":
+        case 'add':
           // affectedItems is the unit instance to add
           armyList.units.push(affectedItems);
           armyList.units.sort((a, b) => a.name.localeCompare(b.name));
           // Re-render to rebuild display units and update sections
           render();
           break;
-        case "delete":
+        case 'delete':
           // affectedItems is the unit ID to delete
           const deleteIndex = armyList.units.findIndex(u => u.id === affectedItems);
           if (deleteIndex !== -1) {
@@ -145,14 +145,14 @@ whenLoaded.then(async () => {
           // Re-render to rebuild display units and update sections
           render();
           break;
-        case "update":
+        case 'update':
           // affectedItems is the updated display unit from CategorySection
           // Find the corresponding instance in armyList.units and update its options
           const updateIndex = armyList.units.findIndex(u => u.id === affectedItems.id);
           if (updateIndex !== -1) {
             const prevEnhancement = armyList.units[updateIndex].options?.enhancement;
             const newEnhancement = affectedItems.options?.enhancement;
-            
+
             // If enhancement changed, remove it from other units
             if (newEnhancement && newEnhancement !== prevEnhancement) {
               armyList.units.forEach(u => {
@@ -163,7 +163,7 @@ whenLoaded.then(async () => {
                 }
               });
             }
-            
+
             // If unit is newly promoted to warlord, remove warlord from other units
             if (affectedItems.options?.warlord && !armyList.units[updateIndex].options?.warlord) {
               armyList.units.forEach(u => {
@@ -174,10 +174,10 @@ whenLoaded.then(async () => {
                 }
               });
             }
-            
+
             // Update only the options, keeping id and name
             armyList.units[updateIndex].options = { ...affectedItems.options };
-            
+
             // Update only this unit instead of rebuilding all units
             updateSingleUnit(affectedItems.id);
           }
@@ -186,16 +186,16 @@ whenLoaded.then(async () => {
     } else {
       // Old format: use existing logic (for migration)
       switch (eventType) {
-        case "add":
+        case 'add':
           armyList[section].push(affectedItems);
           armyList[section].sort((a, b) => a.name.localeCompare(b.name));
           categorySection.units = armyList[section];
           break;
-        case "delete":
+        case 'delete':
           const toPrune = armyList[section].findIndex(u => u.id === affectedItems);
           armyList[section].splice(toPrune, 1);
           break;
-        case "update":
+        case 'update':
           // the items are already updated in place since they're passed to CategorySection by reference
           break;
       }
@@ -209,7 +209,7 @@ whenLoaded.then(async () => {
    * @param {Object} oldList - The army list in old format
    * @returns {Object} - The army list in new format
    */
-  const migrateArmyList = (oldList) => {
+  const migrateArmyList = oldList => {
     if (oldList.units) {
       // Already in new format
       return oldList;
@@ -219,7 +219,7 @@ whenLoaded.then(async () => {
     const allUnits = [
       ...(oldList.characters || []),
       ...(oldList.battleline || []),
-      ...(oldList.otherUnits || [])
+      ...(oldList.otherUnits || []),
     ];
 
     // Convert to new format: strip non-instance data, keep only id, name, options
@@ -227,7 +227,7 @@ whenLoaded.then(async () => {
       const instance = {
         id: unit.id,
         name: unit.name,
-        options: { ...unit.options }
+        options: { ...unit.options },
       };
       return instance;
     });
@@ -235,7 +235,7 @@ whenLoaded.then(async () => {
     // Create new list structure
     const newList = {
       ...oldList,
-      units: migratedUnits
+      units: migratedUnits,
     };
 
     // Remove old arrays (but keep them commented for reference)
@@ -244,17 +244,17 @@ whenLoaded.then(async () => {
     delete newList.otherUnits;
 
     return newList;
-  }
+  };
 
   const init = async () => {
     // Prevent double initialization - set flag immediately to prevent race condition
     if (isInitialized) {
       return;
     }
-    
+
     // Set flag immediately to prevent concurrent initialization
     isInitialized = true;
-    
+
     // Ensure armyData is loaded
     if (factionName && !armyData) {
       try {
@@ -266,29 +266,29 @@ whenLoaded.then(async () => {
         return;
       }
     }
-    
+
     if (armyList && armyData) {
       // Migrate if needed
       if (!armyList.units && (armyList.characters || armyList.battleline || armyList.otherUnits)) {
         armyList = migrateArmyList(armyList);
         save(); // Save migrated format
       }
-      
+
       armyNameInput.value = armyList.name;
       render();
-      document.querySelector("body").classList.remove("loading");
+      document.querySelector('body').classList.remove('loading');
     } else {
       // Reset flag if we can't initialize yet
       isInitialized = false;
     }
-  }
+  };
 
   /**
    * Updates a single unit's display unit in the cache and its section
    * @param {string} unitId - The ID of the unit to update
    * @returns {boolean} - True if the unit was found and updated
    */
-  const updateSingleUnit = (unitId) => {
+  const updateSingleUnit = unitId => {
     if (!armyList || !armyData || !armyList.units || !cachedDisplayUnits) {
       return false;
     }
@@ -305,10 +305,11 @@ whenLoaded.then(async () => {
     }
 
     // Get the old display unit from cache (O(1) lookup with Map)
-    const oldDisplayUnit = cachedDisplayUnits instanceof Map 
-      ? cachedDisplayUnits.get(unitId)
-      : cachedDisplayUnits.find(u => u.id === unitId);
-    
+    const oldDisplayUnit =
+      cachedDisplayUnits instanceof Map
+        ? cachedDisplayUnits.get(unitId)
+        : cachedDisplayUnits.find(u => u.id === unitId);
+
     if (!oldDisplayUnit) {
       // Unit not in cache, do full render
       render();
@@ -338,13 +339,13 @@ whenLoaded.then(async () => {
     // Update the appropriate section
     let targetSection;
     switch (newSection) {
-      case "characters":
+      case 'characters':
         targetSection = charactersSection;
         break;
-      case "battleline":
+      case 'battleline':
         targetSection = battlelineSection;
         break;
-      case "otherUnits":
+      case 'otherUnits':
         targetSection = otherSection;
         break;
       default:
@@ -353,7 +354,7 @@ whenLoaded.then(async () => {
 
     // Get current units from the section
     const sectionUnits = [...(targetSection.units || [])];
-    
+
     const sectionIndex = sectionUnits.findIndex(u => u.id === unitId);
     if (sectionIndex !== -1) {
       // Update existing unit in section
@@ -365,60 +366,68 @@ whenLoaded.then(async () => {
     }
 
     return true;
-  }
+  };
 
   const render = () => {
     if (armyList && armyData) {
-      detachmentSelector.value = armyList.detachment || "";
-      
+      detachmentSelector.value = armyList.detachment || '';
+
       // Get units with modifications applied based on current detachment (for available units)
       const modifiedUnits = getModifiedUnits(armyData, armyList.detachment);
-      
+
       if (armyList.units) {
         // New format: build display units and categorize at runtime
         const displayUnits = armyList.units
           .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
           .filter(u => u !== null);
-        
+
         // Cache display units as Map for O(1) lookups
         cachedDisplayUnits = new Map();
         displayUnits.forEach(unit => {
           cachedDisplayUnits.set(unit.id, unit);
         });
-        
+
         // Categorize display units
-        const characters = displayUnits.filter(u => getUnitSection(u) === "characters");
-        const battleline = displayUnits.filter(u => getUnitSection(u) === "battleline");
-        const otherUnits = displayUnits.filter(u => getUnitSection(u) === "otherUnits");
-        
+        const characters = displayUnits.filter(u => getUnitSection(u) === 'characters');
+        const battleline = displayUnits.filter(u => getUnitSection(u) === 'battleline');
+        const otherUnits = displayUnits.filter(u => getUnitSection(u) === 'otherUnits');
+
         charactersSection.units = characters;
-        charactersSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes("Character"));
+        charactersSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes('Character'));
         charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
-        
+
         battlelineSection.units = battleline;
-        battlelineSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes("Battleline"));
-        
+        battlelineSection.availableUnits = modifiedUnits.filter(u =>
+          u.tags?.includes('Battleline')
+        );
+
         otherSection.units = otherUnits;
-        otherSection.availableUnits = modifiedUnits.filter(u => !u.tags?.includes("Character") && !u.tags?.includes("Battleline"));
+        otherSection.availableUnits = modifiedUnits.filter(
+          u => !u.tags?.includes('Character') && !u.tags?.includes('Battleline')
+        );
       } else {
         // Old format: use existing structure (for migration)
         cachedDisplayUnits = null; // Clear cache for old format
         charactersSection.units = armyList.characters || [];
-        charactersSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes("Character"));
+        charactersSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes('Character'));
         charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
         battlelineSection.units = armyList.battleline || [];
-        battlelineSection.availableUnits = modifiedUnits.filter(u => u.tags?.includes("Battleline"));
+        battlelineSection.availableUnits = modifiedUnits.filter(u =>
+          u.tags?.includes('Battleline')
+        );
         otherSection.units = armyList.otherUnits || [];
-        otherSection.availableUnits = modifiedUnits.filter(u => !u.tags?.includes("Character") && !u.tags?.includes("Battleline"));
+        otherSection.availableUnits = modifiedUnits.filter(
+          u => !u.tags?.includes('Character') && !u.tags?.includes('Battleline')
+        );
       }
     }
-  }
+  };
 
   const getDetachmentOptions = (armyData, detachment) => {
     return {
       enhancements: armyData.detachments[detachment]?.enhancements || [],
     };
-  }
+  };
 
   /**
    * Calculates the total points for a unit instance based on canonical unit and options
@@ -431,11 +440,17 @@ whenLoaded.then(async () => {
     let points = 0;
 
     // Base points from unitSize or default
-    if (unitInstance.options?.unitSize && canonicalUnit.unitOptions?.unitSize && Array.isArray(canonicalUnit.points)) {
+    if (
+      unitInstance.options?.unitSize &&
+      canonicalUnit.unitOptions?.unitSize &&
+      Array.isArray(canonicalUnit.points)
+    ) {
       // unitOptions.unitSize is an array like [10, 20]
       // points is an array like [180, 360]
       // Find the index of the selected unitSize and use it to get the corresponding points
-      const unitSizeIndex = canonicalUnit.unitOptions.unitSize.indexOf(unitInstance.options.unitSize);
+      const unitSizeIndex = canonicalUnit.unitOptions.unitSize.indexOf(
+        unitInstance.options.unitSize
+      );
       if (unitSizeIndex !== -1 && unitSizeIndex < canonicalUnit.points.length) {
         points = canonicalUnit.points[unitSizeIndex];
       } else {
@@ -461,7 +476,7 @@ whenLoaded.then(async () => {
     }
 
     return points;
-  }
+  };
 
   /**
    * Builds a complete display unit from a stored instance, canonical unit, and detachment modifications
@@ -492,12 +507,16 @@ whenLoaded.then(async () => {
     let displayUnitOptions = undefined;
     if (canonicalUnit.unitOptions) {
       displayUnitOptions = JSON.parse(JSON.stringify(canonicalUnit.unitOptions));
-      
+
       // Transform unitSize from array of numbers to array of objects with modelCount and points
-      if (displayUnitOptions.unitSize && Array.isArray(displayUnitOptions.unitSize) && Array.isArray(canonicalUnit.points)) {
+      if (
+        displayUnitOptions.unitSize &&
+        Array.isArray(displayUnitOptions.unitSize) &&
+        Array.isArray(canonicalUnit.points)
+      ) {
         displayUnitOptions.unitSize = displayUnitOptions.unitSize.map((modelCount, index) => ({
           modelCount: modelCount,
-          points: canonicalUnit.points[index] || canonicalUnit.points[0] || 0
+          points: canonicalUnit.points[index] || canonicalUnit.points[0] || 0,
         }));
       }
     }
@@ -512,27 +531,27 @@ whenLoaded.then(async () => {
       weapons: [...(canonicalUnit.weapons || [])],
       wargear: [...(canonicalUnit.wargear || [])],
       unitOptions: displayUnitOptions,
-      options: { ...unitInstance.options }
+      options: { ...unitInstance.options },
     };
 
     return displayUnit;
-  }
+  };
 
   /**
    * Determines which section a unit should belong to based on its tags
    * @param {Object} displayUnit - The display unit (with tags after detachment mods)
    * @returns {string} - The section name: "characters", "battleline", or "otherUnits"
    */
-  const getUnitSection = (displayUnit) => {
+  const getUnitSection = displayUnit => {
     const tags = displayUnit.tags || [];
-    if (tags.includes("Character")) {
-      return "characters";
-    } else if (tags.includes("Battleline")) {
-      return "battleline";
+    if (tags.includes('Character')) {
+      return 'characters';
+    } else if (tags.includes('Battleline')) {
+      return 'battleline';
     } else {
-      return "otherUnits";
+      return 'otherUnits';
     }
-  }
+  };
 
   /**
    * Applies unitModifications to a unit, returning a modified copy
@@ -552,7 +571,7 @@ whenLoaded.then(async () => {
       // Check if this modification applies to this unit
       if (modification.target === unit.name) {
         switch (modification.type) {
-          case "addTag":
+          case 'addTag':
             // Add the tag if it doesn't already exist
             if (!modifiedUnit.tags) {
               modifiedUnit.tags = [];
@@ -569,7 +588,7 @@ whenLoaded.then(async () => {
     });
 
     return modifiedUnit;
-  }
+  };
 
   /**
    * Gets units with modifications applied based on the current detachment
@@ -590,13 +609,10 @@ whenLoaded.then(async () => {
     }
 
     // Apply modifications to each unit
-    return armyData.units.map(unit => 
-      applyUnitModifications(unit, unitModifications)
-    );
-  }
+    return armyData.units.map(unit => applyUnitModifications(unit, unitModifications));
+  };
 
-
-  btnExport.addEventListener("click", () => {
+  btnExport.addEventListener('click', () => {
     // Build display units for export if using new format
     let exportData = armyList;
     if (armyList.units && armyData) {
@@ -614,51 +630,51 @@ whenLoaded.then(async () => {
           .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
           .filter(u => u !== null);
       }
-      
+
       // Categorize for export
-      const characters = displayUnits.filter(u => getUnitSection(u) === "characters");
-      const battleline = displayUnits.filter(u => getUnitSection(u) === "battleline");
-      const otherUnits = displayUnits.filter(u => getUnitSection(u) === "otherUnits");
-      
+      const characters = displayUnits.filter(u => getUnitSection(u) === 'characters');
+      const battleline = displayUnits.filter(u => getUnitSection(u) === 'battleline');
+      const otherUnits = displayUnits.filter(u => getUnitSection(u) === 'otherUnits');
+
       exportData = {
         ...armyList,
         characters,
         battleline,
-        otherUnits
+        otherUnits,
       };
     }
-    
+
     const exported = exportArmyList(exportData);
     navigator.clipboard.writeText(exported);
-    alert("Army list exported to clipboard");
+    alert('Army list exported to clipboard');
   });
 
-  btnDelete.addEventListener("click", () => {
-    if (window.confirm("Delete this army list: are you sure?")) {
+  btnDelete.addEventListener('click', () => {
+    if (window.confirm('Delete this army list: are you sure?')) {
       DataStore.deleteItem(id);
     }
   });
 
-  armyNameInput.addEventListener("change", evt => {
+  armyNameInput.addEventListener('change', evt => {
     armyList.name = evt.target.value;
     save();
   });
 
-  charactersSection.addEventListener("change", evt => {
-    onUpdate("characters", evt.detail.changeType, evt.detail.units, charactersSection);
+  charactersSection.addEventListener('change', evt => {
+    onUpdate('characters', evt.detail.changeType, evt.detail.units, charactersSection);
   });
-  battlelineSection.addEventListener("change", evt => {
-    onUpdate("battleline", evt.detail.changeType, evt.detail.units, battlelineSection);
+  battlelineSection.addEventListener('change', evt => {
+    onUpdate('battleline', evt.detail.changeType, evt.detail.units, battlelineSection);
   });
-  otherSection.addEventListener("change", evt => {
-    onUpdate("otherUnits", evt.detail.changeType, evt.detail.units, otherSection);
+  otherSection.addEventListener('change', evt => {
+    onUpdate('otherUnits', evt.detail.changeType, evt.detail.units, otherSection);
   });
 
-  detachmentSelector.addEventListener("change", evt => {
+  detachmentSelector.addEventListener('change', evt => {
     const detachmentName = evt.target.value;
     if (detachmentName && detachmentName !== armyList.detachment) {
       armyList.detachment = detachmentName;
-      
+
       if (armyList.units) {
         // New format: flush any existing character enhancements
         armyList.units.forEach(u => {
@@ -674,7 +690,7 @@ whenLoaded.then(async () => {
           }
         });
       }
-      
+
       // Re-render to rebuild display units with new detachment (units will be re-categorized automatically)
       charactersSection.options = getDetachmentOptions(armyData, armyList.detachment);
       render(); // Rebuild cache with new detachment
@@ -685,9 +701,9 @@ whenLoaded.then(async () => {
 
   DataStore.init();
 
-  DataStore.addEventListener("change", async evt => {
+  DataStore.addEventListener('change', async evt => {
     switch (evt.detail.changeType) {
-      case "init":
+      case 'init':
         if (evt.detail.items.length) {
           armyList = DataStore.getItemById(id);
         }
@@ -698,7 +714,7 @@ whenLoaded.then(async () => {
         await init();
         recalculatePoints();
         break;
-      case "delete":
+      case 'delete':
         window.history.go(-1);
         break;
       default:
@@ -706,4 +722,4 @@ whenLoaded.then(async () => {
         break;
     }
   });
-});  
+});

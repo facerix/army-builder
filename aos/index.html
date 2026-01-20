@@ -1,220 +1,173 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Personnel</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://personnel.facerix.com/" />
+    <meta property="og:title" content="Personnel" />
+    <meta
+      property="og:description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta property="og:url" content="https://personnel.facerix.com/" />
+    <meta property="og:type" content="website" />
 
-<head>
-  <title>Personnel</title>
-  <meta charset="utf-8" />
-  <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" href="https://personnel.facerix.com/" />
-  <meta property="og:title" content="Personnel" />
-  <meta property="og:description"
-    content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-  <meta property="og:url" content="https://personnel.facerix.com/" />
-  <meta property="og:type" content="website" />
+    <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
+    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
 
-  <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
-  <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
-  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="modulepreload" href="./aos.js" />
 
-  <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="modulepreload" href="./aos.js" />
+    <style>
+      header.top {
+        background-color: #741910;
+        color: white;
 
-  <style>
-    header.top {
-      background-color: #741910;
-      color: white;
-
-      img {
-        filter: invert(1);
-      }
-    }
-
-    .faction-selector {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    main {
-      hr {
-        width: 100%
+        img {
+          filter: invert(1);
+        }
       }
 
-      .saved-lists {
+      .faction-selector {
         display: flex;
-        flex: 1 1 auto;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
         gap: 0.5rem;
-        justify-content: flex-start;
-        flex-direction: column;
-        align-content: center;
-        align-items: center;
       }
 
-      .list-slug {
-        display: inline-flex;
-        align-items: center;
-        height: fit-content;
-        gap: 0.25rem;
-
-        border: 2px double transparent;
-        border-radius: 4px;
-        padding: 0 1rem;
-
-        img.faction {
-          height: 2.5rem;
+      main {
+        hr {
+          width: 100%;
         }
 
-        &:hover {
-          border-color: #741910;
-        }
-      }
-
-      &.loading {
         .saved-lists {
-          display: none;
-          opacity: 0;
+          display: flex;
+          flex: 1 1 auto;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          justify-content: flex-start;
+          flex-direction: column;
+          align-content: center;
+          align-items: center;
+        }
+
+        .list-slug {
+          display: inline-flex;
+          align-items: center;
+          height: fit-content;
+          gap: 0.25rem;
+
+          border: 2px double transparent;
+          border-radius: 4px;
+          padding: 0 1rem;
+
+          img.faction {
+            height: 2.5rem;
+          }
+
+          &:hover {
+            border-color: #741910;
+          }
+        }
+
+        &.loading {
+          .saved-lists {
+            display: none;
+            opacity: 0;
+          }
+
+          .loader {
+            height: 100px;
+            display: block;
+            opacity: 1;
+          }
         }
 
         .loader {
-          height: 100px;
-          display: block;
-          opacity: 1;
+          display: none;
+          opacity: 0;
+          transition: opacity 250ms allow-discrete;
         }
       }
-      
-      .loader {
-        display: none;
-        opacity: 0;
-        transition: opacity 250ms allow-discrete;
+
+      @media (min-width: 768px) {
+        header > h1 {
+          margin-right: 90px;
+        }
       }
-    }
+    </style>
+  </head>
 
-    @media (min-width: 768px) {
-      header > h1 {
-        margin-right: 90px;
-      }
-    }
-  </style>
-</head>
+  <body class="u-fill-height">
+    <header class="top">
+      <a href="/">
+        <img src="/images/back.svg" alt="back arrow" />
+      </a>
+      <img src="/images/warhammer.svg" alt="Warhammer" />
+      <h1>AoS Lists</h1>
+    </header>
+    <main class="u-center loading">
+      <div class="faction-selector">
+        <span>Faction: </span>
+        <select id="faction">
+          <option value="">Select Faction</option>
+          <optgroup label="Chaos">
+            <option value="khorne">Blades of Khorne</option>
+            <option value="tzeentch">Disciples of Tzeentch</option>
+            <option value="slaanesh">Hedonites of Slaanesh</option>
+            <option value="nurgle">Maggotkin of Nurgle</option>
+            <option value="skaven">Skaven</option>
+            <option value="slavesToDarkness">Slaves to Darkness</option>
+          </optgroup>
 
-<body class="u-fill-height">
-  <header class="top">
-    <a href="/">
-      <img src="/images/back.svg" alt="back arrow" />
-    </a>
-    <img src="/images/warhammer.svg" alt="Warhammer" />
-    <h1>AoS Lists</h1>
-  </header>
-  <main class="u-center loading">
-    <div class="faction-selector">
-      <span>Faction: </span>
-      <select id="faction">
-        <option value="">Select Faction</option>
-        <optgroup label="Chaos">
-          <option value="khorne">
-            Blades of Khorne
-          </option>
-          <option value="tzeentch">
-            Disciples of Tzeentch
-          </option>
-          <option value="slaanesh">
-            Hedonites of Slaanesh
-          </option>
-          <option value="nurgle">
-            Maggotkin of Nurgle
-          </option>
-          <option value="skaven">
-            Skaven
-          </option>
-          <option value="slavesToDarkness">
-            Slaves to Darkness
-          </option>
-        </optgroup>
+          <optgroup label="Death">
+            <option value="fleshEaterCourts">Flesh-eater Courts</option>
+            <option value="nighthaunt">Nighthaunt</option>
+            <option value="bonereapers">Ossiarch Bonereapers</option>
+            <option value="gravelords">Soulblight Gravelords</option>
+          </optgroup>
 
-        <optgroup label="Death">
-          <option value="fleshEaterCourts">
-            Flesh-eater Courts
-          </option>
-          <option value="nighthaunt">
-            Nighthaunt
-          </option>
-          <option value="bonereapers">
-            Ossiarch Bonereapers
-          </option>
-          <option value="gravelords">
-            Soulblight Gravelords
-          </option>
-        </optgroup>
+          <optgroup label="Destruction">
+            <option value="gloomspite">Gloomspite Gitz</option>
+            <option value="ironjawz">Ironjawz</option>
+            <option value="kruleboyz">Kruleboyz</option>
+            <option value="ogors">Ogor Mawtribes</option>
+            <option value="sonsOfBehemat">Sons of Behemat</option>
+          </optgroup>
 
-        <optgroup label="Destruction">
-          <option value="gloomspite">
-            Gloomspite Gitz
-          </option>
-          <option value="ironjawz">
-            Ironjawz
-          </option>
-          <option value="kruleboyz">
-            Kruleboyz
-          </option>
-          <option value="ogors">
-            Ogor Mawtribes
-          </option>
-          <option value="sonsOfBehemat">
-            Sons of Behemat
-          </option>
-        </optgroup>
+          <optgroup label="Order">
+            <option value="citiesOfSigmar">Cities of Sigmar</option>
+            <option value="daughtersOfKhaine">Daughters of Khaine</option>
+            <option value="fyreslayers">Fyreslayers</option>
+            <option value="idonethDeepkin">Idoneth Deepkin</option>
+            <option value="kharadronOverlords">Kharadron Overlords</option>
+            <option value="luminethRealmlords">Lumineth Realm-lords</option>
+            <option value="seraphon">Seraphon</option>
+            <option value="stormcast">Stormcast Eternals</option>
+            <option value="sylvaneth">Sylvaneth</option>
+          </optgroup>
+        </select>
+        <button disabled>New list</button>
+      </div>
 
-        <optgroup label="Order">
-          <option value="citiesOfSigmar">
-            Cities of Sigmar
-          </option>
-          <option value="daughtersOfKhaine">
-            Daughters of Khaine
-          </option>
-          <option value="fyreslayers">
-            Fyreslayers
-          </option>
-          <option value="idonethDeepkin">
-            Idoneth Deepkin
-          </option>
-          <option value="kharadronOverlords">
-            Kharadron Overlords
-          </option>
-          <option value="luminethRealmlords">
-            Lumineth Realm-lords
-          </option>
-          <option value="seraphon">
-            Seraphon
-          </option>
-          <option value="stormcast">
-            Stormcast Eternals
-          </option>
-          <option value="sylvaneth">
-            Sylvaneth
-          </option>
-        </optgroup>
-      </select>
-      <button disabled>New list</button>
-    </div>
+      <hr />
+      <h5>Saved lists</h5>
+      <img src="/images/aos-infinite-spinner.svg" alt="loading indicator" class="loader" />
+      <div class="saved-lists"></div>
+    </main>
 
-    <hr>
-    <h5>Saved lists</h5>
-    <img src="/images/aos-infinite-spinner.svg" alt="loading indicator" class="loader" />
-    <div class="saved-lists"> </div>
-  </main>
+    <footer id="main-foot">A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation</footer>
 
-  <footer id="main-foot">
-    A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation
-  </footer>
-
-  <update-notification></update-notification>
-</body>
-<script src="./aos.js" type="module"></script>
-
+    <update-notification></update-notification>
+  </body>
+  <script src="./aos.js" type="module"></script>
 </html>

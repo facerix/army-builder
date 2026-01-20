@@ -12,7 +12,7 @@ const cachedArmyData = {};
  * @param {string} faction - Full faction name (e.g., "Adepta Sororitas")
  * @returns {Promise<Object>} Processed army data with points
  */
-export const get40kArmyData = async (faction) => {
+export const get40kArmyData = async faction => {
   // Check cache first
   if (cachedArmyData[faction]) {
     return cachedArmyData[faction];
@@ -38,32 +38,36 @@ export const get40kArmyData = async (faction) => {
     // Handle parent faction loading for Space Marine chapters
     if (rawFactionData.chapterInfo?.parentFaction) {
       const parentFactionName = rawFactionData.chapterInfo.parentFaction;
-      
+
       // Get parent faction points
       const parentPoints = POINTS[parentFactionName] || { units: {}, enhancements: {} };
-      
+
       // Load parent faction data
-      const parentModule = await import(`./army-data/${FACTION_NAMES_TO_CODES[parentFactionName]}.js`);
+      const parentModule = await import(
+        `./army-data/${FACTION_NAMES_TO_CODES[parentFactionName]}.js`
+      );
       const parentFaction = parentModule.factionData;
-      
+
       if (parentFaction && parentPoints) {
         // Filter parent units to only include units that are not already in the factionUnitsWithPoints array
-        const parentUnitsWithPoints = parentFaction.units.filter((unit) => {
-          return !factionUnitsWithPoints.some((t) => t.name === unit.name);
-        }).map(u => getPointsForUnit(u, parentPoints.units));
-        
+        const parentUnitsWithPoints = parentFaction.units
+          .filter(unit => {
+            return !factionUnitsWithPoints.some(t => t.name === unit.name);
+          })
+          .map(u => getPointsForUnit(u, parentPoints.units));
+
         // Merge units arrays
         factionUnitsWithPoints.push(...parentUnitsWithPoints);
         factionUnitsWithPoints.sort(sortByName);
 
         // Merge enhancements
         if (rawFactionData.enhancements || parentFaction.enhancements) {
-          rawFactionData.enhancements = { 
-            ...(parentFaction.enhancements || {}), 
-            ...(rawFactionData.enhancements || {}) 
+          rawFactionData.enhancements = {
+            ...(parentFaction.enhancements || {}),
+            ...(rawFactionData.enhancements || {}),
           };
         }
-        
+
         // Merge points (parent points override child points for same keys)
         points.units = { ...parentPoints.units, ...points.units };
         points.enhancements = { ...parentPoints.enhancements, ...points.enhancements };
@@ -75,7 +79,7 @@ export const get40kArmyData = async (faction) => {
       units: factionUnitsWithPoints,
       detachments: getPointsForDetachments(rawFactionData.detachments, points.enhancements),
     };
-    
+
     // Cache the result
     cachedArmyData[faction] = dataWithPoints;
     return dataWithPoints;
@@ -95,7 +99,7 @@ const getPointsForUnit = (unit, points) => {
   const pointsForUnit = points[unit.name] ?? 0;
   return {
     ...unit,
-    points: pointsForUnit
+    points: pointsForUnit,
   };
 };
 
@@ -119,4 +123,3 @@ const getPointsForDetachments = (detachmentData, pointsData) => {
   });
   return detachmentWithPoints;
 };
-

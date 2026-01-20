@@ -1,8 +1,8 @@
 /**
  * Function for consisely creating a chunk of HTML nodes
- * @param {string} tagName 
- * @param {Object | Map} attrs 
- * @param {HTMLElement[]} children 
+ * @param {string} tagName
+ * @param {Object | Map} attrs
+ * @param {HTMLElement[]} children
  * @returns HTMLElement
  */
 export const h = (tagName, attrs, children) => {
@@ -14,31 +14,31 @@ export const h = (tagName, attrs, children) => {
   }
   children?.forEach(child => el.appendChild(child));
   return el;
-}
+};
 
 /**
  * Useful little template literal tagging function to make template strings behave more like JSX
  * taken almost verbatim from https://blog.jim-nielsen.com/2019/jsx-like-syntax-for-tagged-template-literals/
- * @param {string[]} strings 
- * @param {string[]} values 
+ * @param {string[]} strings
+ * @param {string[]} values
  * @returns string
  */
 export function jsx(strings, ...values) {
-  let out = "";
+  let out = '';
   strings.forEach((string, i) => {
     const value = values[i];
 
     // Array - Join to string and output with value
     if (Array.isArray(value)) {
-      out += string + value.join("");
+      out += string + value.join('');
     }
     // String - Output with value
-    else if (typeof value === "string") {
+    else if (typeof value === 'string') {
       out += string + value;
     }
     // Number - Coerce to string and output with value
     // This would happen anyway, but for clarity's sake on what's happening here
-    else if (typeof value === "number") {
+    else if (typeof value === 'number') {
       out += string + String(value);
     }
     // object, undefined, null, boolean - Don't output a value.
@@ -47,7 +47,7 @@ export function jsx(strings, ...values) {
     }
   });
   return out;
-};
+}
 
 /**
  * Utility function to wrap an array of things in an HTML list
@@ -57,44 +57,44 @@ export function jsx(strings, ...values) {
  */
 export const listify = (arrayOfThings, isOrdered) => {
   return [
-    isOrdered ? "<ol>" : "<ul>",
+    isOrdered ? '<ol>' : '<ul>',
     ...arrayOfThings.map(i => `<li>${i}</li>`),
-    isOrdered ? "</ol>" : "</ul>"
+    isOrdered ? '</ol>' : '</ul>',
   ].join('\n');
-}
+};
 
 export const pluralize = (quantity, thing) => {
   return jsx`
 		${quantity} ${thing}${quantity !== 1 && 's'}
 	`;
-}
+};
 
-export const CreateSvg = (body, width, height, classNames = "") => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("width", width);
-  svg.setAttribute("height", height);
-  svg.setAttribute("viewBox", "0 0 24 24");
-  classNames && svg.setAttribute("class", classNames);
+export const CreateSvg = (body, width, height, classNames = '') => {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', width);
+  svg.setAttribute('height', height);
+  svg.setAttribute('viewBox', '0 0 24 24');
+  classNames && svg.setAttribute('class', classNames);
   svg.innerHTML = body;
   return svg;
 };
 
 // not intended to be fully-featured; I'll build it out as I need it
-export const htmlToMarkdown = (html) => {
-  let out = "";
+export const htmlToMarkdown = html => {
+  let out = '';
   html.childNodes.forEach(nd => {
     if (nd.nodeType === Node.ELEMENT_NODE) {
       switch (nd.tagName) {
-        case "P":
+        case 'P':
           out += `\n${htmlToMarkdown(nd)}\n`;
           break;
-        case "STRONG":
+        case 'STRONG':
           out += `*${nd.textContent}*`;
           break;
-        case "UL":
+        case 'UL':
           out += `\n\n${htmlToMarkdown(nd)}\n`;
           break;
-        case "LI":
+        case 'LI':
           out += `* ${htmlToMarkdown(nd)}\n`;
           break;
       }
@@ -104,24 +104,31 @@ export const htmlToMarkdown = (html) => {
   });
 
   return out;
-}
+};
 
-export const queryParams = (paramsObject) => {
-  return '?' + Object.keys(paramsObject).map(k => `${k}=${paramsObject[k]}`).join('&');
-}
+export const queryParams = paramsObject => {
+  return (
+    '?' +
+    Object.keys(paramsObject)
+      .map(k => `${k}=${paramsObject[k]}`)
+      .join('&')
+  );
+};
 
 /**
  * Centralized function to determine if the app is running in development mode
  * @returns {boolean} true if in development mode, false otherwise
  */
 export const isDevelopmentMode = () => {
-	try {
-		return location.hostname === 'localhost' || 
-		       location.hostname === '127.0.0.1' || 
-		       location.hostname.includes('local') ||
-		       location.search.includes('dev=true');
-	} catch (_error) {
-		// In case location is not available (e.g., in Service Worker context)
-		return false;
-	}
-}
+  try {
+    return (
+      location.hostname === 'localhost' ||
+      location.hostname === '127.0.0.1' ||
+      location.hostname.includes('local') ||
+      location.search.includes('dev=true')
+    );
+  } catch (_error) {
+    // In case location is not available (e.g., in Service Worker context)
+    return false;
+  }
+};

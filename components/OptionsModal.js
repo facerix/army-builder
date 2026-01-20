@@ -1,6 +1,14 @@
 import { h } from '../src/domUtils.js';
-import { optionFieldsetName, truncateSelectionsForUnitSize, findAvailableOption } from './option-renderers/OptionUtils.js';
-import { isExcludedItemPresent, getExcludedItemsPresent, formatExclusionReason } from './option-renderers/ExclusionManager.js';
+import {
+  optionFieldsetName,
+  truncateSelectionsForUnitSize,
+  findAvailableOption,
+} from './option-renderers/OptionUtils.js';
+import {
+  isExcludedItemPresent,
+  getExcludedItemsPresent,
+  formatExclusionReason,
+} from './option-renderers/ExclusionManager.js';
 import { renderOption } from './option-renderers/OptionRendererFactory.js';
 import { processOptionType, syncOptionsFromForm } from './option-renderers/FormParser.js';
 
@@ -244,56 +252,87 @@ const CSS = `
 }
 `;
 
-const WarlordOption = (checked) => {
-  return h("fieldset", { className: "warlord-option" }, [
-    h("label", { for: "warlord", innerText: "Warlord", className: "option-name" }),
-    h("input", { type: "checkbox", id: "warlord", name: "warlord", checked })
+const WarlordOption = checked => {
+  return h('fieldset', { className: 'warlord-option' }, [
+    h('label', { for: 'warlord', innerText: 'Warlord', className: 'option-name' }),
+    h('input', { type: 'checkbox', id: 'warlord', name: 'warlord', checked }),
   ]);
 };
 
 const EnhancementOption = (enhancements, currentEnhancement) => {
   const enhancementOptions = enhancements.length
     ? [
-      h("option", { value: "", innerText: "None" }),
-      ...enhancements.map(e => h("option", { value: e.name, innerText: `${e.name} (${e.points} points)`, selected: e.name === currentEnhancement }))
-    ]
-    : [h("option", { value: "", innerText: "None available" })];
-  return h("fieldset", { className: "enhancement-option" }, [
-    h("label", { innerText: "Enhancement:", className: "option-name" }),
-    h("select", { id: "enhancement", name: "enhancement" }, enhancementOptions)
+        h('option', { value: '', innerText: 'None' }),
+        ...enhancements.map(e =>
+          h('option', {
+            value: e.name,
+            innerText: `${e.name} (${e.points} points)`,
+            selected: e.name === currentEnhancement,
+          })
+        ),
+      ]
+    : [h('option', { value: '', innerText: 'None available' })];
+  return h('fieldset', { className: 'enhancement-option' }, [
+    h('label', { innerText: 'Enhancement:', className: 'option-name' }),
+    h('select', { id: 'enhancement', name: 'enhancement' }, enhancementOptions),
   ]);
 };
 
 const UnitSizeOption = (unitSizes, currentUnitSize) => {
   const unitSizeOptions = unitSizes.length
     ? [
-      ...unitSizes.map(u => {
-        const id = `unit-size-${u.modelCount}`;
-        const checked = Number(u.modelCount) === Number(currentUnitSize);
-        return [
-          h("input", { type: "radio", name: "unitSize", id, value: u.modelCount, checked }),
-          h("label", { className: "option-value", name: "unitSize", htmlFor: id, innerText: `${u.modelCount} (${u.points} points)`})
-        ];
-      }).flat()
-    ]
-    : [h("input", { type: "radio", value: "", selected: true })];
-  return h("fieldset", { className: "unit-size-option" }, [
-    h("label", { innerText: "Unit Size:", className: "option-name" }),
+        ...unitSizes
+          .map(u => {
+            const id = `unit-size-${u.modelCount}`;
+            const checked = Number(u.modelCount) === Number(currentUnitSize);
+            return [
+              h('input', { type: 'radio', name: 'unitSize', id, value: u.modelCount, checked }),
+              h('label', {
+                className: 'option-value',
+                name: 'unitSize',
+                htmlFor: id,
+                innerText: `${u.modelCount} (${u.points} points)`,
+              }),
+            ];
+          })
+          .flat(),
+      ]
+    : [h('input', { type: 'radio', value: '', selected: true })];
+  return h('fieldset', { className: 'unit-size-option' }, [
+    h('label', { innerText: 'Unit Size:', className: 'option-name' }),
     ...unitSizeOptions,
   ]);
 };
 
-const OptionFieldset = (optionType, optionOptions, currentOptions, labelText, defaultItems = [], availableOptions = [], allDefaultItems = [], allCurrentOptions = {}, allAvailableOptions = []) => {
+const OptionFieldset = (
+  optionType,
+  optionOptions,
+  currentOptions,
+  labelText,
+  defaultItems = [],
+  availableOptions = [],
+  allDefaultItems = [],
+  allCurrentOptions = {},
+  allAvailableOptions = []
+) => {
   const optionsKey = optionType; // "weapons" or "wargear"
   const unitSize = currentOptions.unitSize;
-  
+
   const optionsList = optionOptions.map(option => {
-    return renderOption(option, currentOptions, optionsKey, unitSize, allDefaultItems, allCurrentOptions, allAvailableOptions);
+    return renderOption(
+      option,
+      currentOptions,
+      optionsKey,
+      unitSize,
+      allDefaultItems,
+      allCurrentOptions,
+      allAvailableOptions
+    );
   });
 
-  return h("fieldset", { className: "option-options" }, [
-    h("label", { innerText: labelText, className: "option-name" }),
-    ...optionsList
+  return h('fieldset', { className: 'option-options' }, [
+    h('label', { innerText: labelText, className: 'option-name' }),
+    ...optionsList,
   ]);
 };
 
@@ -306,52 +345,54 @@ class OptionsModal extends HTMLElement {
 
   constructor() {
     super();
-    this.attachShadow({ mode: "open" });
+    this.attachShadow({ mode: 'open' });
   }
 
   connectedCallback() {
     if (this.#ready) return;
     const shadow = this.shadowRoot;
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.textContent = CSS;
     shadow.appendChild(style);
 
-    const wrapper = document.createElement("div");
+    const wrapper = document.createElement('div');
     wrapper.innerHTML = TEMPLATE;
     shadow.appendChild(wrapper);
 
-    this.dialog = shadow.querySelector("dialog");
-    this.titleElem = shadow.querySelector("#modalTitle");
-    this.btnClose = shadow.querySelector("#btnClose");
-    this.btnCancel = shadow.querySelector("#btnCancel");
-    this.btnSave = shadow.querySelector("#btnSave");
-    this.optionsList = shadow.querySelector(".options-list");
+    this.dialog = shadow.querySelector('dialog');
+    this.titleElem = shadow.querySelector('#modalTitle');
+    this.btnClose = shadow.querySelector('#btnClose');
+    this.btnCancel = shadow.querySelector('#btnCancel');
+    this.btnSave = shadow.querySelector('#btnSave');
+    this.optionsList = shadow.querySelector('.options-list');
 
-    this.btnClose.addEventListener("click", () => this.close());
-    this.btnCancel.addEventListener("click", () => this.close());
-    this.dialog.addEventListener("close", () => this.close());
+    this.btnClose.addEventListener('click', () => this.close());
+    this.btnCancel.addEventListener('click', () => this.close());
+    this.dialog.addEventListener('close', () => this.close());
 
     // Attach the submit event handler to the form element
-    this.form = shadow.querySelector("form");
+    this.form = shadow.querySelector('form');
     if (this.form) {
-      this.form.addEventListener("submit", (evt) => {
+      this.form.addEventListener('submit', evt => {
         evt.preventDefault();
         this.saveOptions();
       });
-      
+
       // Add change listeners for checkboxes to update counters dynamically and enforce max: 1
-      this.form.addEventListener("change", (evt) => {
-        if (evt.target.name === "unitSize") {
+      this.form.addEventListener('change', evt => {
+        if (evt.target.name === 'unitSize') {
           // Unit size changed, update options first then truncate and re-render to update effectiveMax
           this.#options.unitSize = parseInt(evt.target.value, 10);
           this.#truncateAllSelections();
           this.render();
-        } else if (evt.target.type === "checkbox" && evt.target.name) {
+        } else if (evt.target.type === 'checkbox' && evt.target.name) {
           // Check if this is a max: 1 checkbox option (no counter header, just checkboxes)
-          const optionItem = evt.target.closest(".option-item");
-          if (optionItem && !optionItem.classList.contains("option-item-multi")) {
+          const optionItem = evt.target.closest('.option-item');
+          if (optionItem && !optionItem.classList.contains('option-item-multi')) {
             // This might be a max: 1 checkbox group - check if we need to enforce single selection
-            const checkboxes = this.form.querySelectorAll(`input[type="checkbox"][name="${evt.target.name}"]`);
+            const checkboxes = this.form.querySelectorAll(
+              `input[type="checkbox"][name="${evt.target.name}"]`
+            );
             if (checkboxes.length > 1 && evt.target.checked) {
               // If max is 1, uncheck all other checkboxes when one is checked
               checkboxes.forEach(cb => {
@@ -369,9 +410,9 @@ class OptionsModal extends HTMLElement {
             this.updateMultiSelectCounter(baseName);
           }
         }
-        
+
         // Update exclusion states when any option changes (radio or checkbox)
-        if (evt.target.type === "radio" || evt.target.type === "checkbox") {
+        if (evt.target.type === 'radio' || evt.target.type === 'checkbox') {
           this.#updateExclusionStates();
         }
       });
@@ -384,47 +425,62 @@ class OptionsModal extends HTMLElement {
   // Update exclusion states dynamically when options change
   #updateExclusionStates() {
     // Sync current form state to check exclusions
-    this.#syncOptionsFromForm("weapons");
-    this.#syncOptionsFromForm("wargear");
-    
+    this.#syncOptionsFromForm('weapons');
+    this.#syncOptionsFromForm('wargear');
+
     // Prepare combined arrays for exclusion checks
     const allDefaultItems = [...(this.#defaultWeapons || []), ...(this.#defaultWargear || [])];
-    const allCurrentOptions = { weapons: this.#options.weapons || [], wargear: this.#options.wargear || [] };
-    const allAvailableOptions = [...(this.#availableOptions.weapons || []), ...(this.#availableOptions.wargear || [])];
-    
+    const allCurrentOptions = {
+      weapons: this.#options.weapons || [],
+      wargear: this.#options.wargear || [],
+    };
+    const allAvailableOptions = [
+      ...(this.#availableOptions.weapons || []),
+      ...(this.#availableOptions.wargear || []),
+    ];
+
     // Update disabled states for options with excludes
-    ["weapons", "wargear"].forEach(optionType => {
+    ['weapons', 'wargear'].forEach(optionType => {
       const availableOptions = this.#availableOptions[optionType] || [];
-      
+
       availableOptions.forEach(option => {
         if (option.excludes) {
           const isDisabled = isExcludedItemPresent(
-            option.excludes, 
-            allDefaultItems, 
+            option.excludes,
+            allDefaultItems,
             allCurrentOptions,
             allAvailableOptions,
             optionType
           );
           const fieldsetName = optionFieldsetName(option);
-          
+
           // Find all inputs for this option in the shadow DOM
           const shadowRoot = this.shadowRoot;
           if (shadowRoot) {
-            const inputs = shadowRoot.querySelectorAll(`input[name="${fieldsetName}"], input[name^="${fieldsetName}-"]`);
+            const inputs = shadowRoot.querySelectorAll(
+              `input[name="${fieldsetName}"], input[name^="${fieldsetName}-"]`
+            );
             inputs.forEach(input => {
               input.disabled = isDisabled;
             });
-            
+
             // Update exclusion reason text if present
             if (isDisabled) {
-              const excludedItems = getExcludedItemsPresent(option.excludes, allDefaultItems, allCurrentOptions, allAvailableOptions);
+              const excludedItems = getExcludedItemsPresent(
+                option.excludes,
+                allDefaultItems,
+                allCurrentOptions,
+                allAvailableOptions
+              );
               const exclusionReason = formatExclusionReason(excludedItems);
-              const optionItem = shadowRoot.querySelector(`input[name="${fieldsetName}"], input[name^="${fieldsetName}-"]`)?.closest(".option-item");
+              const optionItem = shadowRoot
+                .querySelector(`input[name="${fieldsetName}"], input[name^="${fieldsetName}-"]`)
+                ?.closest('.option-item');
               if (optionItem) {
-                let reasonElement = optionItem.querySelector(".option-legend-excludes");
+                let reasonElement = optionItem.querySelector('.option-legend-excludes');
                 if (!reasonElement && exclusionReason) {
-                  reasonElement = document.createElement("span");
-                  reasonElement.className = "option-legend-excludes";
+                  reasonElement = document.createElement('span');
+                  reasonElement.className = 'option-legend-excludes';
                   optionItem.appendChild(reasonElement);
                 }
                 if (reasonElement) {
@@ -433,9 +489,11 @@ class OptionsModal extends HTMLElement {
               }
             } else {
               // Remove exclusion reason if option is no longer disabled
-              const optionItem = shadowRoot.querySelector(`input[name="${fieldsetName}"], input[name^="${fieldsetName}-"]`)?.closest(".option-item");
+              const optionItem = shadowRoot
+                .querySelector(`input[name="${fieldsetName}"], input[name^="${fieldsetName}-"]`)
+                ?.closest('.option-item');
               if (optionItem) {
-                const reasonElement = optionItem.querySelector(".option-legend-excludes");
+                const reasonElement = optionItem.querySelector('.option-legend-excludes');
                 if (reasonElement) {
                   reasonElement.remove();
                 }
@@ -450,7 +508,7 @@ class OptionsModal extends HTMLElement {
   updateMultiSelectCounter(fieldsetName) {
     const shadow = this.shadowRoot;
     if (!shadow) return;
-    
+
     // Find all checkboxes that match this fieldset (including indexed names for selectionType: "any")
     const checkboxes = shadow.querySelectorAll(
       `input[type="checkbox"][name="${fieldsetName}"], input[type="checkbox"][name^="${fieldsetName}-"]`
@@ -460,19 +518,19 @@ class OptionsModal extends HTMLElement {
       `input[type="checkbox"][name="${fieldsetName}"], input[type="checkbox"][name^="${fieldsetName}-"]`
     );
     if (!firstCheckbox) return;
-    
-    const optionItem = firstCheckbox.closest(".option-item-multi");
+
+    const optionItem = firstCheckbox.closest('.option-item-multi');
     if (!optionItem) return;
-    
-    const counter = optionItem.querySelector(".option-counter");
-    const header = optionItem.querySelector(".option-legend-max");
-    
+
+    const counter = optionItem.querySelector('.option-counter');
+    const header = optionItem.querySelector('.option-legend-max');
+
     if (counter && header) {
       // Extract max from the option header text (e.g., "Select up to 2")
       const maxMatch = header.textContent.match(/\d+/);
       const max = maxMatch ? parseInt(maxMatch[0], 10) : 0;
       counter.textContent = `${checkedCount} / ${max} selected`;
-      
+
       // Enable/disable checkboxes based on max
       checkboxes.forEach(cb => {
         if (!cb.checked && checkedCount >= max) {
@@ -491,18 +549,22 @@ class OptionsModal extends HTMLElement {
     const { warlord, enhancement, unitSize, ...rest } = options;
     const savedOptions = this.#options[optionType] || [];
     const availableOptions = this.#availableOptions[optionType];
-    
+
     syncOptionsFromForm(optionType, savedOptions, availableOptions, formData, rest);
   }
 
   // Helper: Truncate selections for a single option type (weapons or wargear)
   #truncateSelectionsForOptionType(savedOptions, availableOptions, unitSize) {
     if (!savedOptions || !availableOptions) return;
-    
+
     savedOptions.forEach(savedOption => {
       const unitOption = findAvailableOption(savedOption, availableOptions);
       if (unitOption && savedOption.selected !== false && savedOption.selected !== undefined) {
-        savedOption.selected = truncateSelectionsForUnitSize(unitOption, savedOption.selected, unitSize);
+        savedOption.selected = truncateSelectionsForUnitSize(
+          unitOption,
+          savedOption.selected,
+          unitSize
+        );
       }
     });
   }
@@ -512,19 +574,19 @@ class OptionsModal extends HTMLElement {
   #truncateAllSelections() {
     const unitSize = this.#options.unitSize;
     if (!unitSize) return;
-    
+
     // Sync current form state to this.#options before truncating
-    this.#syncOptionsFromForm("weapons");
-    this.#syncOptionsFromForm("wargear");
-    
+    this.#syncOptionsFromForm('weapons');
+    this.#syncOptionsFromForm('wargear');
+
     this.#truncateSelectionsForOptionType(
-      this.#options.weapons, 
-      this.#availableOptions.weapons, 
+      this.#options.weapons,
+      this.#availableOptions.weapons,
       unitSize
     );
     this.#truncateSelectionsForOptionType(
-      this.#options.wargear, 
-      this.#availableOptions.wargear, 
+      this.#options.wargear,
+      this.#availableOptions.wargear,
       unitSize
     );
   }
@@ -582,63 +644,109 @@ class OptionsModal extends HTMLElement {
     // Truncate selections before saving to ensure validity
     const currentUnitSize = unitSize ? parseInt(unitSize, 10) : this.#options.unitSize;
     if (currentUnitSize) {
-      this.#truncateSelectionsForOptionType(weapons, this.#availableOptions.weapons, currentUnitSize);
-      this.#truncateSelectionsForOptionType(wargear, this.#availableOptions.wargear, currentUnitSize);
+      this.#truncateSelectionsForOptionType(
+        weapons,
+        this.#availableOptions.weapons,
+        currentUnitSize
+      );
+      this.#truncateSelectionsForOptionType(
+        wargear,
+        this.#availableOptions.wargear,
+        currentUnitSize
+      );
     }
 
     this.options = {
-      ...(warlord ? { warlord: warlord === "on" } : {}),
+      ...(warlord ? { warlord: warlord === 'on' } : {}),
       ...(enhancement ? { enhancement } : {}),
       ...(unitSize ? { unitSize: parseInt(unitSize, 10) } : {}),
       ...(weapons ? { weapons } : {}),
       ...(wargear ? { wargear } : {}),
     };
 
-    this.dispatchEvent(new CustomEvent("optionsSaved", {
-      detail: {
-        options: this.options
-      },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('optionsSaved', {
+        detail: {
+          options: this.options,
+        },
+        bubbles: true,
+        composed: true,
+      })
+    );
     this.close();
   }
 
   render() {
     if (this.optionsList && this.#availableOptions) {
-      this.optionsList.innerHTML = "";
+      this.optionsList.innerHTML = '';
       if (this.#options.warlord !== undefined) {
         this.optionsList.append(WarlordOption(this.#options.warlord));
       }
       if (this.#availableOptions.enhancements) {
-        this.optionsList.append(EnhancementOption(this.#availableOptions.enhancements, this.#options.enhancement));
+        this.optionsList.append(
+          EnhancementOption(this.#availableOptions.enhancements, this.#options.enhancement)
+        );
       }
       if (this.#availableOptions.unitSize) {
-        this.optionsList.append(UnitSizeOption(this.#availableOptions.unitSize, this.#options.unitSize));
+        this.optionsList.append(
+          UnitSizeOption(this.#availableOptions.unitSize, this.#options.unitSize)
+        );
       }
       // Prepare combined arrays for exclusion checks
       const allDefaultItems = [...(this.#defaultWeapons || []), ...(this.#defaultWargear || [])];
-      const allCurrentOptions = { weapons: this.#options.weapons || [], wargear: this.#options.wargear || [] };
-      const allAvailableOptions = { weapons: this.#availableOptions.weapons || [], wargear: this.#availableOptions.wargear || [] };
-      
+      const allCurrentOptions = {
+        weapons: this.#options.weapons || [],
+        wargear: this.#options.wargear || [],
+      };
+      const allAvailableOptions = {
+        weapons: this.#availableOptions.weapons || [],
+        wargear: this.#availableOptions.wargear || [],
+      };
+
       if (this.#availableOptions.weapons) {
-        this.optionsList.append(OptionFieldset("weapons", this.#availableOptions.weapons, this.#options, "Weapon options:", this.#defaultWeapons, this.#availableOptions.weapons, allDefaultItems, allCurrentOptions, allAvailableOptions));
+        this.optionsList.append(
+          OptionFieldset(
+            'weapons',
+            this.#availableOptions.weapons,
+            this.#options,
+            'Weapon options:',
+            this.#defaultWeapons,
+            this.#availableOptions.weapons,
+            allDefaultItems,
+            allCurrentOptions,
+            allAvailableOptions
+          )
+        );
       }
       if (this.#availableOptions.wargear) {
-        this.optionsList.append(OptionFieldset("wargear", this.#availableOptions.wargear, this.#options, "Wargear options:", this.#defaultWargear, this.#availableOptions.wargear, allDefaultItems, allCurrentOptions, allAvailableOptions));
+        this.optionsList.append(
+          OptionFieldset(
+            'wargear',
+            this.#availableOptions.wargear,
+            this.#options,
+            'Wargear options:',
+            this.#defaultWargear,
+            this.#availableOptions.wargear,
+            allDefaultItems,
+            allCurrentOptions,
+            allAvailableOptions
+          )
+        );
       }
-      
+
       // Update exclusion states after rendering
       this.#updateExclusionStates();
-      
+
       // Initialize counters for multi-select options
       if (this.#availableOptions.weapons) {
         this.#availableOptions.weapons.forEach(opt => {
           const fieldsetName = optionFieldsetName(opt);
           // Initialize counter if it's a multi-select option (max > 1, or has per property, or has selectionType)
-          if ((Array.isArray(opt.name) && opt.max > 1) || 
-              (opt.per && opt.max) || 
-              (opt.selectionType && Array.isArray(opt.name))) {
+          if (
+            (Array.isArray(opt.name) && opt.max > 1) ||
+            (opt.per && opt.max) ||
+            (opt.selectionType && Array.isArray(opt.name))
+          ) {
             this.updateMultiSelectCounter(fieldsetName);
           }
         });
@@ -647,9 +755,11 @@ class OptionsModal extends HTMLElement {
         this.#availableOptions.wargear.forEach(opt => {
           const fieldsetName = optionFieldsetName(opt);
           // Initialize counter if it's a multi-select option (max > 1, or has per property, or has selectionType)
-          if ((Array.isArray(opt.name) && opt.max > 1) || 
-              (opt.per && opt.max) || 
-              (opt.selectionType && Array.isArray(opt.name))) {
+          if (
+            (Array.isArray(opt.name) && opt.max > 1) ||
+            (opt.per && opt.max) ||
+            (opt.selectionType && Array.isArray(opt.name))
+          ) {
             this.updateMultiSelectCounter(fieldsetName);
           }
         });
@@ -658,4 +768,4 @@ class OptionsModal extends HTMLElement {
   }
 }
 
-customElements.define("options-modal", OptionsModal);
+customElements.define('options-modal', OptionsModal);

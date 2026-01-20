@@ -1,183 +1,184 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Personnel</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://personnel.facerix.com/" />
+    <meta property="og:title" content="Personnel" />
+    <meta
+      property="og:description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta property="og:url" content="https://personnel.facerix.com/" />
+    <meta property="og:type" content="website" />
 
-<head>
-  <title>Personnel</title>
-  <meta charset="utf-8" />
-  <meta name="description" content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#ffffff" />
-  <link rel="canonical" href="https://personnel.facerix.com/" />
-  <meta property="og:title" content="Personnel" />
-  <meta property="og:description"
-    content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar" />
-  <meta property="og:url" content="https://personnel.facerix.com/" />
-  <meta property="og:type" content="website" />
+    <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
+    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
 
-  <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
-  <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
-  <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="modulepreload" href="./40k.js" />
 
-  <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="modulepreload" href="./40k.js" />
+    <style>
+      header.top {
+        background-color: #274764;
+        color: white;
 
-  <style>
-    header.top {
-      background-color: #274764;
-      color: white;
-
-      img {
-        filter: invert(1);
-        height: 30px;
-      }
-    }
-
-    .faction-selector {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    main {
-      hr {
-        width: 100%
+        img {
+          filter: invert(1);
+          height: 30px;
+        }
       }
 
-      .saved-lists {
+      .faction-selector {
         display: flex;
-        flex: 1 1 auto;
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
         gap: 0.5rem;
-        justify-content: flex-start;
-        flex-direction: column;
-        align-content: center;
-        align-items: center;
       }
 
-      .list-slug {
-        display: inline-flex;
-        align-items: center;
-        height: fit-content;
-        gap: 0.25rem;
-
-        border: 2px double transparent;
-        border-radius: 4px;
-        padding: 0 1rem;
-
-        img.faction {
-          height: 2.5rem;
+      main {
+        hr {
+          width: 100%;
         }
 
-        &:hover {
-          border-color: #274764;
-        }
-      }
-
-      &.loading {
         .saved-lists {
-          display: none;
-          opacity: 0;
+          display: flex;
+          flex: 1 1 auto;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          justify-content: flex-start;
+          flex-direction: column;
+          align-content: center;
+          align-items: center;
+        }
+
+        .list-slug {
+          display: inline-flex;
+          align-items: center;
+          height: fit-content;
+          gap: 0.25rem;
+
+          border: 2px double transparent;
+          border-radius: 4px;
+          padding: 0 1rem;
+
+          img.faction {
+            height: 2.5rem;
+          }
+
+          &:hover {
+            border-color: #274764;
+          }
+        }
+
+        &.loading {
+          .saved-lists {
+            display: none;
+            opacity: 0;
+          }
+
+          .loader {
+            height: 100px;
+            display: block;
+            opacity: 1;
+          }
         }
 
         .loader {
-          height: 100px;
-          display: block;
-          opacity: 1;
+          display: none;
+          opacity: 0;
+          transition: opacity 250ms allow-discrete;
         }
       }
-      
-      .loader {
-        display: none;
-        opacity: 0;
-        transition: opacity 250ms allow-discrete;
+
+      @media (min-width: 768px) {
+        header > h1 {
+          margin-right: 130px;
+        }
       }
-    }
+    </style>
+  </head>
 
-    @media (min-width: 768px) {
-      header > h1 {
-        margin-right: 130px;
-      }
-    }
-  </style>
-</head>
+  <body class="u-fill-height">
+    <header class="top">
+      <a href="/">
+        <img src="/images/back.svg" alt="back arrow" />
+      </a>
+      <img src="/images/aquila.svg" alt="Warhammer logo" />
+      <h1>40k Lists</h1>
+    </header>
+    <main class="u-center loading">
+      <div class="faction-selector">
+        <span>Faction: </span>
+        <select id="faction">
+          <option value="">Select Faction</option>
+          <optgroup label="Imperium">
+            <option value="sisters">Adepta Sororitas</option>
+            <option value="custodes">Adeptus Custodes</option>
+            <option value="mechanicus">Adeptus Mechanicus</option>
+            <option value="astra">Astra Militarum</option>
+            <option value="greyKnights">Grey Knights</option>
+            <option value="imperialAgents">Imperial Agents</option>
+            <option value="imperialKnights">Imperial Knights</option>
+          </optgroup>
 
-<body class="u-fill-height">
-  <header class="top">
-    <a href="/">
-      <img src="/images/back.svg" alt="back arrow" />
-    </a>
-    <img src="/images/aquila.svg" alt="Warhammer logo" />
-    <h1>40k Lists</h1>
-  </header>
-  <main class="u-center loading">
-    <div class="faction-selector">
-      <span>Faction: </span>
-      <select id="faction">
-        <option value="">Select Faction</option>
-        <optgroup label="Imperium">
-          <option value="sisters">Adepta Sororitas</option>
-          <option value="custodes">Adeptus Custodes</option>
-          <option value="mechanicus">Adeptus Mechanicus</option>
-          <option value="astra">Astra Militarum</option>
-          <option value="greyKnights">Grey Knights</option>
-          <option value="imperialAgents">Imperial Agents</option>
-          <option value="imperialKnights">Imperial Knights</option>
-        </optgroup>
+          <optgroup label="Adeptus Astartes">
+            <option value="blackTemplars">Black Templars</option>
+            <option value="bloodAngels">Blood Angels</option>
+            <option value="darkAngels">Dark Angels</option>
+            <option value="deathwatch">Deathwatch</option>
+            <option value="imperialFists" class="u-hidden">Imperial Fists</option>
+            <option value="ironHands" class="u-hidden">Iron Hands</option>
+            <option value="ravenGuard" class="u-hidden">Raven Guard</option>
+            <option value="salamanders" class="u-hidden">Salamanders</option>
+            <option value="spaceMarines">Space Marines</option>
+            <option value="spaceWolves">Space Wolves</option>
+            <option value="ultramarines" class="u-hidden">Ultramarines</option>
+            <option value="whiteScars" class="u-hidden">White Scars</option>
+          </optgroup>
 
-        <optgroup label="Adeptus Astartes">
-          <option value="blackTemplars">Black Templars</option>
-          <option value="bloodAngels">Blood Angels</option>
-          <option value="darkAngels">Dark Angels</option>
-          <option value="deathwatch">Deathwatch</option>
-          <option value="imperialFists" class="u-hidden">Imperial Fists</option>
-          <option value="ironHands" class="u-hidden">Iron Hands</option>
-          <option value="ravenGuard" class="u-hidden">Raven Guard</option>
-          <option value="salamanders" class="u-hidden">Salamanders</option>
-          <option value="spaceMarines">Space Marines</option>
-          <option value="spaceWolves">Space Wolves</option>
-          <option value="ultramarines" class="u-hidden">Ultramarines</option>
-          <option value="whiteScars" class="u-hidden">White Scars</option>
-        </optgroup>
+          <optgroup label="Chaos">
+            <option value="chaosMarines">Chaos Space Marines</option>
+            <option value="deathGuard">Death Guard</option>
+            <option value="emperorsChildren">Emperor's Children</option>
+            <option value="thousandSons">Thousand Sons</option>
+            <option value="worldEaters">World Eaters</option>
+            <option value="daemons">Chaos Daemons</option>
+            <option value="chaosKnights">Chaos Knights</option>
+          </optgroup>
 
-        <optgroup label="Chaos">
-          <option value="chaosMarines">Chaos Space Marines</option>
-          <option value="deathGuard">Death Guard</option>
-          <option value="emperorsChildren">Emperor's Children</option>
-          <option value="thousandSons">Thousand Sons</option>
-          <option value="worldEaters">World Eaters</option>
-          <option value="daemons">Chaos Daemons</option>
-          <option value="chaosKnights">Chaos Knights</option>
-        </optgroup>
+          <optgroup label="Xenos">
+            <option value="aeldari">Aeldari</option>
+            <option value="drukhari">Drukhari</option>
+            <option value="gsc">Genestealer Cults</option>
+            <option value="votann">Leagues of Votann</option>
+            <option value="necrons">Necrons</option>
+            <option value="orks">Orks</option>
+            <option value="tyranids">Tyranids</option>
+            <option value="tau">T'au Empire</option>
+          </optgroup>
+        </select>
+        <button disabled>New list</button>
+      </div>
 
-        <optgroup label="Xenos">
-          <option value="aeldari">Aeldari</option>
-          <option value="drukhari">Drukhari</option>
-          <option value="gsc">Genestealer Cults</option>
-          <option value="votann">Leagues of Votann</option>
-          <option value="necrons">Necrons</option>
-          <option value="orks">Orks</option>
-          <option value="tyranids">Tyranids</option>
-          <option value="tau">T'au Empire</option>
-        </optgroup>
-      </select>
-      <button disabled>New list</button>
-    </div>
+      <hr />
+      <h5>Saved lists</h5>
+      <img src="/images/40k-dots.svg" alt="loading indicator" class="loader" />
+      <div class="saved-lists"></div>
+    </main>
 
-    <hr>
-    <h5>Saved lists</h5>
-    <img src="/images/40k-dots.svg" alt="loading indicator" class="loader" />
-    <div class="saved-lists"> </div>
-  </main>
+    <footer id="main-foot">A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation</footer>
 
-  <footer id="main-foot">
-    A&nbsp;<a href="/about.html">Facerix</a>&nbsp;creation
-  </footer>
-
-  <update-notification></update-notification>
-</body>
-<script src="./40k.js" type="module"></script>
-
+    <update-notification></update-notification>
+  </body>
+  <script src="./40k.js" type="module"></script>
 </html>

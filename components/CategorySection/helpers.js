@@ -1,11 +1,10 @@
-
 /**
  * Matches a single tag requirement against unit tags.
  * Supports:
  * - Simple tags: "Tag1" - unit must have Tag1
  * - Negated tags: "!Tag2" - unit must NOT have Tag2
  * - Compound tags: "Tag1+!Tag2" - unit must have Tag1 AND NOT Tag2
- * 
+ *
  * @param {string} tagRequirement - Single tag requirement to match
  * @param {string[]} unitTags - Tags that the unit has
  * @param {string} unitName - Name of the unit (for exact name matching)
@@ -45,7 +44,7 @@ export const matchesSingleTagRequirement = (tagRequirement, unitTags, unitName) 
  * - Negated tags: "!Tag2" - unit must NOT have Tag2
  * - Compound tags: "Tag1+!Tag2" - unit must have Tag1 AND NOT Tag2
  * - Array of tags: ["Tag1+!Tag2", "Tag3"] - (Tag1 AND NOT Tag2) OR Tag3
- * 
+ *
  * @param {string|string[]} tagRequirements - Tag requirement(s) to match (can be array for OR logic)
  * @param {string[]} unitTags - Tags that the unit has
  * @param {string} unitName - Name of the unit (for exact name matching)
@@ -76,8 +75,10 @@ export const matchOptionByName = (optionName, savedOptionName) => {
   if (Array.isArray(optionName)) {
     if (Array.isArray(savedOptionName)) {
       // Compare arrays by checking if they have the same length and same elements
-      return optionName.length === savedOptionName.length && 
-             optionName.every((val, idx) => val === savedOptionName[idx]);
+      return (
+        optionName.length === savedOptionName.length &&
+        optionName.every((val, idx) => val === savedOptionName[idx])
+      );
     }
     // If savedOptionName is not an array but selected is set, check if selected value is in optionName array
     return false; // We'll check selected separately
@@ -112,22 +113,25 @@ export const calculateEffectiveMax = (option, unitSize) => {
  */
 export const truncateSelectionsForUnitSize = (option, selected, newUnitSize) => {
   if (!option.per || !option.max) return selected;
-  
+
   const newEffectiveMax = calculateEffectiveMax(option, newUnitSize);
-  
+
   // Handle array selections (selectionType: "any" or "anyNoDuplicates")
-  if ((option.selectionType === "any" || option.selectionType === "anyNoDuplicates") && Array.isArray(selected)) {
+  if (
+    (option.selectionType === 'any' || option.selectionType === 'anyNoDuplicates') &&
+    Array.isArray(selected)
+  ) {
     return selected.length > newEffectiveMax ? selected.slice(0, newEffectiveMax) : selected;
   }
-  
+
   // Handle single-string with per (integer count)
   if (typeof option.name === 'string' && option.per && typeof selected === 'number') {
     return Math.min(selected, newEffectiveMax);
   }
-  
+
   // Handle selectionType: "all" (string value) - no truncation needed, value is still valid
   // (though the option might not exist if array was changed, but that's handled elsewhere)
-  
+
   return selected;
 };
 
@@ -140,12 +144,13 @@ export const truncateSelectionsForUnitSize = (option, selected, newUnitSize) => 
  */
 export const optionsForUnit = (categoryOptions, unit, includeEnhancements = false) => {
   const availableOptions = {};
-  if (!unit.tags?.includes("Epic Hero") && includeEnhancements) {
+  if (!unit.tags?.includes('Epic Hero') && includeEnhancements) {
     // filter enhancements to either match unit name or tags (e.g. "exo-armor")
-    availableOptions.enhancements = categoryOptions?.enhancements?.filter(o => {
-      // Check if enhancement matches tag requirements (handles arrays, compound tags, negation)
-      return matchesTagRequirement(o.tags, unit.tags || [], unit.name);
-    }) ?? [];
+    availableOptions.enhancements =
+      categoryOptions?.enhancements?.filter(o => {
+        // Check if enhancement matches tag requirements (handles arrays, compound tags, negation)
+        return matchesTagRequirement(o.tags, unit.tags || [], unit.name);
+      }) ?? [];
   }
   // other options
   if (unit.unitOptions) {
@@ -201,7 +206,10 @@ export const optionsForUnit = (categoryOptions, unit, includeEnhancements = fals
  * @returns {Object} The normalized unit options
  */
 export const getUnitCurrentOptions = (unit, isHeroUnit = false) => {
-  const sizeOption = unit.options?.unitSize ?? unit.modelCount ? { unitSize: unit.options?.unitSize || unit.modelCount } : {};
+  const sizeOption =
+    (unit.options?.unitSize ?? unit.modelCount)
+      ? { unitSize: unit.options?.unitSize || unit.modelCount }
+      : {};
   return {
     ...(isHeroUnit ? { warlord: false } : {}),
     ...(unit.options ? unit.options : {}),

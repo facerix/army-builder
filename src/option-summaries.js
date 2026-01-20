@@ -2,11 +2,11 @@
 const findAndRemoveReplacedItems = (actualItems, replaces) => {
   if (Array.isArray(replaces)) {
     // Check if first element is "&" (AND) or "|" (OR)
-    const isAnd = replaces[0] === "&";
-    const isOr = replaces[0] === "|";
+    const isAnd = replaces[0] === '&';
+    const isOr = replaces[0] === '|';
     // Get actual item names (skip first element if it's "&" or "|")
     const itemNames = isAnd || isOr ? replaces.slice(1) : replaces;
-    
+
     if (isAnd) {
       // AND logic: all items must be found
       const itemsToRemove = [];
@@ -43,8 +43,13 @@ const findAndRemoveReplacedItems = (actualItems, replaces) => {
 };
 
 // Helper: Check if an option is selected
-const isOptionSelected = (opt) => {
-  if (opt.selected === false || opt.selected === undefined || opt.selected === "off" || opt.selected === 0) {
+const isOptionSelected = opt => {
+  if (
+    opt.selected === false ||
+    opt.selected === undefined ||
+    opt.selected === 'off' ||
+    opt.selected === 0
+  ) {
     return false;
   }
   if (Array.isArray(opt.selected) && opt.selected.length === 0) {
@@ -56,35 +61,39 @@ const isOptionSelected = (opt) => {
 // Helper: Find full option definition from definitions array
 const findFullOptionDefinition = (opt, fullOptionDefinitions) => {
   if (!fullOptionDefinitions) return opt;
-  
-  return fullOptionDefinitions.find(full => {
-    if (Array.isArray(full.name)) {
-      if (Array.isArray(opt.name)) {
-        return full.name.length === opt.name.length && 
-               full.name.every((val, idx) => val === opt.name[idx]);
+
+  return (
+    fullOptionDefinitions.find(full => {
+      if (Array.isArray(full.name)) {
+        if (Array.isArray(opt.name)) {
+          return (
+            full.name.length === opt.name.length &&
+            full.name.every((val, idx) => val === opt.name[idx])
+          );
+        }
+        return false;
       }
-      return false;
-    }
-    return full.name === opt.name;
-  }) || opt;
+      return full.name === opt.name;
+    }) || opt
+  );
 };
 
 // Helper: Remove items from actualItems by count (for per-based replacements)
 const removeItemsByCount = (actualItems, itemsToRemove, countToRemove) => {
   let remainingToRemove = countToRemove;
   const targetNames = [...new Set(itemsToRemove.map(item => item.name))];
-  
+
   for (const targetName of targetNames) {
     if (remainingToRemove <= 0) break;
-    
+
     const matchingItems = actualItems.filter(item => item.name === targetName);
-    
+
     for (const item of matchingItems) {
       if (remainingToRemove <= 0) break;
-      
+
       const itemIndex = actualItems.indexOf(item);
       if (itemIndex === -1) continue;
-      
+
       if (item.count <= remainingToRemove) {
         actualItems.splice(itemIndex, 1);
         remainingToRemove -= item.count;
@@ -112,13 +121,13 @@ const addUpgrade = (actualItems, upgrade, replaces, countStrategy = 'full') => {
     actualItems.push(upgrade);
     return;
   }
-  
+
   const itemsToRemove = findAndRemoveReplacedItems(actualItems, replaces);
   if (itemsToRemove.length === 0) {
     actualItems.push(upgrade);
     return;
   }
-  
+
   if (countStrategy === 'per' && typeof upgrade.count === 'number') {
     // Per-based: remove only the specified count
     removeItemsByCount(actualItems, itemsToRemove, upgrade.count);
@@ -151,7 +160,7 @@ const handlePerBasedOption = (opt, fullOpt, actualItems, unitSize) => {
   if (typeof opt.name !== 'string' || !fullOpt.per || typeof opt.selected !== 'number') {
     return false;
   }
-  
+
   const upgrade = { ...opt, count: opt.selected, selected: opt.name };
   addUpgrade(actualItems, upgrade, opt.replaces, 'per');
   return true;
@@ -159,19 +168,19 @@ const handlePerBasedOption = (opt, fullOpt, actualItems, unitSize) => {
 
 // Handler: SelectionType "all" (selected is the option name string)
 const handleSelectionTypeAll = (opt, fullOpt, actualItems, unitSize) => {
-  const isAll = fullOpt.selectionType === "all" || opt.selectionType === "all";
+  const isAll = fullOpt.selectionType === 'all' || opt.selectionType === 'all';
   if (!isAll || !Array.isArray(opt.name) || typeof opt.selected !== 'string') {
     return false;
   }
-  
+
   if (!opt.name.includes(opt.selected)) {
     return false;
   }
-  
-  const upgrade = { 
+
+  const upgrade = {
     name: opt.selected,
-    count: unitSize, 
-    selected: opt.selected 
+    count: unitSize,
+    selected: opt.selected,
   };
   addUpgrade(actualItems, upgrade, opt.replaces, 'useReplaced');
   return true;
@@ -179,18 +188,18 @@ const handleSelectionTypeAll = (opt, fullOpt, actualItems, unitSize) => {
 
 // Handler: SelectionType "any" - string selection (radio button)
 const handleSelectionTypeAnyString = (opt, actualItems, unitSize) => {
-  if (typeof opt.selected !== 'string' || opt.selected === "off" || opt.selected === false) {
+  if (typeof opt.selected !== 'string' || opt.selected === 'off' || opt.selected === false) {
     return false;
   }
-  
+
   if (!opt.name.includes(opt.selected)) {
     return false;
   }
-  
-  const upgrade = { 
+
+  const upgrade = {
     name: opt.selected,
-    count: unitSize, 
-    selected: opt.selected 
+    count: unitSize,
+    selected: opt.selected,
   };
   addUpgrade(actualItems, upgrade, opt.replaces, 'useReplaced');
   return true;
@@ -201,39 +210,39 @@ const handleSelectionTypeAnyArray = (opt, actualItems, unitSize) => {
   if (!Array.isArray(opt.selected)) {
     return false;
   }
-  
+
   // Count occurrences of each option name
   const counts = {};
   opt.selected.forEach(selectedValue => {
     counts[selectedValue] = (counts[selectedValue] || 0) + 1;
   });
-  
+
   // Create one upgrade item per unique option name with its count
   Object.entries(counts).forEach(([selectedValue, count]) => {
     const upgrade = { ...opt, count, selected: selectedValue };
     const itemsToRemove = opt.replaces ? findAndRemoveReplacedItems(actualItems, opt.replaces) : [];
-    
+
     if (itemsToRemove.length > 0) {
       const totalReplaceCount = removeAllMatchingItems(actualItems, itemsToRemove);
       actualItems.push({
         ...upgrade,
-        count: Math.min(totalReplaceCount, count)
+        count: Math.min(totalReplaceCount, count),
       });
     } else {
       actualItems.push(upgrade);
     }
   });
-  
+
   return true;
 };
 
 // Handler: Generic array selections
 const handleGenericArraySelection = (opt, actualItems, unitSize) => {
   const selectedValues = Array.isArray(opt.selected) ? opt.selected : [opt.selected];
-  
+
   selectedValues.forEach(selectedValue => {
     const isMultiSelectOption = Array.isArray(opt.name) && opt.max > 1;
-    const defaultCount = isMultiSelectOption ? 1 : (opt.max || unitSize);
+    const defaultCount = isMultiSelectOption ? 1 : opt.max || unitSize;
     const upgrade = { ...opt, count: defaultCount, selected: selectedValue };
     addUpgrade(actualItems, upgrade, opt.replaces, 'useReplaced');
   });
@@ -243,54 +252,69 @@ const handleGenericArraySelection = (opt, actualItems, unitSize) => {
 const buildSummary = (item, unitSize) => {
   const count = item.count || unitSize;
   const shouldPrefixMax1 = unitSize > 1 && item.max === 1 && count === 1;
-  const countStr = count > 1 || shouldPrefixMax1 ? `${count}x ` : "";
-  
+  const countStr = count > 1 || shouldPrefixMax1 ? `${count}x ` : '';
+
   let itemName;
   if (Array.isArray(item.name)) {
-    if (item.selected !== undefined && item.selected !== false && typeof item.selected === 'string') {
+    if (
+      item.selected !== undefined &&
+      item.selected !== false &&
+      typeof item.selected === 'string'
+    ) {
       itemName = item.selected;
-    } else if (typeof item.selected === 'number' && item.selected >= 0 && item.selected < item.name.length) {
+    } else if (
+      typeof item.selected === 'number' &&
+      item.selected >= 0 &&
+      item.selected < item.name.length
+    ) {
       itemName = item.name[item.selected];
     } else {
-      itemName = item.name[0] || item.name.join(", ");
+      itemName = item.name[0] || item.name.join(', ');
     }
   } else {
     itemName = item.name;
   }
-  
+
   // Ensure itemName is a string
   if (Array.isArray(itemName)) {
-    itemName = itemName[0] || itemName.join(", ");
+    itemName = itemName[0] || itemName.join(', ');
   }
   if (!itemName || itemName === 'null' || itemName === 'undefined') {
-    itemName = Array.isArray(item.name) ? (item.name[0] || 'Unknown') : String(item.name || 'Unknown');
+    itemName = Array.isArray(item.name)
+      ? item.name[0] || 'Unknown'
+      : String(item.name || 'Unknown');
   }
-  
+
   return `${countStr}${itemName}`;
 };
 
-export const getOptionSummaries = (defaultItems, itemOptions, unitSize, fullOptionDefinitions = null) => {
-  const actualItems = [ ...defaultItems ].map(w => ({ ...w, count: w.count || unitSize }));
-  
+export const getOptionSummaries = (
+  defaultItems,
+  itemOptions,
+  unitSize,
+  fullOptionDefinitions = null
+) => {
+  const actualItems = [...defaultItems].map(w => ({ ...w, count: w.count || unitSize }));
+
   itemOptions?.forEach(opt => {
     if (!isOptionSelected(opt)) {
       return;
     }
-    
+
     const fullOpt = findFullOptionDefinition(opt, fullOptionDefinitions);
-    
+
     // Try handlers in order - each returns true if it handled the option
     if (handlePerBasedOption(opt, fullOpt, actualItems, unitSize)) return;
     if (handleSelectionTypeAll(opt, fullOpt, actualItems, unitSize)) return;
-    
-    if (fullOpt.selectionType === "any") {
+
+    if (fullOpt.selectionType === 'any') {
       if (handleSelectionTypeAnyString(opt, actualItems, unitSize)) return;
       if (handleSelectionTypeAnyArray(opt, actualItems, unitSize)) return;
       return;
     }
-    
+
     handleGenericArraySelection(opt, actualItems, unitSize);
   });
 
   return actualItems.map(item => buildSummary(item, unitSize));
-}
+};

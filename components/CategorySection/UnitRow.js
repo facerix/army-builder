@@ -157,78 +157,121 @@ class UnitRow extends HTMLElement {
     if (style) shadow.appendChild(style);
 
     const safeOptions = this.#options || {};
-    
+
     const buttons = [
-      h("button", { className: "remove-unit", title: "remove unit" }, [
-        h("img", { src: "/images/circle-minus.svg", alt: "circle minus" })
-      ])
+      h('button', { className: 'remove-unit', title: 'remove unit' }, [
+        h('img', { src: '/images/circle-minus.svg', alt: 'circle minus' }),
+      ]),
     ];
     if (Object.keys(safeOptions).length > 0) {
-      buttons.unshift(h("button", { className: "options", title: "unit options" }, [
-        h("img", { src: "/images/gear.svg", alt: "gear" })
-      ]));
+      buttons.unshift(
+        h('button', { className: 'options', title: 'unit options' }, [
+          h('img', { src: '/images/gear.svg', alt: 'gear' }),
+        ])
+      );
     }
     if (isDevelopmentMode()) {
-      buttons.push(h("button", { className: "debug", title: "debug" }, [
-        h("img", { src: "/images/skull.svg", alt: "debug" })
-      ]));
+      buttons.push(
+        h('button', { className: 'debug', title: 'debug' }, [
+          h('img', { src: '/images/skull.svg', alt: 'debug' }),
+        ])
+      );
     }
 
     // options
     const optionsList = [];
     if (safeOptions?.enhancement) {
-      optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Enhancement</em>: ${safeOptions.enhancement}` }));
+      optionsList.push(
+        h('span', {
+          className: 'unit-option',
+          innerHTML: `<em>Enhancement</em>: ${safeOptions.enhancement}`,
+        })
+      );
     }
 
     // if there are weapon options, show e.g. "5x Plasma Axe" or whatever; otherwise just show "unit size N"
     let weaponProfiles = [];
-    weaponProfiles = getOptionSummaries(this.#unit.weapons || [], safeOptions.weapons, safeOptions.unitSize || this.#unit.modelCount, this.#unit.unitOptions?.weapons);
+    weaponProfiles = getOptionSummaries(
+      this.#unit.weapons || [],
+      safeOptions.weapons,
+      safeOptions.unitSize || this.#unit.modelCount,
+      this.#unit.unitOptions?.weapons
+    );
     if (weaponProfiles.length > 0) {
-      optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Weapons</em>: ${weaponProfiles.join(", ")}` }));
+      optionsList.push(
+        h('span', {
+          className: 'unit-option',
+          innerHTML: `<em>Weapons</em>: ${weaponProfiles.join(', ')}`,
+        })
+      );
     }
 
     // if there are wargear options, show e.g. "5x Preymark crest" or whatever
     let wargearProfiles = [];
-    wargearProfiles = getOptionSummaries(this.#unit.wargear || [], safeOptions.wargear, safeOptions.unitSize || this.#unit.modelCount, this.#unit.unitOptions?.wargear);
+    wargearProfiles = getOptionSummaries(
+      this.#unit.wargear || [],
+      safeOptions.wargear,
+      safeOptions.unitSize || this.#unit.modelCount,
+      this.#unit.unitOptions?.wargear
+    );
     if (wargearProfiles.length > 0) {
-      optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Wargear</em>: ${wargearProfiles.join(", ")}` }));
+      optionsList.push(
+        h('span', {
+          className: 'unit-option',
+          innerHTML: `<em>Wargear</em>: ${wargearProfiles.join(', ')}`,
+        })
+      );
     }
 
     if (weaponProfiles.length === 0 && wargearProfiles.length === 0 && safeOptions?.unitSize) {
-      optionsList.push(h("span", { className: "unit-option", innerHTML: `<em>Unit Size</em>: ${safeOptions.unitSize}` }));
+      optionsList.push(
+        h('span', {
+          className: 'unit-option',
+          innerHTML: `<em>Unit Size</em>: ${safeOptions.unitSize}`,
+        })
+      );
     }
 
     // tags
     const tags = [];
     if (safeOptions?.warlord) {
-      tags.push(h("span", { className: "unit-tag", innerText: "Warlord" }));
+      tags.push(h('span', { className: 'unit-tag', innerText: 'Warlord' }));
     }
-    if (this.#unit.tags?.includes("Epic Hero")) {
-      tags.push(h("span", { className: "unit-tag", innerText: "Epic" }));
+    if (this.#unit.tags?.includes('Epic Hero')) {
+      tags.push(h('span', { className: 'unit-tag', innerText: 'Epic' }));
     }
     // Show indicator for units with imported wargear that needs mapping
     if (safeOptions?.importedWargear) {
-      tags.push(h("span", { 
-        className: "unit-tag imported-wargear-indicator", 
-        innerText: "⚠️ Map Wargear",
-        title: "This unit has imported wargear that needs to be mapped"
-      }));
+      tags.push(
+        h('span', {
+          className: 'unit-tag imported-wargear-indicator',
+          innerText: '⚠️ Map Wargear',
+          title: 'This unit has imported wargear that needs to be mapped',
+        })
+      );
     }
 
-    const unitNamePlusCount = safeOptions?.unitSize ? `${safeOptions.unitSize}x ${this.#unit.name}` : this.#unit.name;
-    const row = h("div", { className: "unit-summary" }, [
-      h("div", { className: "unit-details" }, [
-        h("span", { className: "unit-name-line" }, [
-          h("span", { className: "unit-name", innerText: unitNamePlusCount }),
-          ...tags
+    const unitNamePlusCount = safeOptions?.unitSize
+      ? `${safeOptions.unitSize}x ${this.#unit.name}`
+      : this.#unit.name;
+    const row = h('div', { className: 'unit-summary' }, [
+      h('div', { className: 'unit-details' }, [
+        h('span', { className: 'unit-name-line' }, [
+          h('span', { className: 'unit-name', innerText: unitNamePlusCount }),
+          ...tags,
         ]),
-        h("span", { className: "unit-options" }, [ ...optionsList ]),
+        h('span', { className: 'unit-options' }, [...optionsList]),
       ]),
-      h("span", { className: "unit-pts points", innerText: `${this.#unit.points} Points` }),
+      h('span', { className: 'unit-pts points', innerText: `${this.#unit.points} Points` }),
       ...buttons,
-      ...(isDevelopmentMode() ? [
-        h("pre", { className: "debug-info u-hidden", innerText: JSON.stringify(this.#unit, null, 2) }),
-      ] : []),
+      ...(isDevelopmentMode()
+        ? [
+            h('pre', {
+              className: 'debug-info u-hidden',
+              innerText: JSON.stringify(this.#unit, null, 2),
+            }),
+          ]
+        : []),
     ]);
 
     // Set up event listeners for buttons
@@ -244,19 +287,23 @@ class UnitRow extends HTMLElement {
 
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('remove-unit', {
-          bubbles: true,
-          detail: { unitId: this.#unit.id }
-        }));
+        this.dispatchEvent(
+          new CustomEvent('remove-unit', {
+            bubbles: true,
+            detail: { unitId: this.#unit.id },
+          })
+        );
       });
     }
 
     if (optionsBtn) {
       optionsBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('options-clicked', {
-          bubbles: true,
-          detail: { unitId: this.#unit.id }
-        }));
+        this.dispatchEvent(
+          new CustomEvent('options-clicked', {
+            bubbles: true,
+            detail: { unitId: this.#unit.id },
+          })
+        );
       });
     }
 
