@@ -9,9 +9,10 @@ class UpdateNotification extends HTMLElement {
     super();
     this.pendingWorker = null;
     this.isVisible = false;
+    this.isUpdating = false;
     this.boundHandleUpdateNow = this.handleUpdateNow.bind(this);
     this.boundHandleUpdateLater = this.handleUpdateLater.bind(this);
-    
+
     // Attach shadow DOM
     this.attachShadow({ mode: 'open' });
   }
@@ -23,6 +24,11 @@ class UpdateNotification extends HTMLElement {
 
   disconnectedCallback() {
     this.cleanupEventListeners();
+    // Clean up update progress listener if it exists
+    if (this._updateProgressHandler) {
+      window.removeEventListener('sw-update-progress', this._updateProgressHandler);
+      this._updateProgressHandler = null;
+    }
   }
 
   render() {
@@ -63,19 +69,69 @@ class UpdateNotification extends HTMLElement {
           font-size: 14px;
         }
         
-        .update-notification button:hover {
+        .update-notification button:hover:not(:disabled) {
           background: #f0f0f0;
         }
         
-        .update-notification button:active {
+        .update-notification button:active:not(:disabled) {
           transform: scale(0.98);
+        }
+        
+        .update-notification button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+        
+        .updating-state {
+          display: none;
+        }
+        
+        .updating-state.active {
+          display: block;
+        }
+        
+        .update-actions {
+          display: block;
+        }
+        
+        .update-actions.hidden {
+          display: none;
+        }
+        
+        .spinner {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          border-top-color: white;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+          vertical-align: middle;
+          margin-right: 8px;
+        }
+        
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+        
+        .update-status {
+          font-size: 13px;
+          opacity: 0.9;
+          margin-top: 8px;
         }
       </style>
       <div class="update-notification">
-        <strong>Update Available!</strong>
-        <p>A new version of Personnel is ready.</p>
-        <button class="update-now">Update Now</button>
-        <button class="update-later">Later</button>
+        <strong class="title">Update Available!</strong>
+        <p class="message">A new version of Personnel is ready.</p>
+        <div class="update-actions">
+          <button class="update-now">Update Now</button>
+          <button class="update-later">Later</button>
+        </div>
+        <div class="updating-state">
+          <div class="spinner"></div>
+          <strong>Updating...</strong>
+          <p class="update-status">Please wait while we install the update.</p>
+        </div>
       </div>
     `;
   }
@@ -113,18 +169,20 @@ class UpdateNotification extends HTMLElement {
   show(pendingWorker) {
     this.pendingWorker = pendingWorker;
     const notification = this.shadowRoot.querySelector('.update-notification');
-    
+
     if (notification) {
       this.style.display = 'block';
       notification.style.display = 'block';
       this.isVisible = true;
-      
+
       // Dispatch custom event for analytics or other tracking
-      this.dispatchEvent(new CustomEvent('update-notification-shown', {
-        detail: { pendingWorker },
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('update-notification-shown', {
+          detail: { pendingWorker },
+          bubbles: true,
+          composed: true,
+        })
+      );
     } else {
       console.error('[UpdateNotification] Could not find .update-notification element');
     }
@@ -135,17 +193,52 @@ class UpdateNotification extends HTMLElement {
    */
   hide() {
     const notification = this.shadowRoot.querySelector('.update-notification');
-    
+
     if (notification) {
       this.style.display = 'none';
       notification.style.display = 'none';
       this.isVisible = false;
-      
+
       // Dispatch custom event
-      this.dispatchEvent(new CustomEvent('update-notification-hidden', {
-        bubbles: true,
-        composed: true
-      }));
+      this.dispatchEvent(
+        new CustomEvent('update-notification-hidden', {
+          bubbles: true,
+          composed: true,
+        })
+      );
+    }
+  }
+
+  /**
+   * Show updating state
+   */
+  showUpdating(status = 'Please wait while we install the update.') {
+    this.isUpdating = true;
+    const notification = this.shadowRoot.querySelector('.update-notification');
+    const actions = this.shadowRoot.querySelector('.update-actions');
+    const updatingState = this.shadowRoot.querySelector('.updating-state');
+    const statusText = this.shadowRoot.querySelector('.update-status');
+    const title = this.shadowRoot.querySelector('.title');
+    const message = this.shadowRoot.querySelector('.message');
+
+    if (notification && actions && updatingState) {
+      actions.classList.add('hidden');
+      updatingState.classList.add('active');
+      if (statusText) {
+        statusText.textContent = status;
+      }
+      if (title) {
+        title.textContent = 'Updating...';
+      }
+      if (message) {
+        message.style.display = 'none';
+      }
+
+      // Disable buttons
+      const buttons = this.shadowRoot.querySelectorAll('button');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+      });
     }
   }
 
@@ -153,20 +246,51 @@ class UpdateNotification extends HTMLElement {
    * Handle user accepting the update
    */
   handleUpdateNow() {
+    // Show updating state immediately
+    this.showUpdating('Activating new service worker...');
+
     // Dispatch custom event before updating
-    this.dispatchEvent(new CustomEvent('update-accepted', {
-      detail: { pendingWorker: this.pendingWorker },
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('update-accepted', {
+        detail: { pendingWorker: this.pendingWorker },
+        bubbles: true,
+        composed: true,
+      })
+    );
 
     // Delegate to ServiceWorkerManager for the actual update logic
     if (window.serviceWorkerManager) {
-      window.serviceWorkerManager.handleUpdateNow(this.pendingWorker);
+      // Listen for update progress events
+      const handleUpdateProgress = event => {
+        if (event.detail && event.detail.status) {
+          this.showUpdating(event.detail.status);
+        }
+      };
+
+      // Store handler reference for cleanup
+      this._updateProgressHandler = handleUpdateProgress;
+      window.addEventListener('sw-update-progress', handleUpdateProgress);
+
+      window.serviceWorkerManager.handleUpdateNow(this.pendingWorker).catch(error => {
+        console.error('[UpdateNotification] Update failed:', error);
+        // Show error state
+        this.showUpdating('Update failed. Please try again.');
+        this.isUpdating = false;
+        // Re-enable buttons on error
+        const buttons = this.shadowRoot.querySelectorAll('button');
+        buttons.forEach(btn => {
+          btn.disabled = false;
+        });
+        // Clean up event listener
+        if (this._updateProgressHandler) {
+          window.removeEventListener('sw-update-progress', this._updateProgressHandler);
+          this._updateProgressHandler = null;
+        }
+      });
     } else {
       console.error('[UpdateNotification] ServiceWorkerManager not available');
+      this.hide();
     }
-    this.hide();
   }
 
   /**
@@ -174,11 +298,13 @@ class UpdateNotification extends HTMLElement {
    */
   handleUpdateLater() {
     // Dispatch custom event
-    this.dispatchEvent(new CustomEvent('update-dismissed', {
-      bubbles: true,
-      composed: true
-    }));
-    
+    this.dispatchEvent(
+      new CustomEvent('update-dismissed', {
+        bubbles: true,
+        composed: true,
+      })
+    );
+
     this.hide();
   }
 
@@ -201,4 +327,3 @@ class UpdateNotification extends HTMLElement {
 customElements.define('update-notification', UpdateNotification);
 
 export default UpdateNotification;
-

@@ -3,7 +3,7 @@
 importScripts('/sw-core.js');
 
 // Configure cache using shared config helper
-const cacheConfig = CacheConfig.create('2.5.0');
+const cacheConfig = CacheConfig.create('2.7.0');
 const CACHE_VERSION = cacheConfig.version;
 const CACHE_NAMES = cacheConfig; // Object with name, staticName, runtimeName
 const CACHE_PREFIX = cacheConfig.prefix;
@@ -54,5 +54,12 @@ self.addEventListener('fetch', event => {
 
 // Message event - handle messages from the main thread
 self.addEventListener('message', event => {
-  ServiceWorkerCore.handleMessage(event, CACHE_NAMES.name, CACHE_VERSION, LOG_PREFIX);
+  // Handle async message handler for SKIP_WAITING
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    event.waitUntil(
+      ServiceWorkerCore.handleMessage(event, CACHE_NAMES.name, CACHE_VERSION, LOG_PREFIX)
+    );
+  } else {
+    ServiceWorkerCore.handleMessage(event, CACHE_NAMES.name, CACHE_VERSION, LOG_PREFIX);
+  }
 });

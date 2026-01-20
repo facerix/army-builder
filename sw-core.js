@@ -437,11 +437,28 @@ const ServiceWorkerCore = {
    * @param {string} cacheVersion - Version of the current cache
    * @param {string} logPrefix - Prefix for log messages
    */
-  handleMessage(event, cacheName, cacheVersion, logPrefix = '[SW]') {
+  async handleMessage(event, cacheName, cacheVersion, logPrefix = '[SW]') {
     console.log(`${logPrefix} Received message:`, event.data);
     
     if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
+      console.log(`${logPrefix} Skipping waiting and activating immediately...`);
+      await self.skipWaiting();
+      console.log(`${logPrefix} Service worker activated, claiming clients...`);
+      
+      // Claim all clients immediately to ensure old worker is replaced
+      await self.clients.claim();
+      
+      // Notify all clients that the new worker is active
+      const clients = await self.clients.matchAll({ includeUncontrolled: true });
+      console.log(`${logPrefix} Claimed ${clients.length} client(s), ready for new version`);
+      
+      // Send a message to all clients to let them know the update is complete
+      clients.forEach(client => {
+        client.postMessage({
+          type: 'SW_ACTIVATED',
+          version: cacheVersion
+        });
+      });
     }
     
     if (event.data && event.data.type === 'GET_CACHE_INFO') {

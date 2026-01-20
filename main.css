@@ -25,7 +25,7 @@ body {
   background-color: #f0f0f0;
   color: #303030;
 
-  font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+  font-family: Futura, 'Trebuchet MS', Arial, sans-serif;
   font-style: normal;
   font-variant: normal;
 }
@@ -61,17 +61,20 @@ header#main-head {
   color: inherit;
 
   h1 {
-    font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
     font-size: 24px;
   }
 }
 
-h1, h2, h3, h4 {
-  font-family: "Arial Black", "Arial Bold", Gadget, sans-serif;
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
   font-variant: common-ligatures small-caps;
 }
 
-#main-head>* {
+#main-head > * {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -168,7 +171,8 @@ section {
   }
 }
 
-.btn, button {
+.btn,
+button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -179,7 +183,7 @@ section {
   cursor: pointer;
   font-variant: common-ligatures small-caps;
   text-decoration: none;
-  
+
   img {
     height: 2em;
     width: 2em;
@@ -203,7 +207,7 @@ section {
 a.btn {
   &:not(:disabled):hover,
   &:not(:disabled):focus-visible {
-   text-decoration: underline;
+    text-decoration: underline;
   }
 }
 
@@ -256,12 +260,12 @@ a:focus-visible {
 /* background scroll fix for dialogs */
 /* see https://www.bram.us/2025/11/25/use-overscroll-behavior-contain-to-prevent-a-page-from-scrolling-while-a-dialog-is-open/ */
 dialog {
-	overscroll-behavior: contain;
+  overscroll-behavior: contain;
 }
 
 dialog::backdrop {
-	overflow: hidden;
-	overscroll-behavior: contain;
+  overflow: hidden;
+  overscroll-behavior: contain;
 }
 
 /* responsive design tweaks (breakpoints adopted from Bootstrap) */
@@ -293,7 +297,6 @@ dialog::backdrop {
     display: block;
   }
 }
-
 
 /* web component placeholders */
 site-header:not(:defined) {
