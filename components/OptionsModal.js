@@ -96,6 +96,7 @@ const CSS = `
       border-radius: 0.5em;
       border: 1px solid #ccc;
       background-color: #f0f0f0;
+      color: black;
       cursor: pointer;
     }
   }
