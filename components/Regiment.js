@@ -2,11 +2,15 @@ import './UnitModal.js';
 import { h } from '../src/domUtils.js';
 
 const UnitRow = (unit, isLeader) => {
+  // Unit should already have points pre-calculated from buildDisplayUnit
+  // For leader, use leaderPoints; for regular units, use points
+  const points = isLeader ? unit.leaderPoints || 0 : unit.points || 0;
+
   const row = h('div', { className: 'unit-summary' }, [
     h('span', { className: 'unit-name', innerText: isLeader ? unit.leader : unit.name }),
     h('span', {
       className: 'unit-pts points',
-      innerText: `${isLeader ? unit.leaderPoints : unit.points} Points`,
+      innerText: `${points} Points`,
     }),
     ...(isLeader
       ? [
@@ -166,6 +170,7 @@ class Regiment extends HTMLElement {
   #regimentData = null;
   #index = 0;
   #options = [];
+  #unitDefinitions = []; // All unit definitions for looking up points
   #leaderUnitElement = null;
   #regimentUnitsElement = null;
   #regimentTitleElement = null;
@@ -314,6 +319,11 @@ class Regiment extends HTMLElement {
 
   set options(options) {
     this.#options = options;
+  }
+
+  set unitDefinitions(definitions) {
+    this.#unitDefinitions = definitions;
+    // Note: unitDefinitions kept for modal options, but points are pre-calculated
   }
 
   get regimentData() {

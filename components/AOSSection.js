@@ -3,9 +3,12 @@ import './Regiment.js';
 import { h } from '../src/domUtils.js';
 
 const UnitRow = (unit, showOptions) => {
+  // Unit should already have points pre-calculated from buildDisplayUnit
+  const points = unit.points || 0;
+
   const row = h('div', { className: 'unit-summary' }, [
     h('span', { className: 'unit-name', innerText: unit.name }),
-    h('span', { className: 'unit-pts points', innerText: `${unit.points} Points` }),
+    h('span', { className: 'unit-pts points', innerText: `${points} Points` }),
     ...(showOptions
       ? [
           h('button', { className: 'options', title: 'unit options' }, [
@@ -180,12 +183,11 @@ class AOSSection extends HTMLElement {
                 ...unit,
                 name: `${unit.name}'s Regiment`,
                 leader: unit.name,
-                leaderPoints: unit.points,
                 units: [],
               }
             : unit;
         this.#data.push(unitToAdd);
-        this.#render();
+        this.#render(); // buildDisplayUnit will calculate points
         this.#emit('add', unitToAdd);
       });
 
@@ -259,14 +261,57 @@ class AOSSection extends HTMLElement {
     return this.#points ?? 0;
   }
 
+  /**
+   * Builds a display unit with points pre-calculated from definitions
+   * Similar to 40k's buildDisplayUnit - calculates points once and caches them
+   */
+  #buildDisplayUnit(unitInstance) {
+    // Helper to look up unit points from definitions
+    const getUnitPoints = unitName => {
+      const allUnits = [...this.#options, ...this.#subOptions];
+      const unitDef = allUnits.find(u => u.name === unitName);
+      return unitDef?.points || 0;
+    };
+
+    if (this.#mode === 'regiments') {
+      // For regiments, calculate leader points and unit points
+      const leaderPoints =
+        unitInstance.leaderPoints || getUnitPoints(unitInstance.leader || unitInstance.name);
+      // Build display units for units within the regiment (with points pre-calculated)
+      const displayUnits = (unitInstance.units || []).map(unit => ({
+        ...unit,
+        points: getUnitPoints(unit.name),
+      }));
+      const unitPoints = displayUnits.reduce((acc, unit) => acc + (unit.points || 0), 0);
+      return {
+        ...unitInstance,
+        leaderPoints,
+        units: displayUnits, // Replace with display units that have points
+        points: leaderPoints + unitPoints,
+      };
+    } else {
+      // For regular units, just add points
+      return {
+        ...unitInstance,
+        points: getUnitPoints(unitInstance.name),
+      };
+    }
+  }
+
   #render() {
     if (!this.#data) return;
 
+    // Build display units with points pre-calculated
+    const displayUnits = this.#data.map(unit => this.#buildDisplayUnit(unit));
+
+    // Recalculate total points from display units
+    this.#points = displayUnits.reduce((acc, unit) => acc + (unit.points || 0), 0);
+    this.pointsLabel.innerText = this.#points ? `${this.#points} Points` : '';
+
     this.contentContainer.innerHTML = '';
-    this.#data.forEach((regiment, index) =>
-      this.#mode === 'regiments' ? this.addRegiment(regiment, index) : this.addUnit(regiment)
+    displayUnits.forEach((unit, index) =>
+      this.#mode === 'regiments' ? this.addRegiment(unit, index) : this.addUnit(unit)
     );
-    this.recalculatePoints();
   }
 
   addRegiment(regiment, index) {
@@ -292,6 +337,8 @@ class AOSSection extends HTMLElement {
       .flat()
       .filter(o => o);
     regimentElement.options = modalOptions;
+    // Pass all unit definitions for point lookups
+    regimentElement.unitDefinitions = [...this.#options, ...this.#subOptions];
 
     // Set up event listeners for the regiment component
     regimentElement.addEventListener('removeRegiment', evt => {
@@ -307,7 +354,6 @@ class AOSSection extends HTMLElement {
       const { unit, regimentId } = evt.detail;
       const regiment = this.#data.find(r => r.id === regimentId);
       regiment.units.push(unit);
-      this.recalculatePoints();
       this.#render();
       this.#emit('update', regiment);
     });
@@ -332,7 +378,7 @@ class AOSSection extends HTMLElement {
     if (foundNode) {
       foundNode.remove();
       this.#data = this.#data.filter(r => r.id !== regimentId);
-      this.recalculatePoints();
+      this.#render();
       this.#emit('delete', regimentId);
     }
   }
@@ -346,7 +392,6 @@ class AOSSection extends HTMLElement {
         if (unitIndex !== -1) {
           regiment.units.splice(unitIndex, 1);
           this.#render();
-          this.recalculatePoints();
           this.#emit('update', regiment);
         }
       }
@@ -358,37 +403,20 @@ class AOSSection extends HTMLElement {
       if (foundNode) {
         foundNode.remove();
         this.#data = this.#data.filter(u => u.id !== unitId);
-        this.recalculatePoints();
+        this.#render();
         this.#emit('delete', unitId);
       }
     }
   }
 
   recalculatePoints() {
-    let totalPoints = 0;
-
+    // Points are now calculated in #buildDisplayUnit during render
+    // This method is kept for compatibility but points are calculated in #render
     if (this.#data) {
-      if (this.#mode === 'regiments') {
-        // Calculate points for regiments (leader + units)
-        // (we use for loop rather than forEach to allow mutating the array in place)
-        for (let i = 0; i < this.#data.length; i++) {
-          const regiment = this.#data[i];
-          regiment.leaderPoints = regiment.leaderPoints || 0;
-          // calculate points for units in regiment
-          const unitPoints = regiment.units.reduce((acc, unit) => acc + (unit.points || 0), 0);
-          regiment.points = regiment.leaderPoints + unitPoints;
-          totalPoints += regiment.points;
-          this.#data[i] = regiment;
-        }
-      } else {
-        // Calculate points for regular units
-        totalPoints = this.#data.reduce((acc, curr) => {
-          return acc + (curr.points || 0);
-        }, 0);
-      }
+      const displayUnits = this.#data.map(unit => this.#buildDisplayUnit(unit));
+      this.#points = displayUnits.reduce((acc, unit) => acc + (unit.points || 0), 0);
+      this.pointsLabel.innerText = this.#points ? `${this.#points} Points` : '';
     }
-    this.#points = totalPoints;
-    this.pointsLabel.innerText = totalPoints ? `${totalPoints} Points` : '';
   }
 }
 
