@@ -30,16 +30,17 @@ whenLoaded.then(() => {
 
 document.addEventListener('DOMContentLoaded', () => {
   const savedLists = document.querySelector('.saved-lists');
-  const btnNew = document.querySelector('.faction-selector button');
-  const factionSelector = document.querySelector('select#faction');
+  // const factionSelector = document.querySelector('select#faction');
+  const factionLinks = document.querySelectorAll('#factionMenu li a');
 
   // disable faction options that don't have a battle profile
-  factionSelector.querySelectorAll('option').forEach(option => {
-    const faction = FACTION_NAMES[option.value];
+  factionLinks.forEach(link => {
+    const factionCode = link.href.split('=')[1];
+    const faction = FACTION_NAMES[factionCode];
     if (faction) {
       if (!(faction in FACTION_NAMES_TO_CODES)) {
-        // console.log(`faction '${faction}' is missing battle profile data`);
-        option.disabled = true;
+        console.log(`faction '${faction}' is missing battle profile data`);
+        link.href = '';
       }
     }
   });
@@ -68,20 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  factionSelector.addEventListener('change', evt => {
-    btnNew.disabled = !evt.target.value;
-  });
-
-  btnNew.addEventListener('click', () => {
-    const faction = factionSelector.value;
-    DataStore.addItem({
-      game: '40k',
-      faction,
-      name: `Unnamed ${FACTION_NAMES[faction]} army`,
-      totalPoints: 0,
-      characters: [],
-      battleline: [],
-      otherUnits: [],
-    });
-  });
+  // factionSelector.addEventListener('change', evt => {
+  //   // TODO: filter the saved lists to only show lists for the selected faction
+  //   const faction = evt.target.value;
+  //   const savedLists = document.querySelectorAll('.saved-lists .list-slug');
+  //   savedLists.forEach(list => {
+  //     if (list.dataset.faction !== faction) {
+  //       list.style.display = 'none';
+  //     }
+  //   });
+  // });
 });

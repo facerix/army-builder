@@ -85,14 +85,15 @@ whenLoaded.then(async () => {
   const otherSection = document.querySelector('#otherUnits');
   const totalPoints = document.querySelector('#totalPoints');
 
-  const newArmy = () => {
-    return {
-      id,
-      faction,
+  const createNewArmy = () => {
+    DataStore.addItem({
       game: '40k',
+      faction,
+      name: `Unnamed ${FACTION_NAMES[faction]} army`,
       totalPoints: 0,
       units: [],
-    };
+    });
+    return DataStore.getItemById(id);
   };
 
   const recalculatePoints = () => {
@@ -651,7 +652,7 @@ whenLoaded.then(async () => {
 
   btnDelete.addEventListener('click', () => {
     if (window.confirm('Delete this army list: are you sure?')) {
-      DataStore.deleteItem(id);
+      DataStore.deleteItem(armyList.id);
     }
   });
 
@@ -708,9 +709,16 @@ whenLoaded.then(async () => {
           armyList = DataStore.getItemById(id);
         }
         if (!armyList) {
-          alert("I can't find a list with this ID");
-          armyList = newArmy();
+          createNewArmy();
+          break;
         }
+        await init();
+        recalculatePoints();
+        break;
+      case 'add':
+        armyList = evt.detail.affectedRecords;
+        const newUrl = window.location.origin + window.location.pathname + `?id=${armyList.id}&faction=${faction}`;
+        window.history.replaceState(null, '', newUrl);
         await init();
         recalculatePoints();
         break;
