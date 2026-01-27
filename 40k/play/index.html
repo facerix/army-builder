@@ -1,0 +1,261 @@
+<!doctype html>
+
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Personnel: View 40k list</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://personnel.facerix.com/" />
+    <meta property="og:title" content="Personnel" />
+    <meta
+      property="og:description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta property="og:url" content="https://personnel.facerix.com/" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
+    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="modulepreload" href="./40k-play.js" />
+
+    <style>
+      header.top {
+        background-color: #274764;
+        color: white;
+
+        img {
+          filter: invert(1);
+          height: 30px;
+        }
+
+        .actions {
+          display: flex;
+          margin-left: auto;
+
+          button {
+            border-color: transparent;
+            padding: 0.25em;
+            margin-left: 0.5em;
+          }
+        }
+      }
+
+      body {
+        .loader {
+          height: 0;
+          opacity: 0;
+        }
+
+        &.loading {
+          main {
+            height: 0;
+            opacity: 0;
+          }
+
+          .loader {
+            height: 200px;
+            opacity: 1;
+            transition: all 250ms ease-out;
+          }
+        }
+      }
+
+      main {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+      }
+
+      aside {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        width: 200px;
+        height: auto;
+
+        select {
+          margin-top: 1rem;
+          flex: 1 1 auto;
+          padding: 0.25rem;
+          font-size: 1.1rem;
+        }
+      }
+
+      #datacardContainer {
+        flex: 1 1 auto;
+        border-left: 1px solid #ccc;
+        padding-left: 0.5rem;
+      }
+
+      p.warning {
+        background-color: #950817;
+        color: white;
+        border-radius: 0.5rem;
+        font-style: italic;
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+
+      data-card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        margin: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #ccc;
+        overflow: hidden;
+
+        header {
+          background-color: #274764;
+          color: white;
+          padding: 0.5rem;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+
+          h3 {
+            margin: 0;
+          }
+
+          datacard-stat-line {
+            display: flex;
+            flex-direction: row;
+            gap: 0.5rem;
+          }
+
+          datacard-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            span.stat-label {
+              font-size: 0.75rem;
+            }
+
+            span.stat-value {
+              width: 2rem;
+              padding: 0.25rem;
+              border: 1px solid #ccc;
+              border-radius: 0.3rem 0;
+              text-align: center;
+              corner-shape: bevel;
+            }
+          }
+        }
+        section.body {
+          display: flex;
+
+          h4 {
+            margin: 0;
+            background-color: #274764;
+            color: white;
+            padding: 0.25rem;
+          }
+
+          .attack-profiles {
+            flex: 1 1 60%;
+
+            .attack-profile-table {
+              border-collapse: collapse;
+              border-spacing: 0;
+              margin-bottom: 0.5rem;
+              width: 100%;
+            }
+
+            thead {
+              margin: 0;
+              background-color: #274764;
+              color: white;
+              padding: 0.25rem;
+
+              img {
+                height: 1rem;
+                filter: invert(1);
+                margin-right: 0.25rem;
+              }
+
+              th.title {
+                font-variant: common-ligatures small-caps;
+                padding-left: 0.5rem;
+                text-align: left;
+              }
+
+              th.stat, td.stat {
+                font-stretch: condensed;
+                width: 42px;
+              }
+            }
+
+            .attack-name {
+              font-size: 0.9rem;
+              padding-left: 1.1rem;
+            }
+
+            td.stat {
+              text-align: center;
+            }
+          }
+
+          aside {
+            flex: 0 0 40%;
+            padding: 0 0.5rem;
+            border-left: 1px solid #ccc;
+          }
+
+          .ability-profile {
+            font-stretch: condensed;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+          }
+        }
+        footer {
+          border-top: 1px solid #ccc;
+          padding: 0 0.5rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="u-fill-height loading">
+    <header class="top">
+      <a href="/40k">
+        <img src="/images/back.svg" alt="back arrow" />
+      </a>
+      <img src="/images/aquila.svg" alt="Warhammer logo" />
+      <h1>40k Army Datacards</h1>
+      <!-- <span class="actions">
+        <button id="btnExport" title="Export this army list">
+          <img src="/images/clipboard-copy.svg" alt="clipboard icon" />
+        </button>
+        <button id="btnDelete" title="Delete this army list">
+          <img src="/images/trash.svg" alt="trash icon" />
+        </button>
+      </span> -->
+    </header>
+    <img src="/images/40k-gear-spinner.svg" alt="spinning gear placeholder" class="loader" />
+    <main>
+      <aside id="armyMetadata">
+        <div id="armyName"></div>
+        <div id="detachment"></div>
+        <div id="totalPoints"></div>
+        <select id="unitNames" size="10"></select>
+      </aside>
+      <section id="datacardContainer"></section>
+    </main>
+
+    <update-notification></update-notification>
+  </body>
+  <script src="40k-play.js" type="module"></script>
+</html>

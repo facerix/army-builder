@@ -25,7 +25,7 @@
 
     <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="modulepreload" href="/index.js" />
+    <link rel="modulepreload" href="./40k-list.js" />
 
     <style>
       header.top {
@@ -41,7 +41,8 @@
           display: flex;
           margin-left: auto;
 
-          button {
+          button,
+          .btn {
             border-color: transparent;
             padding: 0.25em;
             margin-left: 0.5em;
@@ -109,6 +110,9 @@
       <img src="/images/aquila.svg" alt="Warhammer logo" />
       <h1>40k Army List</h1>
       <span class="actions">
+        <a class="btn" id="btnPlay" href="#" title="Play this army list">
+          <img src="/images/dice.svg" alt="dice icon" />
+        </a>
         <button id="btnExport" title="Export this army list">
           <img src="/images/clipboard-copy.svg" alt="clipboard icon" />
         </button>

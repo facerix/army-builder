@@ -45,6 +45,14 @@
         gap: 0.5rem;
       }
 
+      a.btn {
+        padding: 0;
+
+        img {
+          height: 1.5rem;
+        }
+      }
+
       main {
         hr {
           width: 100%;
@@ -67,16 +75,17 @@
           height: fit-content;
           gap: 0.25rem;
 
-          border: 2px double transparent;
+          border: 2px double #274764;
           border-radius: 4px;
-          padding: 0 1rem;
+          padding: 0.25rem 1rem;
 
           img.faction {
             height: 2.5rem;
           }
 
           &:hover {
-            border-color: #274764;
+            border-color: #950817;
+            border-style: solid;
           }
         }
 
@@ -159,7 +168,7 @@
 
                   &:hover::after,
                   &:focus-visible::after {
-                    content: "Coming\A0soon";
+                    content: 'Coming\A0soon';
                     position: absolute;
                     top: 50%;
                     left: 50%;
@@ -175,11 +184,11 @@
                     background-color: rgba(0, 0, 0, 0.5);
                   }
                 }
-  
+
                 &:hover {
                   text-decoration: underline #950817;
                 }
-  
+
                 &:focus-visible {
                   outline: var(--accent-color) auto 1px;
                 }
@@ -231,7 +240,6 @@
           /* transform: translateY(-100%); */
         }
       }
-
     </style>
   </head>
 

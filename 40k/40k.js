@@ -6,9 +6,16 @@ import '../components/UpdateNotification.js';
 
 const listSlug = armyList => {
   const { id, faction, name } = armyList;
-  return h('a', { className: 'list-slug', href: `list/?id=${id}&faction=${faction}` }, [
+  const queryParams = `id=${id}&faction=${faction}`;
+  return h('div', { className: 'list-slug' }, [
     h('img', { className: 'faction', src: FACTION_IMAGE_URLS[faction], alt: 'faction image' }),
     h('span', { innerText: name }),
+    h('a', { className: 'btn', href: `list/?${queryParams}` }, [
+      h('img', { src: '/images/build.svg', alt: 'build icon', title: 'Edit' }),
+    ]),
+    h('a', { className: 'btn', href: `play/?${queryParams}` }, [
+      h('img', { src: '/images/dice.svg', alt: 'dice icon', title: 'Play' }),
+    ]),
   ]);
 };
 

@@ -44,6 +44,8 @@ whenLoaded.then(async () => {
   const faction = urlParams.get('faction');
   const factionName = FACTION_NAMES[faction];
   const detachmentSelector = document.querySelector('select#detachment');
+  const btnPlay = document.querySelector('#btnPlay');
+  btnPlay.href = `/40k/play/?id=${id}&faction=${faction}`;
 
   let armyList;
   let armyData;
@@ -717,7 +719,10 @@ whenLoaded.then(async () => {
         break;
       case 'add':
         armyList = evt.detail.affectedRecords;
-        const newUrl = window.location.origin + window.location.pathname + `?id=${armyList.id}&faction=${faction}`;
+        const newUrl =
+          window.location.origin +
+          window.location.pathname +
+          `?id=${armyList.id}&faction=${faction}`;
         window.history.replaceState(null, '', newUrl);
         await init();
         recalculatePoints();

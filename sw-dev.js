@@ -1,10 +1,10 @@
 // Development Service Worker with Mock Server
 // This version includes the mock server for local development
 // Import shared caching core
-importScripts('/sw-core.js');
+importScripts('/sw-core.js?v=3.0.2-dev');
 
 // Configure cache using shared config helper
-const cacheConfig = CacheConfig.create('3.0.0-dev');
+const cacheConfig = CacheConfig.create('3.0.2-dev');
 const CACHE_VERSION = cacheConfig.version;
 const CACHE_NAMES = cacheConfig; // Object with name, staticName, runtimeName
 const CACHE_PREFIX = cacheConfig.prefix;

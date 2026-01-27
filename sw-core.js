@@ -159,12 +159,16 @@ const CacheConfig = {
       '/images/aos-ripples.svg',
       '/images/aquila.svg',
       '/images/back.svg',
+      '/images/build.svg',
       '/images/circle-minus.svg',
       '/images/clipboard-copy.svg',
       '/images/close.svg',
+      '/images/dice.svg',
       '/images/gear.svg',
+      '/images/meleeWeapon.svg',
       '/images/menu.svg',
       '/images/plus.svg',
+      '/images/rangedWeapon.svg',
       '/images/trash.svg',
       '/images/warhammer.svg',
       
@@ -208,6 +212,28 @@ const ServiceWorkerCore = {
     const isRootPath = pathname === '/' || pathname === '';
     
     return hasRefreshableExtension || isDocument || isRootPath;
+  },
+
+  /**
+   * Utility function to detect if a request is for HTML files
+   * HTML files benefit from network-first strategy on mobile devices
+   * @param {Request} request - The fetch request
+   * @returns {boolean} - True if the request is for HTML
+   */
+  isHTMLResource(request) {
+    const url = new URL(request.url);
+    const pathname = url.pathname.toLowerCase();
+    
+    // Check file extension
+    const hasHTMLExtension = pathname.endsWith('.html');
+    
+    // Check request destination for HTML documents
+    const isDocument = request.destination === 'document';
+    
+    // Check for root path (likely HTML)
+    const isRootPath = pathname === '/' || pathname === '';
+    
+    return hasHTMLExtension || isDocument || isRootPath;
   },
 
   /**
@@ -269,6 +295,7 @@ const ServiceWorkerCore = {
 
   /**
    * Refresh cache in background without blocking the response
+   * Uses cache: 'reload' to bypass browser HTTP cache and force fresh download
    * @param {Request} request - The fetch request
    * @param {Cache} cache - The cache instance
    * @param {string} logPrefix - Prefix for log messages
@@ -276,7 +303,8 @@ const ServiceWorkerCore = {
   async refreshCacheInBackground(request, cache, logPrefix = '[SW]') {
     try {
       // console.log(`${logPrefix} Background refresh for: ${request.url}`);
-      const response = await fetch(request);
+      // Use cache: 'reload' to bypass browser HTTP cache (critical for mobile devices)
+      const response = await fetch(request, { cache: 'reload' });
       
       if (response && response.status === 200 && response.type === 'basic') {
         await cache.put(request, response.clone());
@@ -287,6 +315,46 @@ const ServiceWorkerCore = {
     } catch (error) {
       // Log error but don't throw - this is background operation
       console.warn(`${logPrefix} Background refresh network error for ${request.url}:`, error.message);
+    }
+  },
+
+  /**
+   * Network-first strategy - checks network first, falls back to cache
+   * Useful for ensuring fresh content on mobile devices
+   * @param {Request} request - The fetch request
+   * @param {string} cacheName - Name of the cache to use
+   * @param {string} logPrefix - Prefix for log messages
+   * @returns {Promise<Response>} - The response from network or cache
+   */
+  async networkFirst(request, cacheName, logPrefix = '[SW]') {
+    const cache = await caches.open(cacheName);
+    
+    try {
+      // Try network first with cache: 'reload' to bypass browser HTTP cache
+      console.log(`${logPrefix} Network-first fetch: ${request.url}`);
+      const response = await fetch(request, { cache: 'reload' });
+      
+      // Cache valid responses
+      if (response && response.status === 200 && response.type === 'basic') {
+        const responseToCache = response.clone();
+        await cache.put(request, responseToCache);
+        console.log(`${logPrefix} Network response cached: ${request.url}`);
+      }
+      
+      return response;
+    } catch (error) {
+      // Network failed, try cache
+      console.warn(`${logPrefix} Network failed, trying cache: ${request.url}`);
+      const cachedResponse = await cache.match(request);
+      
+      if (cachedResponse) {
+        console.log(`${logPrefix} Serving from cache (network failed): ${request.url}`);
+        return cachedResponse;
+      }
+      
+      // Both network and cache failed
+      console.error(`${logPrefix} Both network and cache failed for ${request.url}:`, error);
+      throw error;
     }
   },
 
@@ -306,8 +374,9 @@ const ServiceWorkerCore = {
     }
     
     // If not in cache, fetch from network
+    // Use cache: 'reload' to bypass browser HTTP cache
     // console.log(`${logPrefix} Fetching from network: ${request.url}`);
-    const response = await fetch(request);
+    const response = await fetch(request, { cache: 'reload' });
     
     // Cache valid responses
     if (response && response.status === 200 && response.type === 'basic') {
@@ -345,11 +414,12 @@ const ServiceWorkerCore = {
       console.log(`${logPrefix} Caching ${coreResources.length} core resources to: ${cacheNames.name}`);
       
       // Cache core resources individually to get better error reporting
+      // Use cache: 'reload' to bypass browser HTTP cache during installation
       let coreCachedCount = 0;
       const failedResources = [];
       for (const url of coreResources) {
         try {
-          const response = await fetch(url);
+          const response = await fetch(url, { cache: 'reload' });
           if (response.ok) {
             await versionedCache.put(url, response);
             coreCachedCount++;
@@ -373,10 +443,11 @@ const ServiceWorkerCore = {
       console.log(`${logPrefix} Caching ${staticAssets.length} static assets to: ${cacheNames.staticName}`);
       
       // Cache static assets individually to avoid failing on missing files
+      // Use cache: 'reload' for static assets too to ensure fresh downloads
       let cachedCount = 0;
       for (const url of staticAssets) {
         try {
-          const response = await fetch(url);
+          const response = await fetch(url, { cache: 'reload' });
           if (response.ok) {
             await staticCache.put(url, response);
             cachedCount++;
@@ -430,9 +501,10 @@ const ServiceWorkerCore = {
    * @param {Request} request - The fetch request
    * @param {Object} cacheNames - Object containing cache names (name, staticName, runtimeName)
    * @param {string} logPrefix - Prefix for log messages
+   * @param {boolean} useNetworkFirstForHTML - If true, use network-first for HTML files (better for mobile)
    * @returns {Promise<Response>} - The response
    */
-  async handleFetch(request, cacheNames, logPrefix = '[SW]') {
+  async handleFetch(request, cacheNames, logPrefix = '[SW]', useNetworkFirstForHTML = false) {
     // Only handle GET requests
     if (request.method !== 'GET') {
       return fetch(request);
@@ -446,6 +518,11 @@ const ServiceWorkerCore = {
     } else {
       // Everything else goes to versioned cache
       cacheName = cacheNames.name;
+    }
+
+    // For HTML files, optionally use network-first strategy (better for mobile cache busting)
+    if (useNetworkFirstForHTML && this.isHTMLResource(request)) {
+      return this.networkFirst(request, cacheName, logPrefix);
     }
 
     // Use cache-first with refresh for HTML, CSS, and JS files
