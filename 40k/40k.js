@@ -7,7 +7,7 @@ import '../components/UpdateNotification.js';
 const listSlug = armyList => {
   const { id, faction, name } = armyList;
   const queryParams = `id=${id}&faction=${faction}`;
-  return h('div', { className: 'list-slug' }, [
+  const slugElement = h('div', { className: 'list-slug' }, [
     h('img', { className: 'faction', src: FACTION_IMAGE_URLS[faction], alt: 'faction image' }),
     h('span', { className: 'name', innerText: name }),
     h('span', { className: 'actions' }, [
@@ -17,8 +17,14 @@ const listSlug = armyList => {
       h('a', { className: 'btn', href: `play/?${queryParams}` }, [
         h('img', { src: '/images/dice.svg', alt: 'dice icon', title: 'Play' }),
       ]),
+      h('button', { type: 'button', className: 'btn', title: 'Delete' }, [
+        h('img', { src: '/images/trash.svg', alt: 'trash icon' }),
+      ]),
     ]),
   ]);
+  slugElement.dataset.listId = id;
+  slugElement.querySelector('button').dataset.listId = id;
+  return slugElement;
 };
 
 const whenLoaded = Promise.all([customElements.whenDefined('update-notification')]);
@@ -56,10 +62,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   DataStore.init();
 
+  savedLists.addEventListener('click', evt => {
+    const deleteBtn = evt.target.closest('button[data-list-id]');
+    if (deleteBtn) {
+      const listId = deleteBtn.dataset.listId;
+      const listElement = deleteBtn.closest('.list-slug');
+      const listName = listElement.querySelector('.name').innerText;
+      if (window.confirm(`Delete "${listName}": are you sure?`)) {
+        DataStore.deleteItem(listId);
+      }
+    }
+  });
+
   DataStore.addEventListener('change', evt => {
     switch (evt.detail.changeType) {
       case 'init':
         const fortyKLists = evt.detail.items.filter(list => list.game === '40k');
+        savedLists.innerHTML = '';
         if (!fortyKLists.length) {
           savedLists.append(h('p', { innerText: 'No saved lists yet' }));
         }
@@ -71,6 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
       case 'add':
         const newRec = evt.detail.affectedRecords;
         window.location.assign(`list/?id=${newRec.id}&faction=${newRec.faction}`);
+        break;
+      case 'delete':
+        const deletedId = evt.detail.affectedRecords[0];
+        const listElement = savedLists.querySelector(`[data-list-id="${deletedId}"]`);
+        if (listElement) {
+          listElement.remove();
+        }
+        // Show "No saved lists yet" if no lists remain
+        if (savedLists.children.length === 0) {
+          savedLists.append(h('p', { innerText: 'No saved lists yet' }));
+        }
         break;
       default:
         // no action to take otherwise
