@@ -34,7 +34,6 @@ Personnel is a Progressive Web App (PWA) for building army lists for tabletop wa
 │   ├── DataStore.js      # Singleton data store (localStorage)
 │   ├── DBDataStore.js    # IndexedDB alternative (unused)
 │   ├── domUtils.js       # DOM helper functions (h() function)
-│   ├── factions.js       # Faction name/image mappings
 │   ├── parsers.js        # Export/import parsers
 │   └── ServiceWorkerManager.js # Service worker lifecycle
 └── images/                # SVG/PNG assets
@@ -108,8 +107,11 @@ Personnel is a Progressive Web App (PWA) for building army lists for tabletop wa
 ### Core Files
 - `src/DataStore.js`: Central data management singleton
 - `src/domUtils.js`: DOM helpers, `h()` function, development mode detection
-- `src/factions.js`: Faction name/code/image mappings for both games
 - `src/ServiceWorkerManager.js`: Service worker registration and update handling
+
+### Faction Data Files
+- `40k/army-data/factions.js`: 40k faction name/code/image mappings
+- `aos/factions.js`: AoS faction name/image mappings
 
 ### Game-Specific Files
 - `40k/40k-army-data.js`: **HUGE file** (3661 lines) - contains all 40k faction data

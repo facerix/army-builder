@@ -1,10 +1,11 @@
 // Development Service Worker with Mock Server
 // This version includes the mock server for local development
 // Import shared caching core
-importScripts('/sw-core.js?v=3.0.2-dev');
+const VERSION = '3.1.0-dev';
+importScripts(`/sw-core.js?v=${VERSION}`);
 
 // Configure cache using shared config helper
-const cacheConfig = CacheConfig.create('3.0.2-dev');
+const cacheConfig = CacheConfig.create(VERSION);
 const CACHE_VERSION = cacheConfig.version;
 const CACHE_NAMES = cacheConfig; // Object with name, staticName, runtimeName
 const CACHE_PREFIX = cacheConfig.prefix;
@@ -595,17 +596,13 @@ const mockServer = new SWMockServer();
 
 // Get shared resource lists plus dev-specific resources
 const coreResources = CacheConfig.getCoreResources();
-const devResources = CacheConfig.getDevResources();
 const staticAssets = CacheConfig.getStaticAssets();
-
-// Combine core and dev resources
-const allCoreResources = [...coreResources, ...devResources];
 
 console.log(`${LOG_PREFIX} Configuration loaded:`, {
   version: CACHE_VERSION,
   versionedCache: CACHE_NAMES.name,
   staticCache: CACHE_NAMES.staticName,
-  coreResources: allCoreResources.length,
+  coreResources: coreResources.length,
   staticAssets: staticAssets.length,
   mockServerEnabled: true
 });
@@ -615,7 +612,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     ServiceWorkerCore.handleInstall(
       CACHE_NAMES,
-      allCoreResources,
+      coreResources,
       staticAssets,
       LOG_PREFIX,
       false // Queue SW updates

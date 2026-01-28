@@ -1,10 +1,11 @@
 // Service Worker for Personnel App - Production Version
 // Import shared caching core with cache-busting query parameter
 // The version in the query ensures sw-core.js is fetched fresh when SW updates
-importScripts('/sw-core.js?v=3.0.2');
+const VERSION = '3.1.0';
+importScripts(`/sw-core.js?v=${VERSION}`);
 
 // Configure cache using shared config helper
-const cacheConfig = CacheConfig.create('3.0.2');
+const cacheConfig = CacheConfig.create(VERSION);
 const CACHE_VERSION = cacheConfig.version;
 const CACHE_NAMES = cacheConfig; // Object with name, staticName, runtimeName
 const CACHE_PREFIX = cacheConfig.prefix;

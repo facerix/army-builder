@@ -54,7 +54,7 @@ class UpdateNotification extends HTMLElement {
         }
         
         .update-notification p {
-          margin: 0 0 12px 0;
+          margin: 12px 0;
         }
         
         .update-notification button {
@@ -129,7 +129,6 @@ class UpdateNotification extends HTMLElement {
         </div>
         <div class="updating-state">
           <div class="spinner"></div>
-          <strong>Updating...</strong>
           <p class="update-status">Please wait while we install the update.</p>
         </div>
       </div>

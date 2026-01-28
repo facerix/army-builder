@@ -4,65 +4,171 @@ import '/components/UpdateNotification.js';
 import { get40kArmyData } from '../army-data-loader.js';
 import { FACTION_NAMES } from '/40k/army-data/factions.js';
 import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
+import { buildDisplayUnit } from '/src/40k-unit-utils.js';
 
 // this will eventually go somewhere else
 const UNIT_CARD_DATA = {
-  'Necrons': {
+  Necrons: {
     'Skorpekh Destroyers': {
       stats: [8, 6, 3, 3, 7, 2],
-      weapons: [
-        { name: 'Skorpekh hyperphase weapons', type: 'Melee', profile: [4, 3, 7, -2, 2]}
-      ],
+      weapons: [{ name: 'Skorpekh hyperphase weapons', type: 'Melee', profile: [4, 3, 7, -2, 2] }],
       abilities: [
-        { name: 'Whirling Onslaught', description: 'Each time a model in this unit makes a melee attack, re-roll a Hit roll of 1. If this unit made a Charge move this turn, you can re-roll the Hit roll instead.' }
+        {
+          name: 'Whirling Onslaught',
+          description:
+            'Each time a model in this unit makes a melee attack, re-roll a Hit roll of 1. If this unit made a Charge move this turn, you can re-roll the Hit roll instead.',
+        },
       ],
     },
-    'Immortals': {
+    Immortals: {
       stats: [5, 5, 3, 1, 7, 2],
       weapons: [
-        { name: 'Gauss blaster', type: 'Ranged', profile: [24, 2, 3, 5, -1, 1], tags: ["Lethal Hits"] },
-        { name: 'Tesla carbine', type: 'Ranged', profile: [24, 2, 3, 5, 0, 1], tags: ["Assault", "Sustained Hits 2"] },
+        {
+          name: 'Gauss blaster',
+          type: 'Ranged',
+          profile: [24, 2, 3, 5, -1, 1],
+          tags: ['Lethal Hits'],
+        },
+        {
+          name: 'Tesla carbine',
+          type: 'Ranged',
+          profile: [24, 2, 3, 5, 0, 1],
+          tags: ['Assault', 'Sustained Hits 2'],
+        },
         { name: 'Close combat weapon', type: 'Melee', profile: [2, 3, 4, 0, 1] },
-      ]
+      ],
     },
-    'SHARED': {
+    SHARED: {
       wargear: [
-        { name: 'Plasmacyte', description: 'Once per battle for each Plasmacyte this unit has, when this unit is selected to fight, you can use this ability. If you do, until the end of the phase, melee weapons equipped by models in this unit have the [DEVASTATING WOUNDS] ability.' }
-      ]
-    }
-  }
+        {
+          name: 'Plasmacyte',
+          description:
+            'Once per battle for each Plasmacyte this unit has, when this unit is selected to fight, you can use this ability. If you do, until the end of the phase, melee weapons equipped by models in this unit have the [DEVASTATING WOUNDS] ability.',
+        },
+      ],
+    },
+  },
 };
 
 const get40kDatacardData = (unitName, factionName) => {
-  const unitData = {
-    ...UNIT_CARD_DATA[factionName]?.[unitName]
+  return {
+    ...UNIT_CARD_DATA[factionName]?.[unitName],
   };
-  return unitData;
 };
 
-const getEquippedWeapons = (unitWeapons = [], unitWeaponMetadata = []) => {
-  const equipped = [];
-  if (!unitWeapons?.length) {
-    // unit builder didn't specify any weapons because there are no options; use all available weapons
-    equipped.push(...unitWeaponMetadata);
-  } else {
-    unitWeapons.forEach(weapon => {
-      const metadata = unitWeaponMetadata.find(m => m.name === weapon.name);
-      if (metadata) {
-        equipped.push({ ...weapon, ...metadata });
-      }
-    });
-  }
-  return equipped;
-}
+const get40kSharedDatacardData = factionName => {
+  return UNIT_CARD_DATA[factionName]?.['SHARED'] || {};
+};
 
-const NameAndDescription = (ability) => {
+/**
+ * Normalizes unit data for datacard generation into a consistent structure
+ * @param {Object} unit - Display unit from buildDisplayUnit
+ * @param {Object} datacardData - Datacard metadata (stats, weapons, abilities, wargear)
+ * @param {Object} sharedData - SHARED datacard data for looking up descriptions/details
+ * @returns {Object} Normalized unit structure
+ */
+const normalizeUnitForDatacard = (unit, datacardData, sharedData = {}) => {
+  const normalized = {
+    id: unit.id,
+    name: unit.name,
+    points: unit.points || 0,
+    modelCount: unit.modelCount || 1,
+    tags: unit.tags || [],
+    weapons: [],
+    wargear: [],
+    abilities: [],
+    rules: [],
+  };
+
+  // Extract arrays once to avoid repeated property access
+  const unitWeapons = unit?.weapons || [];
+  const weaponMetadata = datacardData?.weapons || [];
+  const sharedWeapons = sharedData?.weapons || [];
+  const unitWargear = unit?.wargear || [];
+  const wargearMetadata = datacardData?.wargear || [];
+  const sharedWargear = sharedData?.wargear || [];
+  const sharedRules = sharedData?.rules || [];
+
+  // Create Maps for O(1) lookups instead of O(n) find() calls
+  const weaponMetadataMap = new Map(weaponMetadata.map(w => [w.name, w]));
+  const sharedWeaponsMap = new Map(sharedWeapons.map(w => [w.name, w]));
+  const wargearMetadataMap = new Map(wargearMetadata.map(w => [w.name, w]));
+  const sharedWargearMap = new Map(sharedWargear.map(w => [w.name, w]));
+  const sharedRulesMap = new Map(sharedRules.map(r => [r.name, r]));
+
+  // Normalize weapons: merge unit weapons with datacard metadata
+  if (unitWeapons.length === 0 && weaponMetadata.length > 0) {
+    // No unit weapons specified, use all metadata weapons
+    normalized.weapons = weaponMetadata.map(w => ({
+      name: w.name,
+      description: w.description || '',
+      count: w.count || 1,
+      type: w.type,
+      profile: w.profile,
+      tags: w.tags,
+    }));
+  } else {
+    // Match unit weapons with metadata (check unit-specific first, then SHARED)
+    for (const weapon of unitWeapons) {
+      const metadata = weaponMetadataMap.get(weapon.name);
+      const sharedMetadata = sharedWeaponsMap.get(weapon.name);
+      normalized.weapons.push({
+        name: weapon.name,
+        description:
+          metadata?.description || sharedMetadata?.description || weapon.description || '',
+        count: weapon.count || metadata?.count || sharedMetadata?.count || 1,
+        type: metadata?.type || sharedMetadata?.type,
+        profile: metadata?.profile || sharedMetadata?.profile,
+        tags: metadata?.tags || sharedMetadata?.tags,
+      });
+    }
+  }
+
+  // Normalize wargear: merge unit wargear with datacard metadata
+  // Only include wargear that exists on the unit, but look up descriptions from SHARED
+  if (unitWargear.length === 0 && wargearMetadata.length > 0) {
+    // No unit wargear specified, use all unit-specific metadata wargear (not SHARED)
+    normalized.wargear = wargearMetadata.map(w => ({
+      name: w.name,
+      description: w.description || '',
+    }));
+  } else {
+    // Match unit wargear with metadata (check unit-specific first, then SHARED for lookups)
+    for (const wg of unitWargear) {
+      const metadata = wargearMetadataMap.get(wg.name);
+      const sharedMetadata = sharedWargearMap.get(wg.name);
+      normalized.wargear.push({
+        name: wg.name,
+        description: metadata?.description || sharedMetadata?.description || wg.description || '',
+      });
+    }
+  }
+
+  // Normalize abilities from datacard data (unit-specific only, SHARED is for lookups)
+  normalized.abilities = (datacardData?.abilities || []).map(a => ({
+    name: a.name,
+    description: a.description || '',
+  }));
+
+  // Normalize rules (if any exist in the future)
+  normalized.rules = (datacardData?.rules || []).map(r => {
+    // Look up description from SHARED if not in unit-specific data
+    const sharedRule = sharedRulesMap.get(r.name);
+    return {
+      name: r.name,
+      description: r.description || sharedRule?.description || '',
+    };
+  });
+
+  return normalized;
+};
+
+const NameAndDescription = ability => {
   return h('div', { className: 'ability-profile' }, [
     h('strong', { innerText: `${ability.name}: ` }),
     h('span', { innerText: ability.description }),
   ]);
 };
-
 
 const datacardStat = (label, value) => {
   return h('datacard-stat', {}, [
@@ -71,8 +177,11 @@ const datacardStat = (label, value) => {
   ]);
 };
 
-const weaponProfile = (weapon) => {
-  const { name, type = 'Melee', profile = '-------'.split('') } = weapon;
+// Cache default profile array to avoid recreating on each call
+const DEFAULT_PROFILE = ['-', '-', '-', '-', '-', '-', '-'];
+
+const weaponProfile = weapon => {
+  const { name, type = 'Melee', profile = DEFAULT_PROFILE } = weapon;
   const [range, a, ws, s, ap, d] = type === 'Ranged' ? profile : [type, ...profile];
   const columns = [h('td', { className: 'attack-name', innerText: name })];
   if (type === 'Ranged') {
@@ -86,81 +195,80 @@ const weaponProfile = (weapon) => {
   return h('tr', { className: 'attack-profile' }, columns);
 };
 
-const buildDatacard = (unit, unitDatacardData) => {
+const buildDatacard = (normalizedUnit, unitDatacardData) => {
   // card header
-  const headerContents = [h('h3', { innerText: unit.name })];
+  const headerContents = [h('h3', { innerText: normalizedUnit.name })];
   const stats = unitDatacardData?.stats;
   if (stats) {
-    headerContents.push(h('datacard-stat-line', {}, [
-      datacardStat('M', stats[0]),
-      datacardStat('T', stats[1]),
-      datacardStat('Sv', `${stats[2]}+`),
-      datacardStat('W', stats[3]),
-      datacardStat('Ld', `${stats[4]}+`),
-      datacardStat('OC', stats[5]),
-    ]));
+    headerContents.push(
+      h('datacard-stat-line', {}, [
+        datacardStat('M', stats[0]),
+        datacardStat('T', stats[1]),
+        datacardStat('Sv', `${stats[2]}+`),
+        datacardStat('W', stats[3]),
+        datacardStat('Ld', `${stats[4]}+`),
+        datacardStat('OC', stats[5]),
+      ])
+    );
   } else {
     headerContents.push(h('p', { innerText: '[Missing unit stats]' }));
   }
 
-  // weapons
+  // weapons - use normalized weapons
   const meleeAttacks = [];
   const rangedAttacks = [];
   const attackProfiles = [];
-  const weapons = getEquippedWeapons(unit?.weapons, unitDatacardData?.weapons);
-  if (weapons.length > 0) {
-    weapons.forEach(w => {
-      if (w.type === 'Melee') {
-        meleeAttacks.push(weaponProfile(w));
-      } else {
-        rangedAttacks.push(weaponProfile(w));
-      }
-    });
-  }
+  normalizedUnit.weapons.forEach(w => {
+    if (w.type === 'Melee') {
+      meleeAttacks.push(weaponProfile(w));
+    } else if (w.type === 'Ranged') {
+      rangedAttacks.push(weaponProfile(w));
+    }
+  });
+
   if (rangedAttacks.length > 0) {
-    attackProfiles.push(h('table', { className: 'attack-profile-table' }, [
-      h('thead', {}, [
-        h('tr', {}, [
-          h('th', { className: 'title' }, [
-            h('img', { src: '/images/rangedWeapon.svg', alt: 'ranged icon', title: 'Ranged' }),
-            h('span', { innerText: 'Ranged Weapons' }),
+    attackProfiles.push(
+      h('table', { className: 'attack-profile-table' }, [
+        h('thead', {}, [
+          h('tr', {}, [
+            h('th', { className: 'title' }, [
+              h('img', { src: '/images/rangedWeapon.svg', alt: 'ranged icon', title: 'Ranged' }),
+              h('span', { innerText: 'Ranged Weapons' }),
+            ]),
+            h('th', { className: 'stat', innerText: 'Range' }),
+            h('th', { className: 'stat', innerText: 'A' }),
+            h('th', { className: 'stat', innerText: 'WS' }),
+            h('th', { className: 'stat', innerText: 'S' }),
+            h('th', { className: 'stat', innerText: 'AP' }),
+            h('th', { className: 'stat', innerText: 'D' }),
           ]),
-          h('th', { className: 'stat', innerText: 'Range' }),
-          h('th', { className: 'stat', innerText: 'A' }),
-          h('th', { className: 'stat', innerText: 'WS' }),
-          h('th', { className: 'stat', innerText: 'S' }),
-          h('th', { className: 'stat', innerText: 'AP' }),
-          h('th', { className: 'stat', innerText: 'D' }),
         ]),
-      ]),
-      h('tbody', {}, rangedAttacks),
-    ]));
+        h('tbody', {}, rangedAttacks),
+      ])
+    );
   }
   if (meleeAttacks.length > 0) {
-    attackProfiles.push(h('table', { className: 'attack-profile-table' }, [
-      h('thead', {}, [
-        h('tr', {}, [
-          h('th', { className: 'title' }, [
-            h('img', { src: '/images/meleeWeapon.svg', alt: 'melee icon', title: 'Melee' }),
-            h('span', { innerText: 'Melee Weapons' }),
+    attackProfiles.push(
+      h('table', { className: 'attack-profile-table' }, [
+        h('thead', {}, [
+          h('tr', {}, [
+            h('th', { className: 'title' }, [
+              h('img', { src: '/images/meleeWeapon.svg', alt: 'melee icon', title: 'Melee' }),
+              h('span', { innerText: 'Melee Weapons' }),
+            ]),
+            h('th', { className: 'stat', innerText: 'A' }),
+            h('th', { className: 'stat', innerText: 'WS' }),
+            h('th', { className: 'stat', innerText: 'S' }),
+            h('th', { className: 'stat', innerText: 'AP' }),
+            h('th', { className: 'stat', innerText: 'D' }),
           ]),
-          h('th', { className: 'stat', innerText: 'A' }),
-          h('th', { className: 'stat', innerText: 'WS' }),
-          h('th', { className: 'stat', innerText: 'S' }),
-          h('th', { className: 'stat', innerText: 'AP' }),
-          h('th', { className: 'stat', innerText: 'D' }),
         ]),
-      ]),
-      h('tbody', {}, meleeAttacks),
-    ]));
+        h('tbody', {}, meleeAttacks),
+      ])
+    );
   }
 
-  // abilities
-  const abilities = unitDatacardData?.abilities ?? [];
-
-  // wargear
-  const wargear = getEquippedWeapons(unit?.wargear, unitDatacardData?.wargear);
-  
+  // Use normalized abilities, wargear, and rules
   const card = h('data-card', {}, [
     h('header', {}, headerContents),
     h('section', { className: 'body' }, [
@@ -168,28 +276,34 @@ const buildDatacard = (unit, unitDatacardData) => {
         ...attackProfiles,
         h('details', {}, [
           h('summary', { innerText: 'Debug' }),
-          h('pre', { innerText: JSON.stringify(unit, null, 2) }),
+          h('pre', { innerText: JSON.stringify(normalizedUnit, null, 2) }),
         ]),
       ]),
       h('aside', {}, [
-        h('h4', { innerText: 'Abilities' }),
-        ...abilities.map(NameAndDescription),
-        ...(wargear?.length > 0
+        ...(normalizedUnit.abilities.length > 0
           ? [
-              h('h4', { innerText: 'Wargear' }),
-              ...wargear.map(NameAndDescription),
+              h('h4', { innerText: 'Abilities' }),
+              ...normalizedUnit.abilities.map(NameAndDescription),
             ]
+          : []),
+        ...(normalizedUnit.wargear.length > 0
+          ? [h('h4', { innerText: 'Wargear' }), ...normalizedUnit.wargear.map(NameAndDescription)]
+          : []),
+        ...(normalizedUnit.rules.length > 0
+          ? [h('h4', { innerText: 'Rules' }), ...normalizedUnit.rules.map(NameAndDescription)]
           : []),
         h('h4', { innerText: 'Unit Composition' }),
         h('p', {}, [
           h('strong', { innerText: 'Model Count: ' }),
-          h('span', { innerText: unit?.modelCount }),
+          h('span', { innerText: normalizedUnit.modelCount || 1 }),
         ]),
       ]),
     ]),
-    h('footer', {}, [h('p', { innerText: `Keywords: ${unit.tags.join(', ')}` })]),
+    h('footer', {}, [
+      h('p', { innerText: `Keywords: ${normalizedUnit.tags?.join(', ') || 'None'}` }),
+    ]),
   ]);
-  card.dataset.id = unit.id;
+  card.dataset.id = normalizedUnit.id;
   return card;
 };
 
@@ -226,7 +340,8 @@ whenLoaded.then(async () => {
   let armyList;
   let armyData;
   let datacardData = new Map();
-  let cachedDisplayUnits = null; // Cache display units as Map<unitId, displayUnit> for O(1) lookups
+  let cachedDisplayUnits = null; // Cache display units as Map<unitId, displayUnit> - needed for points calculation and as input to normalization
+  let cachedNormalizedUnits = new Map(); // Cache normalized units as Map<unitId, normalizedUnit> to avoid re-normalization
   let isInitialized = false; // Flag to prevent double initialization
 
   // Load army data asynchronously
@@ -257,11 +372,24 @@ whenLoaded.then(async () => {
   unitNamesSelect.addEventListener('change', evt => {
     const unitId = evt.target.value;
     const unit = cachedDisplayUnits?.get(unitId);
-    const unitDatacardData = get40kDatacardData(unit.name, factionName);
-    
+
     if (unit && faction) {
+      // Check cache first, normalize only if not cached
+      let normalizedUnit = cachedNormalizedUnits.get(unitId);
+      let unitDatacardData;
+
+      if (!normalizedUnit) {
+        unitDatacardData = get40kDatacardData(unit.name, factionName);
+        const sharedDatacardData = get40kSharedDatacardData(factionName);
+        normalizedUnit = normalizeUnitForDatacard(unit, unitDatacardData, sharedDatacardData);
+        cachedNormalizedUnits.set(unitId, normalizedUnit);
+      } else {
+        // Still need datacard data for stats and buildDatacard
+        unitDatacardData = get40kDatacardData(unit.name, factionName);
+      }
+
       datacardsContainer.innerHTML = '';
-      if (!unitDatacardData) {
+      if (!unitDatacardData || Object.keys(unitDatacardData).length === 0) {
         datacardsContainer.append(
           h('p', {
             className: 'warning',
@@ -270,9 +398,7 @@ whenLoaded.then(async () => {
           })
         );
       }
-      datacardsContainer.append(
-        buildDatacard({ ...unit, faction }, unitDatacardData)
-      );
+      datacardsContainer.append(buildDatacard(normalizedUnit, unitDatacardData));
     }
   });
 
@@ -318,7 +444,9 @@ whenLoaded.then(async () => {
     if (armyList?.units && armyData && !cachedDisplayUnits) {
       cachedDisplayUnits = new Map();
       const displayUnits = armyList.units
-        .map(u => buildDisplayUnit(u, armyData, armyList.detachment))
+        .map(u =>
+          buildDisplayUnit(u, armyData, armyList.detachment, { applyWeaponWargearOptions: true })
+        )
         .filter(u => u !== null)
         .sort((a, b) => a.name.localeCompare(b.name));
       displayUnits.forEach(unit => {
@@ -343,194 +471,6 @@ whenLoaded.then(async () => {
     return {
       enhancements: armyData.detachments[detachment]?.enhancements || [],
     };
-  };
-
-  /**
-   * Calculates the total points for a unit instance based on canonical unit and options
-   * @param {Object} unitInstance - The stored unit instance (id, name, options)
-   * @param {Object} canonicalUnit - The canonical unit definition from armyData
-   * @param {Object} detachmentData - The detachment data (for enhancements)
-   * @returns {number} - Total points for the unit
-   */
-  const calculateUnitPoints = (unitInstance, canonicalUnit, detachmentData) => {
-    let points = 0;
-
-    // Base points from unitSize or default
-    if (
-      unitInstance.options?.unitSize &&
-      canonicalUnit.unitOptions?.unitSize &&
-      Array.isArray(canonicalUnit.points)
-    ) {
-      // unitOptions.unitSize is an array like [10, 20]
-      // points is an array like [180, 360]
-      // Find the index of the selected unitSize and use it to get the corresponding points
-      const unitSizeIndex = canonicalUnit.unitOptions.unitSize.indexOf(
-        unitInstance.options.unitSize
-      );
-      if (unitSizeIndex !== -1 && unitSizeIndex < canonicalUnit.points.length) {
-        points = canonicalUnit.points[unitSizeIndex];
-      } else {
-        // Fallback to first points value if index not found
-        points = canonicalUnit.points[0];
-      }
-    } else if (Array.isArray(canonicalUnit.points)) {
-      // If points is an array but no unitSize selected, use first value
-      points = canonicalUnit.points[0];
-    } else {
-      // Single points value
-      points = canonicalUnit.points || 0;
-    }
-
-    // Add enhancement points if present
-    if (unitInstance.options?.enhancement && detachmentData?.enhancements) {
-      const enhancement = detachmentData.enhancements.find(
-        e => e.name === unitInstance.options.enhancement
-      );
-      if (enhancement) {
-        points += enhancement.points || 0;
-      }
-    }
-
-    return points;
-  };
-
-  /**
-   * Builds a complete display unit from a stored instance, canonical unit, and detachment modifications
-   * @param {Object} unitInstance - The stored unit instance (id, name, options)
-   * @param {Object} armyData - The army data containing canonical units
-   * @param {string} detachment - The detachment name
-   * @returns {Object} - Complete unit object for display
-   */
-  const buildDisplayUnit = (unitInstance, armyData, detachment) => {
-    console.log('building display unit: ', unitInstance);
-    // Find canonical unit by name
-    const canonicalUnit = armyData.units.find(u => u.name === unitInstance.name);
-    if (!canonicalUnit) {
-      console.warn(`Unit not found: ${unitInstance.name}`);
-      return null;
-    }
-
-    // Get detachment data
-    const detachmentData = detachment ? armyData.detachments[detachment] : null;
-    const unitModifications = detachmentData?.unitModifications || [];
-
-    // Apply detachment modifications to get modified tags
-    const modifiedUnit = applyUnitModifications(canonicalUnit, unitModifications);
-
-    // Calculate points
-    const points = calculateUnitPoints(unitInstance, canonicalUnit, detachmentData);
-
-    // Apply unit options to unit size, weapons, and wargear
-    if (unitInstance.options) {
-      const { unitSize, weapons, wargear, enhancement } = unitInstance.options;
-      if (enhancement) {
-        modifiedUnit.enhancement = enhancement;
-      }
-      if (unitSize) {
-        modifiedUnit.modelCount = unitSize;
-      }
-      weapons?.forEach(weapon => {
-        if (weapon.selected && weapon.selected !== 'off') {
-          console.log('TODO: apply weapon option: ', weapon);
-          if (weapon.replaces) {
-            for (let i = 0; i < modifiedUnit.weapons.length; i++) {
-              if (modifiedUnit.weapons[i].name === weapon.replaces) {
-                if (Array.isArray(weapon.name)) {
-                  modifiedUnit.weapons[i].name = weapon.selected;
-                } else {
-                  modifiedUnit.weapons[i].name = weapon.name;
-                }
-                break;
-              }
-            }
-          } else {
-            if (Array.isArray(weapon.name)) {
-              modifiedUnit.weapons.push({ name: weapon.selected });
-            } else {
-              modifiedUnit.weapons.push({ name: weapon.name });
-            }
-          }
-        }
-      });
-      if (wargear?.length && !modifiedUnit.wargear) {
-        modifiedUnit.wargear = [];
-      }
-      wargear?.forEach(wg => {
-        if (wg.selected && wg.selected !== 'off') {
-          console.log('adding wargear: ', wg);
-          modifiedUnit.wargear.push(wg);
-        }
-      });
-    }
-
-    // Transform unitOptions for display (CategorySection expects unitSize to be array of objects with modelCount and points)
-    let displayUnitOptions = undefined;
-    if (canonicalUnit.unitOptions) {
-      displayUnitOptions = JSON.parse(JSON.stringify(canonicalUnit.unitOptions));
-
-      // Transform unitSize from array of numbers to array of objects with modelCount and points
-      if (
-        displayUnitOptions.unitSize &&
-        Array.isArray(displayUnitOptions.unitSize) &&
-        Array.isArray(canonicalUnit.points)
-      ) {
-        displayUnitOptions.unitSize = displayUnitOptions.unitSize.map((modelCount, index) => ({
-          modelCount: modelCount,
-          points: canonicalUnit.points[index] || canonicalUnit.points[0] || 0,
-        }));
-      }
-    }
-
-    // Build display unit by merging canonical data with instance options
-    const displayUnit = {
-      id: unitInstance.id,
-      name: canonicalUnit.name,
-      ...modifiedUnit,
-      points: points,
-      modelCount: unitInstance.options?.unitSize || canonicalUnit.modelCount || 1,
-      tags: [...(modifiedUnit.tags || [])],
-      unitOptions: displayUnitOptions,
-      options: { ...unitInstance.options },
-    };
-
-    return displayUnit;
-  };
-
-  /**
-   * Applies unitModifications to a unit, returning a modified copy
-   * @param {Object} unit - The unit to modify
-   * @param {Array} unitModifications - Array of modification objects
-   * @returns {Object} - A modified copy of the unit
-   */
-  const applyUnitModifications = (unit, unitModifications) => {
-    if (!unitModifications || unitModifications.length === 0) {
-      return unit;
-    }
-
-    // Create a deep copy of the unit to avoid mutating the original
-    const modifiedUnit = JSON.parse(JSON.stringify(unit));
-
-    unitModifications.forEach(modification => {
-      // Check if this modification applies to this unit
-      if (modification.target === unit.name) {
-        switch (modification.type) {
-          case 'addTag':
-            // Add the tag if it doesn't already exist
-            if (!modifiedUnit.tags) {
-              modifiedUnit.tags = [];
-            }
-            if (!modifiedUnit.tags.includes(modification.value)) {
-              modifiedUnit.tags.push(modification.value);
-            }
-            break;
-          // Add more modification types here as needed
-          default:
-            console.warn(`Unknown modification type: ${modification.type}`);
-        }
-      }
-    });
-
-    return modifiedUnit;
   };
 
   DataStore.init();

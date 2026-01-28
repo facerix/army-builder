@@ -27,6 +27,7 @@ const CacheConfig = {
       '/index.html',
       '/index.js',
       '/about.html',
+      '/about.js',
       '/main.css',
       '/40k/index.html',
       '/40k/40k.js',
@@ -51,6 +52,7 @@ const CacheConfig = {
       '/components/Regiment.js',
       '/components/UnitModal.js',
       '/components/UpdateNotification.js',
+      '/src/40k-unit-utils.js',
       '/src/DataStore.js',
       '/src/DBDataStore.js',
       '/src/domUtils.js',
@@ -171,20 +173,8 @@ const CacheConfig = {
       '/images/rangedWeapon.svg',
       '/images/trash.svg',
       '/images/warhammer.svg',
-      
-      // Fonts (TBD?)
     ];
   },
-  
-  /**
-   * Development-specific resources
-   * API clients and other dev tools
-   */
-  getDevResources() {
-    return [
-      // TBD
-    ];
-  }
 };
 
 /**
