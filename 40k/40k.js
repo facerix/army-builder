@@ -9,12 +9,14 @@ const listSlug = armyList => {
   const queryParams = `id=${id}&faction=${faction}`;
   return h('div', { className: 'list-slug' }, [
     h('img', { className: 'faction', src: FACTION_IMAGE_URLS[faction], alt: 'faction image' }),
-    h('span', { innerText: name }),
-    h('a', { className: 'btn', href: `list/?${queryParams}` }, [
-      h('img', { src: '/images/build.svg', alt: 'build icon', title: 'Edit' }),
-    ]),
-    h('a', { className: 'btn', href: `play/?${queryParams}` }, [
-      h('img', { src: '/images/dice.svg', alt: 'dice icon', title: 'Play' }),
+    h('span', { className: 'name', innerText: name }),
+    h('span', { className: 'actions' }, [
+      h('a', { className: 'btn', href: `list/?${queryParams}` }, [
+        h('img', { src: '/images/build.svg', alt: 'build icon', title: 'Edit' }),
+      ]),
+      h('a', { className: 'btn', href: `play/?${queryParams}` }, [
+        h('img', { src: '/images/dice.svg', alt: 'dice icon', title: 'Play' }),
+      ]),
     ]),
   ]);
 };
