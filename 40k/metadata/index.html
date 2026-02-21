@@ -1,0 +1,187 @@
+<!doctype html>
+
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Personnel: 40k faction metadata</title>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href="https://personnel.facerix.com/" />
+    <meta property="og:title" content="Personnel" />
+    <meta
+      property="og:description"
+      content="Progressive web app to build army lists for Warhammer 40k and Age of Sigmar"
+    />
+    <meta property="og:url" content="https://personnel.facerix.com/" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" href="/icons/icon512_maskable.png" type="image/png" />
+    <link rel="mask-icon" href="/hero.svg" color="#ffffff" />
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" sizes="192x192" />
+
+    <link rel="stylesheet" href="/main.css" type="text/css" charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="modulepreload" href="./40k-metadata.js" />
+
+    <style>
+      header.top {
+        background-color: #274764;
+        color: white;
+
+        img {
+          filter: invert(1);
+          height: 30px;
+        }
+
+        .actions {
+          display: flex;
+          margin-left: auto;
+
+          button {
+            border-color: transparent;
+            padding: 0.25em;
+            margin-left: 0.5em;
+          }
+        }
+      }
+
+      body {
+        .loader {
+          height: 0;
+          opacity: 0;
+        }
+
+        &.loading {
+          main {
+            height: 0;
+            opacity: 0;
+          }
+
+          .loader {
+            height: 200px;
+            opacity: 1;
+            transition: all 250ms ease-out;
+          }
+        }
+      }
+
+      main {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .metadata-container header {
+          width: 100%;
+          margin: 0 auto;
+          justify-content: center;
+
+          input[type='file'] {
+            margin: 0 0.5rem;
+          }
+        }
+
+        nav {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        #uploadStatus {
+          margin: 0.5rem 0;
+        }
+
+        .success,
+        .warning {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.5rem;
+        }
+
+        table {
+          width: 80%;
+          margin: 0 auto;
+          border-collapse: collapse;
+          border: 1px solid;
+
+          th {
+            background-color: #f0f0f0;
+          }
+
+          th:first-child,
+          td:first-child {
+            text-align: left;
+          }
+
+          th,
+          td {
+            padding: 0.5rem;
+            border: 1px solid;
+
+            .md-cat {
+              display: inline-flex;
+              flex-direction: column;
+              font-size: smaller;
+              margin-right: 0.5rem;
+
+              img {
+                height: 1.25rem;
+              }
+            }
+          }
+        }
+      }
+
+      .u-hidden {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body class="u-fill-height">
+    <header class="top">
+      <a href="/40k">
+        <img src="/images/back.svg" alt="back arrow" />
+      </a>
+      <img src="/images/aquila.svg" alt="Warhammer logo" />
+      <h1>40k Faction: Edit Metadata</h1>
+    </header>
+    <main>
+      <section id="allFactions" class="u-hidden">
+        <nav id="factionMenu">
+          <h3>Select a faction to manage its metadata</h3>
+          <mega-menu></mega-menu>
+        </nav>
+      </section>
+      <section id="selectedFaction" class="u-hidden">
+        <section class="metadata-container">
+          <header>
+            If you have BattleScribe data for this faction, click here to upload it:
+            <input type="file" id="bsDataFile" accept=".cat,.xml" />
+            <button id="btnUpload" type="button" disabled>Upload</button>
+          </header>
+          <div id="uploadStatus" class="u-center u-hidden"></div>
+          <table id="metadataTable" class="u-center">
+            <thead>
+              <tr>
+                <th>Unit</th>
+                <th>Has metadata?</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+
+    <update-notification></update-notification>
+    <metadata-modal></metadata-modal>
+  </body>
+  <script src="40k-metadata.js" type="module"></script>
+</html>

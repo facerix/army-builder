@@ -52,8 +52,12 @@ export const factionData = {
     {
       name: 'Nekrosor Ammentar',
       tags: ['Character', 'Epic Hero', 'Infantry', 'Destroyer Cult', 'Nekrosor Ammentar'],
-      weapons: ['Enmitic disintegrators', 'Unmaker Gauntlet', 'Blade tail and whip coils'],
-      wargear: ['Nullstone Field Generator'],
+      weapons: [
+        { name: 'Enmitic disintegrators' },
+        { name: 'Unmaker Gauntlet' },
+        { name: 'Blade tail and whip coils' },
+      ],
+      wargear: [{ name: 'Nullstone Field Generator' }],
     },
     {
       name: 'Orikan the Diviner',
@@ -159,8 +163,8 @@ export const factionData = {
 
     /* Fortifications */
     {
-      name: 'Convergence Of Dominion',
-      tags: ['Fortification', 'Vehicle', 'Convergence Of Dominion'],
+      name: 'Convergence of Dominion',
+      tags: ['Fortification', 'Vehicle', 'Convergence of Dominion'],
       unitOptions: { unitSize: [1, 2, 3] },
     },
 
@@ -391,6 +395,24 @@ export const factionData = {
         { name: 'Demanding Leader' },
         { name: 'Dread Majesty', tags: ['Overlord', 'Catacomb Command Barge'] },
         { name: 'Miniaturised Nebuloscope' },
+      ],
+    },
+    {
+      name: 'Cursed Legion',
+      enhancements: [
+        { name: 'Destroyer Ankh', tags: ['Catacomb Command Barge', 'Overlord'] },
+        { name: 'Murdermind', tags: ['Cryptek'] },
+        { name: 'Mark of the Nekrosor', tags: ['Destroyer Cult'] },
+        { name: 'Cursed Circlet', tags: ['Destroyer Cult'] },
+      ],
+    },
+    {
+      name: 'Pantheon of Woe',
+      enhancements: [
+        { name: 'Singularity Matrix', tags: ["C'tan Shard of the Deceiver"] },
+        { name: 'Quantum Goad', tags: ["C'tan Shard of the Nightbringer"] },
+        { name: 'Animus Damper', tags: ["C'tan Shard of the Void Dragon"] },
+        { name: 'Reletavistic Tether', tags: ["Transcendent C'tan"] },
       ],
     },
   ],

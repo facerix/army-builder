@@ -41,7 +41,9 @@ const extractUnitStats = unitProfile => {
 };
 
 /**
- * Extracts weapon stats from a Ranged Weapons profile
+ * Extracts weapon stats from a Ranged Weapons or Melee Weapons profile.
+ * Ranged: Range, A, BS, S, AP, D. Melee: Range (Melee), A, WS, S, AP, D.
+ * Returns array: [Range, A, BS_or_WS, S, AP, D]
  */
 const extractWeaponStats = weaponProfile => {
   if (!weaponProfile) return null;
@@ -55,15 +57,19 @@ const extractWeaponStats = weaponProfile => {
     stats[name] = value;
   });
 
-  // Return as array: [Range, A, BS, S, AP, D]
-  return [
-    unescapeQuotes(stats.Range || ''),
+  // Ranged uses BS, Melee uses WS
+  const toHit = stats.BS || stats.WS || '';
+  const profile = [
     parseNumeric(stats.A || 0),
-    stats.BS || '',
+    toHit,
     parseNumeric(stats.S || 0),
     parseNumeric(stats.AP || 0),
     parseNumeric(stats.D || 0),
   ];
+  if (stats.Range && stats.Range !== 'Melee') {
+    profile.unshift(unescapeQuotes(stats.Range));
+  }
+  return profile;
 };
 
 /**
@@ -80,9 +86,13 @@ const extractWeaponKeywords = weaponProfile => {
 
   if (!keywordsChar) return [];
 
-  return keywordsChar.textContent
-    .trim()
-    .split(/\s+/)
+  const raw = keywordsChar.textContent.trim();
+  if (!raw || raw === '-') return [];
+
+  // Keywords are comma-separated (e.g. "Ignores Cover, Torrent", "Lethal Hits, Rapid Fire 2")
+  return raw
+    .split(/,\s*/)
+    .map(k => k.trim())
     .filter(k => k.length > 0);
 };
 
@@ -286,6 +296,199 @@ const findMinMaxConstraints = groupOrEntry => {
   return minMax ?? null;
 };
 
+/** Names to skip when extracting wargear (Crusade/weapon mods) */
+const WARGEAR_SKIP_NAMES = new Set(['Weapon Modifications', 'Crusade Relic Upgrades']);
+
+/** Sub-group names that contain weapon choices, not wargear abilities */
+const WEAPON_SUBGROUP_NAMES = new Set([
+  'Weapon',
+  'Weapons',
+  'Melee weapon',
+  'Main weapon',
+  'Weapon Upgrades',
+]);
+
+/**
+ * Checks if a selectionEntry or its target (for entryLink) has an Abilities profile (wargear, not weapon)
+ */
+const hasAbilitiesProfile = (entryOrLink, doc) => {
+  let el = entryOrLink;
+  if (entryOrLink.tagName === 'entryLink') {
+    const targetId = entryOrLink.getAttribute('targetId');
+    if (!targetId) return false;
+    el = doc.querySelector(`[id="${targetId}"]`);
+    if (!el) return false;
+  }
+  const profiles = el.querySelectorAll?.('profile') ?? [];
+  for (const p of profiles) {
+    const typeName = p.getAttribute('typeName');
+    if (typeName === 'Abilities') return true;
+    if (typeName === 'Ranged Weapons' || typeName === 'Melee Weapons') return false;
+  }
+  return false;
+};
+
+/**
+ * Gets the display name for an entry or entryLink
+ */
+const getEntryName = (entryOrLink, doc) => {
+  const name = entryOrLink.getAttribute('name');
+  if (name) return unescapeQuotes(name);
+  if (entryOrLink.tagName === 'entryLink') {
+    const target = doc.querySelector(`[id="${entryOrLink.getAttribute('targetId')}"]`);
+    return target?.getAttribute('name') ? unescapeQuotes(target.getAttribute('name')) : null;
+  }
+  return null;
+};
+
+/**
+ * Gets min/max constraints from an element's constraints block
+ */
+const getConstraints = el => {
+  const constraints = el.querySelector(':scope > constraints');
+  if (!constraints) return { min: null, max: null };
+  let min = null;
+  let max = null;
+  constraints.querySelectorAll('constraint').forEach(c => {
+    const type = c.getAttribute('type');
+    const val = parseInt(c.getAttribute('value'), 10);
+    if (type === 'min') min = val;
+    if (type === 'max') max = val;
+  });
+  return { min, max };
+};
+
+/**
+ * Extracts wargear options from a Wargear selectionEntryGroup's sub-group (e.g. Crest, optional items)
+ */
+const extractWargearFromSubGroup = (subGroup, doc) => {
+  const { min, max } = getConstraints(subGroup);
+  const isRequired = min === 1 && max === 1;
+  const isOptional = (min === 0 || min === null) && max === 1;
+
+  const defaultIdAttr = subGroup.getAttribute('defaultSelectionEntryId');
+
+  const collectEntries = () => {
+    const entries = [];
+    subGroup.querySelectorAll('entryLink[type="selectionEntry"]').forEach(link => {
+      const linkId = link.getAttribute('id');
+      const targetId = link.getAttribute('targetId');
+      const isDefault = defaultIdAttr && (linkId === defaultIdAttr || targetId === defaultIdAttr);
+      entries.push({ el: link, isDefault });
+    });
+    subGroup
+      .querySelectorAll(':scope > selectionEntries > selectionEntry[type="upgrade"]')
+      .forEach(entry => {
+        const entryId = entry.getAttribute('id');
+        const isDefault = defaultIdAttr && entryId === defaultIdAttr;
+        entries.push({ el: entry, isDefault });
+      });
+    return entries;
+  };
+
+  const baseWargear = [];
+  const wargearOptions = [];
+  let defaultName = null;
+
+  const entries = collectEntries();
+
+  // Process defaults first to establish base
+  entries
+    .filter(e => e.isDefault)
+    .forEach(({ el }) => {
+      const name = getEntryName(el, doc);
+      if (!name || WARGEAR_SKIP_NAMES.has(name)) return;
+      if (!hasAbilitiesProfile(el, doc)) return;
+      if (isRequired) {
+        baseWargear.push({ name });
+        defaultName = name;
+      } else if (isOptional) {
+        wargearOptions.push({ name, max: 1 });
+      }
+    });
+
+  // Process non-defaults as options
+  entries
+    .filter(e => !e.isDefault)
+    .forEach(({ el }) => {
+      const name = getEntryName(el, doc);
+      if (!name || WARGEAR_SKIP_NAMES.has(name)) return;
+      if (!hasAbilitiesProfile(el, doc)) return;
+      if (isRequired && defaultName) {
+        wargearOptions.push({ name, replaces: defaultName });
+      } else if (isRequired) {
+        wargearOptions.push({ name });
+      } else if (isOptional) {
+        wargearOptions.push({ name, max: 1 });
+      }
+    });
+
+  return { baseWargear, wargearOptions };
+};
+
+/**
+ * Extracts wargear and wargear options from a unit's Wargear selectionEntryGroups
+ */
+const extractWargearFromUnit = rootEntry => {
+  const doc = rootEntry.ownerDocument;
+  const baseWargear = [];
+  const wargearOptions = [];
+  const seenOptions = new Set();
+
+  const addOption = opt => {
+    const key = typeof opt.name === 'string' ? opt.name : (opt.name?.join?.('|') ?? '');
+    if (seenOptions.has(key)) return;
+    seenOptions.add(key);
+    wargearOptions.push(opt);
+  };
+
+  const wargearGroups = rootEntry.querySelectorAll('selectionEntryGroup[name="Wargear"]');
+
+  wargearGroups.forEach(wg => {
+    // Process sub-groups (Crest, optional items, etc.) - skip weapon-named subgroups
+    wg.querySelectorAll(':scope > selectionEntryGroups > selectionEntryGroup').forEach(sub => {
+      const subName = sub.getAttribute('name') ?? '';
+      if (WEAPON_SUBGROUP_NAMES.has(subName)) return;
+
+      const { baseWargear: bw, wargearOptions: wo } = extractWargearFromSubGroup(sub, doc);
+      bw.forEach(w => baseWargear.push(w));
+      wo.forEach(addOption);
+    });
+
+    // Direct entryLinks under Wargear (no subgroup)
+    wg.querySelectorAll(':scope > entryLinks > entryLink[type="selectionEntry"]').forEach(link => {
+      const name = getEntryName(link, doc);
+      if (!name || WARGEAR_SKIP_NAMES.has(name)) return;
+      if (!hasAbilitiesProfile(link, doc)) return;
+
+      const { min, max } = getConstraints(link);
+      if ((min === 0 || min === null) && max === 1) {
+        addOption({ name, max: 1 });
+      } else if (min === 1 && max === 1) {
+        baseWargear.push({ name });
+      }
+    });
+
+    // Direct selectionEntries under Wargear
+    wg.querySelectorAll(':scope > selectionEntries > selectionEntry[type="upgrade"]').forEach(
+      entry => {
+        const name = getEntryName(entry, doc);
+        if (!name || WARGEAR_SKIP_NAMES.has(name)) return;
+        if (!hasAbilitiesProfile(entry, doc)) return;
+
+        const { min, max } = getConstraints(entry);
+        if ((min === 0 || min === null) && max === 1) {
+          addOption({ name, max: 1 });
+        } else if (min === 1 && max === 1) {
+          baseWargear.push({ name });
+        }
+      }
+    );
+  });
+
+  return { baseWargear, wargearOptions };
+};
+
 /**
  * Parses a BattleScribe XML selectionEntry to our JSON format
  * @param {Element} rootEntry - The DOM element containing a selectionEntry element (the unit itself)
@@ -308,8 +511,8 @@ export const parseBattleScribeUnit = rootEntry => {
     unitOptions: {},
     stats: null,
     abilities: [],
-    rules: [],
     weapons: [],
+    wargear: [],
   };
 
   // Extract tags from root entry's categoryLinks (skipping the "Faction:" category)
@@ -460,11 +663,62 @@ export const parseBattleScribeUnit = rootEntry => {
       ruleName = `${ruleName} ${unescapeQuotes(appendValue)}`;
     }
     if (ruleName) {
-      result.rules.push(ruleName);
+      result.abilities.push({
+        name: ruleName,
+        type: 'Core',
+      });
     }
   });
 
-  // TODO: extract weapon profiles
+  // Extract weapon profiles (Ranged Weapons and Melee Weapons) from root entry and nested selectionEntries
+  const weaponProfileTypes = ['Ranged Weapons', 'Melee Weapons'];
+  const addedWeapons = new Set(); // avoid duplicates from both inline profiles and entryLinks
+
+  const addWeapon = (profile, nameOverride = null) => {
+    const weaponName = nameOverride ?? profile.getAttribute('name');
+    if (!weaponName) return;
+    const typeName = profile.getAttribute('typeName');
+    const type = typeName === 'Ranged Weapons' ? 'Ranged' : 'Melee';
+    const key = `${weaponName}|${type}`;
+    if (addedWeapons.has(key)) return;
+    addedWeapons.add(key);
+    result.weapons.push({
+      name: weaponName,
+      type,
+      profile: extractWeaponStats(profile),
+      keywords: extractWeaponKeywords(profile),
+    });
+  };
+
+  // 1. Inline profiles: profiles directly under selectionEntries
+  const weaponProfiles = Array.from(rootEntry.querySelectorAll('profile')).filter(p =>
+    weaponProfileTypes.includes(p.getAttribute('typeName') ?? '')
+  );
+  weaponProfiles.forEach(profile => addWeapon(profile));
+
+  // 2. entryLinks: Votann and others reference weapons by targetId; profiles live in the target
+  const doc = rootEntry.ownerDocument;
+  const entryLinks = rootEntry.querySelectorAll('entryLink[type="selectionEntry"][targetId]');
+  entryLinks.forEach(link => {
+    const targetId = link.getAttribute('targetId');
+    const linkName = link.getAttribute('name');
+    if (!targetId || linkName === 'Weapon Modifications') return;
+    const target = doc.querySelector(`[id="${targetId}"]`);
+    if (!target) return;
+    const targetProfiles = Array.from(target.querySelectorAll('profile')).filter(p =>
+      weaponProfileTypes.includes(p.getAttribute('typeName') ?? '')
+    );
+    targetProfiles.forEach(profile => addWeapon(profile, linkName));
+  });
+
+  // Extract wargear and wargear options from Wargear selectionEntryGroups
+  const { baseWargear, wargearOptions } = extractWargearFromUnit(rootEntry);
+  if (baseWargear.length > 0) {
+    result.wargear = baseWargear;
+  }
+  if (wargearOptions.length > 0) {
+    result.unitOptions.wargear = wargearOptions;
+  }
 
   return result;
 };
@@ -527,6 +781,27 @@ export const parseBattleScribeCatalogue = xmlString => {
     };
   }
 
+  // shared upgrade entries (i.e. usually wargear / weapons)
+  const sharedUpgrades = [];
+  const sharedUpgradeEntries = Array.from(
+    sharedSelectionEntries.querySelectorAll(':scope > selectionEntry[type="upgrade"]')
+  );
+  sharedUpgradeEntries.forEach(entry => {
+    const name = entry.getAttribute('name');
+    const description = unescapeQuotes(
+      entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? ''
+    );
+    if (name && description) {
+      sharedUpgrades.push({
+        name,
+        description,
+      });
+    } else {
+      // console.warn(`shared upgrade entry '${name}' has no name or description`);
+      // console.log('entry: ', entry);
+    }
+  });
+
   // Find all unit-type selectionEntry elements
   // Handle XML namespaces - querySelector should work, but we can also use getElementsByTagName
   const unitEntries = Array.from(
@@ -547,19 +822,6 @@ export const parseBattleScribeCatalogue = xmlString => {
   });
 
   // get detachments/enhancements
-
-  // "detachments": [
-  //   {
-  //     "name": "Berzerker Warband",
-  //     "enhancements": [
-  //       { name: "Battle-lust", tags: ["World Eaters"] },
-  //       { name: "Berzerker Glaive", tags: ["World Eaters"] },
-  //       { name: "Favoured of Khorne", tags: ["World Eaters"] },
-  //       { name: "Helm of Brazen Ire", tags: ["World Eaters"] },
-  //     ],
-  //   },
-  // ]
-
   const enhancementsGroup = catalogue.querySelector("selectionEntryGroup[name='Enhancements']");
   const enhancements = {};
   // if the enhancementGroup has subgroups, those are the detachments and this will be fairly easy.
@@ -583,6 +845,7 @@ export const parseBattleScribeCatalogue = xmlString => {
   } else {
     // if it doesn't, we have to fund other means of digging it out of the selectionEntry objects themselves
     Array.from(enhancementsGroup?.querySelectorAll('selectionEntry') ?? []).forEach(entry => {
+      // console.log('selectionEntry: ', entry);
       const enhancement = enhancementFromBSEntry(entry);
 
       // right now detachment name is in a comment in the data files I'm looking at; if it's NOT there,
@@ -606,5 +869,6 @@ export const parseBattleScribeCatalogue = xmlString => {
     faction: factionName,
     units,
     enhancements,
+    sharedUpgrades,
   };
 };

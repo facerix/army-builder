@@ -1,21 +1,31 @@
 import DataStore from '../src/DataStore.js';
 import { h } from '../src/domUtils.js';
-import { FACTION_IMAGE_URLS, FACTION_NAMES, FACTION_NAMES_TO_CODES } from './army-data/factions.js';
 import { serviceWorkerManager } from '../src/ServiceWorkerManager.js';
+import { getPointsForList } from '../src/40k-unit-utils.js';
+import {
+  FACTION_IMAGE_URLS,
+  FACTION_NAMES,
+  FACTION_NAMES_TO_CODES,
+  FACTION_GROUPS,
+} from './army-data/factions.js';
 import '../components/UpdateNotification.js';
+import '../components/MegaMenu.js';
 
 const listSlug = armyList => {
   const { id, faction, name } = armyList;
   const queryParams = `id=${id}&faction=${faction}`;
   const slugElement = h('div', { className: 'list-slug' }, [
     h('img', { className: 'faction', src: FACTION_IMAGE_URLS[faction], alt: 'faction image' }),
-    h('span', { className: 'name', innerText: name }),
+    h('div', { className: 'name-and-points' }, [
+      h('span', { className: 'name', innerText: name }),
+      h('span', { className: 'points' }),
+    ]),
     h('span', { className: 'actions' }, [
-      h('a', { className: 'btn', href: `list/?${queryParams}` }, [
-        h('img', { src: '/images/build.svg', alt: 'build icon', title: 'Edit' }),
+      h('a', { className: 'btn', href: `list/?${queryParams}`, title: 'Edit' }, [
+        h('img', { src: '/images/build.svg', alt: 'build icon' }),
       ]),
-      h('a', { className: 'btn', href: `play/?${queryParams}` }, [
-        h('img', { src: '/images/dice.svg', alt: 'dice icon', title: 'Play' }),
+      h('a', { className: 'btn', href: `play/?${queryParams}`, title: 'Play' }, [
+        h('img', { src: '/images/dice.svg', alt: 'dice icon' }),
       ]),
       h('button', { type: 'button', className: 'btn', title: 'Delete' }, [
         h('img', { src: '/images/trash.svg', alt: 'trash icon' }),
@@ -27,11 +37,25 @@ const listSlug = armyList => {
   return slugElement;
 };
 
-const whenLoaded = Promise.all([customElements.whenDefined('update-notification')]);
+const whenLoaded = Promise.all([
+  customElements.whenDefined('update-notification'),
+  customElements.whenDefined('mega-menu'),
+]);
 
 whenLoaded.then(() => {
   // Set up update notification
   const updateNotification = document.querySelector('update-notification');
+  const megaMenu = document.querySelector('mega-menu');
+
+  // set up mega menu
+  megaMenu.items = FACTION_GROUPS.map(group => ({
+    name: group.name,
+    items: group.factions.map(faction => ({
+      name: FACTION_NAMES[faction],
+      href: `/40k/list/?faction=${faction}`,
+      image: FACTION_IMAGE_URLS[faction],
+    })),
+  }));
 
   // Listen for service worker updates
   window.addEventListener('sw-update-available', event => {
@@ -83,7 +107,13 @@ document.addEventListener('DOMContentLoaded', () => {
           savedLists.append(h('p', { innerText: 'No saved lists yet' }));
         }
         fortyKLists.forEach(list => {
-          savedLists.append(listSlug(list));
+          const listElement = listSlug(list);
+          savedLists.append(listElement);
+          setTimeout(async () => {
+            // calculate points for each list asynchronously
+            const points = await getPointsForList(list);
+            listElement.querySelector('.points').innerText = `${points} points`;
+          }, 0);
         });
         document.querySelector('main').classList.remove('loading');
         break;

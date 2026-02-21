@@ -36,6 +36,17 @@
           filter: invert(1);
           height: 30px;
         }
+
+        .actions {
+          display: flex;
+          margin-left: auto;
+
+          button {
+            border-color: transparent;
+            padding: 0.25em;
+            margin-left: 0.5em;
+          }
+        }
       }
 
       .faction-selector {
@@ -89,8 +100,21 @@
             margin-right: 0.5rem;
           }
 
-          span.name {
+          .name-and-points {
             flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+
+            .points {
+              font-size: 0.75rem;
+              color: #909090;
+              transition: opacity 250ms allow-discrete;
+              height: 1rem; /* to prevent layout shift when the points are added */
+
+              &:empty {
+                opacity: 0;
+              }
+            }
           }
 
           span.actions {
@@ -132,99 +156,18 @@
       }
 
       #btnNew {
-        /* margin-right: auto; */
         anchor-name: --anc;
-      }
-
-      .megaMenu {
-        width: 90vw;
-        display: flex;
-        flex-wrap: wrap;
-        background-color: #1c3247;
-        color: white;
-        gap: 1rem;
-        text-align: left;
-        padding: 0 1rem 0.5rem;
-
-        .megaMenuColumn {
-          background-color: #274764;
-          flex: 1;
-          padding: 0 1rem;
-          justify-items: center;
-
-          h3 {
-            text-align: center;
-            border-bottom: 2px groove white;
-          }
-
-          ul {
-            list-style: none;
-            padding: 0;
-
-            li {
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              padding: 0.25rem 0;
-
-              img {
-                width: 1rem;
-                filter: invert(1);
-              }
-
-              a {
-                color: white;
-                text-decoration: none;
-
-                &[href=''] {
-                  color: #666;
-                  cursor: not-allowed;
-                  filter: grayscale(100%);
-                  opacity: 0.5;
-
-                  &:hover::after,
-                  &:focus-visible::after {
-                    content: 'Coming\A0soon';
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    color: white;
-                    text-align: center;
-                    font-size: 0.8rem;
-                    font-weight: bold;
-                    text-transform: uppercase;
-                    letter-spacing: 0.1em;
-                    padding: 0.5rem;
-                    border-radius: 0.25rem;
-                    background-color: rgba(0, 0, 0, 0.5);
-                  }
-                }
-
-                &:hover {
-                  text-decoration: underline #950817;
-                }
-
-                &:focus-visible {
-                  outline: var(--accent-color) auto 1px;
-                }
-              }
-            }
-          }
-        }
       }
 
       [popover]:popover-open {
         opacity: 1;
         height: fit-content;
-        /* transform: translateY(0); */
       }
 
       [popover] {
         /* Final state of the exit animation */
         opacity: 0;
         height: 0;
-        /* transform: translateY(-100%); */
 
         position-anchor: --anc;
         top: anchor(end);
@@ -235,16 +178,6 @@
         transition-property: opacity, transform, overlay, display, height;
         transition-duration: 0.25s;
         transition-behavior: allow-discrete;
-        /* Using the shorthand transition property, we could write:
-          transition: 
-            opacity 0.7s,
-            transform 0.7s,
-            overlay 0.7s allow-discrete,
-            display 0.7s allow-discrete;
-
-          or even:
-          transition: all 0.7s allow-discrete;
-        */
       }
 
       /* Needs to be included after the previous [popover]:popover-open 
@@ -253,7 +186,6 @@
         [popover]:popover-open {
           opacity: 0;
           height: 0;
-          /* transform: translateY(-100%); */
         }
       }
     </style>
@@ -266,151 +198,17 @@
       </a>
       <img src="/images/aquila.svg" alt="Warhammer logo" />
       <h1>40k Lists</h1>
+      <span class="actions">
+        <a class="btn" href="/40k/metadata" title="Manage metadata for armies">
+          <img src="/images/db.svg" alt="database icon" />
+        </a>
+      </span>
     </header>
     <main class="u-center loading">
       <nav id="factionMenu">
         <button type="button" id="btnNew" popovertarget="faction-mega-menu">New list ▼</button>
         <div id="faction-mega-menu" popover>
-          <div class="megaMenu">
-            <div class="megaMenuColumn">
-              <h3>Imperium</h3>
-              <ul>
-                <li>
-                  <img src="/images/40k/sororitas.svg" alt="Adepta Sororitas" />
-                  <a href="/40k/list/?faction=sisters">Adepta Sororitas</a>
-                </li>
-                <li>
-                  <img src="/images/40k/custodes.svg" alt="Adeptus Custodes" />
-                  <a href="/40k/list/?faction=custodes">Adeptus Custodes</a>
-                </li>
-                <li>
-                  <img src="/images/40k/mechanicus.svg" alt="Adeptus Mechanicus" />
-                  <a href="/40k/list/?faction=mechanicus">Adeptus Mechanicus</a>
-                </li>
-                <li>
-                  <img src="/images/40k/militarum.svg" alt="Astra Militarum" />
-                  <a href="/40k/list/?faction=astra">Astra Militarum</a>
-                </li>
-                <li>
-                  <img src="/images/40k/greyKnights.svg" alt="Grey Knights" />
-                  <a href="/40k/list/?faction=greyKnights">Grey Knights</a>
-                </li>
-                <li>
-                  <img src="/images/40k/imperialAquila.svg" alt="Imperial Agents" />
-                  <a href="/40k/list/?faction=imperialAgents">Imperial Agents</a>
-                </li>
-                <li>
-                  <img src="/images/40k/imperialKnights.svg" alt="Imperial Knights" />
-                  <a href="/40k/list/?faction=imperialKnights">Imperial Knights</a>
-                </li>
-              </ul>
-            </div>
-            <div class="megaMenuColumn">
-              <h3>Adeptus Astartes</h3>
-              <ul>
-                <li>
-                  <img src="/images/40k/blackTemplars.svg" alt="Black Templars" />
-                  <a href="/40k/list/?faction=blackTemplars">Black Templars</a>
-                </li>
-                <li>
-                  <img src="/images/40k/bloodAngels.svg" alt="Blood Angels" />
-                  <a href="/40k/list/?faction=bloodAngels">Blood Angels</a>
-                </li>
-                <li>
-                  <img src="/images/40k/darkAngels.svg" alt="Dark Angels" />
-                  <a href="/40k/list/?faction=darkAngels">Dark Angels</a>
-                </li>
-                <li>
-                  <img src="/images/40k/deathwatch.svg" alt="Deathwatch" />
-                  <a href="/40k/list/?faction=deathwatch">Deathwatch</a>
-                </li>
-                <!-- <li><a href="/40k/list/?faction=imperialFists">Imperial Fists</a></li>
-                <li><a href="/40k/list/?faction=ironHands">Iron Hands</a></li>
-                <li><a href="/40k/list/?faction=ravenGuard">Raven Guard</a></li>
-                <li><a href="/40k/list/?faction=salamanders">Salamanders</a></li> -->
-                <li>
-                  <img src="/images/40k/astartes.svg" alt="Space Marines" />
-                  <a href="/40k/list/?faction=spaceMarines">Space Marines</a>
-                </li>
-                <li>
-                  <img src="/images/40k/spaceWolves.svg" alt="Space Wolves" />
-                  <a href="/40k/list/?faction=spaceWolves">Space Wolves</a>
-                </li>
-                <!-- <li><a href="/40k/list/?faction=ultramarines">Ultramarines</a></li>
-                <li><a href="/40k/list/?faction=whiteScars">White Scars</a></li> -->
-              </ul>
-            </div>
-            <div class="megaMenuColumn">
-              <h3>Chaos</h3>
-              <ul>
-                <li>
-                  <img src="/images/40k/hereticAstartes.svg" alt="Chaos Space Marines" />
-                  <a href="/40k/list/?faction=chaosMarines">Chaos Space Marines</a>
-                </li>
-                <li>
-                  <img src="/images/40k/deathGuard.svg" alt="Death Guard" />
-                  <a href="/40k/list/?faction=deathGuard">Death Guard</a>
-                </li>
-                <li>
-                  <img src="/images/40k/emperorsChildren.svg" alt="Emperor's Children" />
-                  <a href="/40k/list/?faction=emperorsChildren">Emperor's Children</a>
-                </li>
-                <li>
-                  <img src="/images/40k/thousandSons.svg" alt="Thousand Sons" />
-                  <a href="/40k/list/?faction=thousandSons">Thousand Sons</a>
-                </li>
-                <li>
-                  <img src="/images/40k/worldEaters.svg" alt="World Eaters" />
-                  <a href="/40k/list/?faction=worldEaters">World Eaters</a>
-                </li>
-                <li>
-                  <img src="/images/40k/chaosDaemons.svg" alt="Chaos Daemons" />
-                  <a href="/40k/list/?faction=daemons">Chaos Daemons</a>
-                </li>
-                <li>
-                  <img src="/images/40k/questorTraitoris.svg" alt="Chaos Knights" />
-                  <a href="/40k/list/?faction=chaosKnights">Chaos Knights</a>
-                </li>
-              </ul>
-            </div>
-            <div class="megaMenuColumn">
-              <h3>Xenos</h3>
-              <ul>
-                <li>
-                  <img src="/images/40k/asuryani.svg" alt="Aeldari" />
-                  <a href="/40k/list/?faction=aeldari">Aeldari</a>
-                </li>
-                <li>
-                  <img src="/images/40k/drukhari.svg" alt="Drukhari" />
-                  <a href="/40k/list/?faction=drukhari">Drukhari</a>
-                </li>
-                <li>
-                  <img src="/images/40k/gsc.svg" alt="Genestealer Cults" />
-                  <a href="/40k/list/?faction=gsc">Genestealer Cults</a>
-                </li>
-                <li>
-                  <img src="/images/40k/votann.svg" alt="Leagues of Votann" />
-                  <a href="/40k/list/?faction=votann">Leagues of Votann</a>
-                </li>
-                <li>
-                  <img src="/images/40k/necrons.svg" alt="Necrons" />
-                  <a href="/40k/list/?faction=necrons">Necrons</a>
-                </li>
-                <li>
-                  <img src="/images/40k/orks.svg" alt="Orks" />
-                  <a href="/40k/list/?faction=orks">Orks</a>
-                </li>
-                <li>
-                  <img src="/images/40k/tyranids.svg" alt="Tyranids" />
-                  <a href="/40k/list/?faction=tyranids">Tyranids</a>
-                </li>
-                <li>
-                  <img src="/images/40k/tau.svg" alt="T'au Empire" />
-                  <a href="/40k/list/?faction=tau">T'au Empire</a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <mega-menu></mega-menu>
         </div>
       </nav>
 

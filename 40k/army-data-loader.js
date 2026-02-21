@@ -58,7 +58,6 @@ export const get40kArmyData = async faction => {
 
         // Merge units arrays
         factionUnitsWithPoints.push(...parentUnitsWithPoints);
-        factionUnitsWithPoints.sort(sortByName);
 
         // Merge enhancements
         if (rawFactionData.enhancements || parentFaction.enhancements) {
@@ -73,6 +72,9 @@ export const get40kArmyData = async faction => {
         points.enhancements = { ...parentPoints.enhancements, ...points.enhancements };
       }
     }
+
+    // sort units by name
+    factionUnitsWithPoints.sort(sortByName);
 
     // Build the final data structure
     const dataWithPoints = {

@@ -80,7 +80,7 @@
         flex-direction: column;
         gap: 0.25rem;
 
-        min-width: 200px;
+        flex: 0 0 200px;
         height: auto;
 
         select {
@@ -92,7 +92,7 @@
         }
       }
 
-      #datacardContainer {
+      section.datacards-container {
         flex: 1 1 auto;
         border-left: 1px solid #ccc;
         padding-left: 0.5rem;
@@ -106,128 +106,35 @@
         padding: 0.5rem;
         margin: 0.5rem 0;
         text-align: center;
-      }
-
-      data-card {
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
-        margin: 1rem;
-        min-height: 450px;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      #btnEditMetadata {
+        border: 1px solid #f3e6e6;
         border-radius: 0.5rem;
-        border: 1px solid #ccc;
-        overflow: hidden;
+        padding: 0.35rem 0.75rem;
+        background: #f3e6e6;
+        color: #5a0910;
+        font-weight: 600;
+        cursor: pointer;
+      }
 
-        header {
-          background-color: #274764;
-          color: white;
-          padding: 0.5rem;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.5rem;
+      #btnEditMetadata:hover,
+      #btnEditMetadata:focus-visible {
+        outline: 2px solid #f3e6e6;
+        outline-offset: 2px;
+      }
 
-          h3 {
-            margin: 0;
-          }
+      #btnEditMetadata:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
 
-          datacard-stat-line {
-            display: flex;
-            flex-direction: row;
-            gap: 0.5rem;
-          }
-
-          datacard-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            span.stat-label {
-              font-size: 0.75rem;
-            }
-
-            span.stat-value {
-              width: 2rem;
-              padding: 0.25rem;
-              border: 1px solid #ccc;
-              border-radius: 0.3rem 0;
-              text-align: center;
-              corner-shape: bevel;
-            }
-          }
-        }
-        section.body {
-          display: flex;
-          flex: 1 1 auto;
-
-          h4 {
-            margin: 0;
-            background-color: #274764;
-            color: white;
-            padding: 0.25rem;
-          }
-
-          .attack-profiles {
-            flex: 1 1 60%;
-
-            .attack-profile-table {
-              border-collapse: collapse;
-              border-spacing: 0;
-              margin-bottom: 0.5rem;
-              width: 100%;
-            }
-
-            thead {
-              margin: 0;
-              background-color: #274764;
-              color: white;
-              padding: 0.25rem;
-
-              img {
-                height: 1rem;
-                filter: invert(1);
-                margin-right: 0.25rem;
-              }
-
-              th.title {
-                font-variant: common-ligatures small-caps;
-                padding-left: 0.5rem;
-                text-align: left;
-              }
-
-              th.stat,
-              td.stat {
-                font-stretch: condensed;
-                width: 42px;
-              }
-            }
-
-            .attack-name {
-              font-size: 0.9rem;
-              padding-left: 1.1rem;
-            }
-
-            td.stat {
-              text-align: center;
-            }
-          }
-
-          aside {
-            flex: 0 0 40%;
-            padding: 0 0.5rem;
-            border-left: 1px solid #ccc;
-          }
-
-          .ability-profile {
-            font-stretch: condensed;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-          }
-        }
-        footer {
-          border-top: 1px solid #ccc;
-          padding: 0 0.5rem;
-        }
+      .u-hidden {
+        display: none;
       }
     </style>
   </head>
@@ -239,14 +146,11 @@
       </a>
       <img src="/images/aquila.svg" alt="Warhammer logo" />
       <h1>40k Army Datacards</h1>
-      <!-- <span class="actions">
-        <button id="btnExport" title="Export this army list">
-          <img src="/images/clipboard-copy.svg" alt="clipboard icon" />
-        </button>
-        <button id="btnDelete" title="Delete this army list">
-          <img src="/images/trash.svg" alt="trash icon" />
-        </button>
-      </span> -->
+      <span class="actions">
+        <a class="btn" id="btnMetadata" title="Manage metadata for army's units">
+          <img src="/images/db.svg" alt="database icon" />
+        </a>
+      </span>
     </header>
     <img src="/images/40k-gear-spinner.svg" alt="spinning gear placeholder" class="loader" />
     <main>
@@ -256,10 +160,18 @@
         <div id="totalPoints"></div>
         <select id="unitNames" size="10"></select>
       </aside>
-      <section id="datacardContainer"></section>
+      <section class="datacards-container">
+        <p class="warning u-hidden">
+          Missing some or all data for this unit; have you uploaded the datacard data for this
+          faction?
+          <button id="btnEditMetadata" type="button">Add datacard metadata</button>
+        </p>
+        <data-card></data-card>
+      </section>
     </main>
 
     <update-notification></update-notification>
+    <metadata-modal></metadata-modal>
   </body>
   <script src="40k-play.js" type="module"></script>
 </html>

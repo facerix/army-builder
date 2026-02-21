@@ -5,35 +5,35 @@ export const FACTION_NAMES_TO_CODES = {
   'Adeptus Custodes': 'custodes',
   'Adeptus Mechanicus': 'mechanicus',
   Aeldari: 'aeldari',
-  // "Astra Militarum": "astra", // No data yet
-  // "Black Templars": "blackTemplars", // No data yet
+  'Astra Militarum': 'astra',
+  'Black Templars': 'blackTemplars',
   'Blood Angels': 'bloodAngels',
-  // "Chaos Daemons": "daemons", // No data yet
-  // "Chaos Knights": "chaosKnights", // No data yet
+  'Chaos Daemons': 'daemons',
+  'Chaos Knights': 'chaosKnights',
   'Chaos Space Marines': 'chaosMarines',
-  // "Dark Angels": "darkAngels", // No data yet
-  // "Death Guard": "deathGuard", // No data yet
-  // "Deathwatch": "deathwatch", // No data yet
-  // "Drukhari": "drukhari", // No data yet
-  // "Emperor's Children": "emperorsChildren", // No data yet
-  // "Genestealer Cults": "gsc", // No data yet
-  'Grey Knights': 'greyKnights', // No data yet
-  // "Imperial Agents": "imperialAgents", // No data yet
-  // "Imperial Fists": "imperialFists", // No data yet
-  // "Imperial Knights": "imperialKnights", // No data yet
-  // "Iron Hands": "ironHands", // No data yet
+  'Dark Angels': 'darkAngels',
+  'Death Guard': 'deathGuard',
+  Deathwatch: 'deathwatch',
+  Drukhari: 'drukhari',
+  "Emperor's Children": 'emperorsChildren',
+  'Genestealer Cults': 'gsc',
+  'Grey Knights': 'greyKnights',
+  'Imperial Agents': 'imperialAgents',
+  'Imperial Fists': 'imperialFists',
+  'Imperial Knights': 'imperialKnights',
+  'Iron Hands': 'ironHands',
   'Leagues of Votann': 'votann',
   Necrons: 'necrons',
-  // "Orks": "orks", // No data yet
-  // "Raven Guard": "ravenGuard", // No data yet
-  // "Salamanders": "salamanders", // No data yet
+  Orks: 'orks',
+  'Raven Guard': 'ravenGuard',
+  Salamanders: 'salamanders',
   'Space Marines': 'spaceMarines',
   'Space Wolves': 'spaceWolves',
-  // "T'au Empire": "tau", // No data yet
-  // "Thousand Sons": "thousandSons", // No data yet
+  "T'au Empire": 'tau',
+  'Thousand Sons': 'thousandSons',
   Tyranids: 'tyranids',
-  // "Ultramarines": "ultramarines", // No data yet
-  // "White Scars": "whiteScars", // No data yet
+  Ultramarines: 'ultramarines',
+  'White Scars': 'whiteScars',
   'World Eaters': 'worldEaters',
 };
 
@@ -73,6 +73,54 @@ export const FACTION_NAMES = {
   tyranids: 'Tyranids',
   tau: "T'au Empire",
 };
+
+export const FACTION_GROUPS = [
+  {
+    name: 'Imperium',
+    factions: [
+      'sisters',
+      'custodes',
+      'mechanicus',
+      'astra',
+      'greyKnights',
+      'imperialAgents',
+      'imperialKnights',
+    ],
+  },
+  {
+    name: 'Adeptus Astartes',
+    factions: [
+      'blackTemplars',
+      'bloodAngels',
+      'darkAngels',
+      'deathwatch',
+      // 'imperialFists',
+      // 'ironHands',
+      // 'ravenGuard',
+      // 'salamanders',
+      'spaceMarines',
+      'spaceWolves',
+      // 'ultramarines',
+      // 'whiteScars',
+    ],
+  },
+  {
+    name: 'Chaos',
+    factions: [
+      'chaosMarines',
+      'deathGuard',
+      'emperorsChildren',
+      'thousandSons',
+      'worldEaters',
+      'daemons',
+      'chaosKnights',
+    ],
+  },
+  {
+    name: 'Xenos',
+    factions: ['aeldari', 'drukhari', 'gsc', 'votann', 'necrons', 'orks', 'tyranids', 'tau'],
+  },
+];
 
 export const FACTION_IMAGE_URLS = {
   // 40k imperium

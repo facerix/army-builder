@@ -40,10 +40,16 @@ const formatUnit = unit => {
     : '';
   const tags = unit.tags ? `<p><b>Tags:</b> ${unit.tags.join(', ')}</p>` : '';
   const rules = unit.rules ? `<p><b>Rules:</b> ${unit.rules.join(', ')}</p>` : '';
+  const weapons = unit.weapons?.length
+    ? `<p><b>Weapons:</b> ${unit.weapons.map(w => `${w.name} (${w.type})`).join(', ')}</p>`
+    : '';
+  const wargear = unit.wargear?.length
+    ? `<p><b>Wargear:</b> ${unit.wargear.map(w => w.name).join(', ')}</p>`
+    : '';
   const abilities = unit.abilities
     ? `<p><b>Abilities:</b> ${unit.abilities.map(a => a.name).join(', ')}</p>`
     : '';
-  const details = `${unitSize}${stats}${tags}${rules}${abilities}`;
+  const details = `${unitSize}${stats}${tags}${weapons}${wargear}${rules}${abilities}`;
   const debug = `<details><summary>Debug info</summary><pre>${JSON.stringify(unit, null, 2)}</pre></details>`;
   return `<li><details><summary>${summary}</summary>${details}${debug}</details></li>`;
 };
@@ -89,6 +95,9 @@ const simplifiedUnits = units => {
       modelCount: u.modelCount,
       tags: u.tags,
     };
+    if (u.wargear?.length) {
+      unit.wargear = u.wargear;
+    }
     if (Object.keys(u.unitOptions).length > 0) {
       unit.unitOptions = u.unitOptions;
     }
@@ -207,6 +216,13 @@ const loadAndParse = async function () {
           return `<li>${detachmentName}:<ul>${parsedData.enhancements[detachmentName].map(formatEnhancement).join('')}</ul></li>`;
         })
         .join('')}</ul></details>
+      <details><summary><b>Parsed Shared Upgrades (${parsedData.sharedUpgrades.length})</b></summary>
+        <ul>${parsedData.sharedUpgrades
+          .map(upgrade => {
+            return `<li><details><summary>${upgrade.name}</summary><p>${upgrade.description}</p></details></li>`;
+          })
+          .join('')}</ul>
+      </details>
     `;
   }
 };

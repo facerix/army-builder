@@ -159,6 +159,7 @@ section {
   h5 {
     margin: 0;
   }
+
   hr {
     width: 90%;
   }
@@ -172,7 +173,8 @@ section {
 }
 
 .btn,
-button {
+button,
+input[type='file']::file-selector-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -192,6 +194,7 @@ button {
 
   &:disabled {
     cursor: not-allowed;
+
     img {
       opacity: 0.5;
     }
@@ -201,6 +204,25 @@ button {
   &:not(:disabled):focus-visible {
     outline: var(--accent-color) auto 1px;
     background-color: #ddbfc67a;
+  }
+}
+
+input[type='file'] {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+
+  &::file-selector-button {
+    display: inline-flex;
+  }
+
+  &:not(:disabled):hover,
+  &:not(:disabled):focus-visible {
+    outline: var(--accent-color) auto 1px;
+
+    &::file-selector-button {
+      background-color: #ddbfc67a;
+    }
   }
 }
 
