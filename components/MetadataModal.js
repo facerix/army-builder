@@ -617,7 +617,7 @@ class MetadataModal extends HTMLElement {
       const weapons = this.form.querySelector('array-list#weapons').value ?? [];
       const wargear = this.form.querySelector('array-list#wargear').value ?? [];
       const abilities = this.form.querySelector('array-list#abilities').value ?? [];
-      const enhancements = this.form.querySelector('array-list#enhancements').value ?? [];
+      const enhancements = this.form.querySelector('array-list#enhancements')?.value ?? [];
 
       const metadata = {};
       if (this.#mode === 'unit' && statsRaw.length) {
