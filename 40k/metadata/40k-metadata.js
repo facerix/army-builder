@@ -170,10 +170,15 @@ whenLoaded.then(async () => {
     }
   };
 
-  uploadButton.addEventListener('click', async evt => {
+  uploadButton.addEventListener('click', async () => {
     const file = datafileInput.files[0];
     if (!file) {
       alert('Please select a file to upload');
+      return;
+    }
+    const ext = file.name.split('.').pop()?.toLowerCase();
+    if (ext !== 'cat' && ext !== 'xml') {
+      alert('Please select a .cat or .xml file');
       return;
     }
     uploadStatus.innerText = 'Loading catalogue file...';
