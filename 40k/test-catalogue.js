@@ -216,12 +216,41 @@ const loadAndParse = async function () {
           return `<li>${detachmentName}:<ul>${parsedData.enhancements[detachmentName].map(formatEnhancement).join('')}</ul></li>`;
         })
         .join('')}</ul></details>
-      <details><summary><b>Parsed Shared Upgrades (${parsedData.sharedUpgrades.length})</b></summary>
-        <ul>${parsedData.sharedUpgrades
-          .map(upgrade => {
-            return `<li><details><summary>${upgrade.name}</summary><p>${upgrade.description}</p></details></li>`;
-          })
-          .join('')}</ul>
+      <details>
+        <summary>
+          <b>Parsed Shared entities (
+            abilities: ${parsedData.shared?.abilities?.length},
+            weapons: ${parsedData.shared?.weapons?.length},
+            wargear: ${parsedData.shared?.wargear?.length},
+            enhancements: ${parsedData.shared?.enhancements?.length}
+          )</b>
+        </summary>
+        <ul>
+          <li>Abilities:</li>
+          <ul>${parsedData.shared?.abilities
+            ?.map(ability => {
+              return `<li><details><summary>${ability.name}</summary><p>${ability.description}</p></details></li>`;
+            })
+            .join('')}</ul>
+          <li>Weapons:</li>
+          <ul>${parsedData.shared?.weapons
+            ?.map(weapon => {
+              return `<li><details><summary>${weapon.name}</summary><p>${weapon.description}</p></details></li>`;
+            })
+            .join('')}</ul>
+          <li>Wargear:</li>
+          <ul>${parsedData.shared?.wargear
+            ?.map(wargear => {
+              return `<li><details><summary>${wargear.name}</summary><p>${wargear.description}</p></details></li>`;
+            })
+            .join('')}</ul>
+          <li>Enhancements:</li>
+          <ul>${parsedData.shared?.enhancements
+            ?.map(enhancement => {
+              return `<li><details><summary>${enhancement.name}</summary><p>${enhancement.description}</p></details></li>`;
+            })
+            .join('')}</ul>
+        </ul>
       </details>
     `;
   }

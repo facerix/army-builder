@@ -133,6 +133,14 @@ const CSS = `
         text-align: center;
         vertical-align: baseline;
       }
+
+      .enhancement {
+        margin-top: 2rem;
+
+        .enhancement-inner {
+          padding: 0.2rem 0 0.2rem 0.5rem
+        }
+      }
     }
 
     aside {
@@ -200,6 +208,22 @@ const TEMPLATE = `<header>
       </thead>
       <tbody></tbody>
     </table>
+    <table class="attack-profile-table" id="unknown-weapons">
+      <thead>
+        <tr>
+          <th class="title">
+            <img src="/images/weapons.svg" alt="swords icon" title="Incomplete Weapons">
+            <span>Incomplete Weapons</span>
+          </th>
+          <th colspan="6">Details</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="enhancement">
+      <h4>Enhancement</h4>
+      <div class="enhancement-inner"></div>
+    </div>
   </div>
   <aside>
     <div class="abilities">
@@ -248,9 +272,10 @@ const WeaponProfile = weapon => {
   if (!name) {
     return document.createDocumentFragment();
   }
+  const label = weapon.count > 1 ? `${weapon.count}x ${name}` : name;
   const columns = [
     h('td', { className: 'attack-name' }, [
-      h('span', { className: 'attack-name-text', innerText: name }),
+      h('span', { className: 'attack-name-text', innerText: label }),
       ...(normalizedTags?.map(tag => h('span', { className: 'attack-name-tag', innerText: tag })) ||
         []),
     ]),
@@ -261,10 +286,12 @@ const WeaponProfile = weapon => {
     const [range, a, ws, s, ap, d] =
       type === 'Ranged' ? normalizedProfile : [type, ...normalizedProfile];
     if (type === 'Ranged') {
-      columns.push(h('td', { className: 'stat', innerText: `${range}"` }));
+      const rangeValue = parseInt(range, 10);
+      columns.push(h('td', { className: 'stat', innerText: `${rangeValue}″` }));
     }
+    const wsValue = parseInt(ws, 10);
     columns.push(h('td', { className: 'stat', innerText: a }));
-    columns.push(h('td', { className: 'stat', innerText: `${ws}+` }));
+    columns.push(h('td', { className: 'stat', innerText: `${wsValue}+` }));
     columns.push(h('td', { className: 'stat', innerText: s }));
     columns.push(h('td', { className: 'stat', innerText: ap }));
     columns.push(h('td', { className: 'stat', innerText: d }));
@@ -299,6 +326,10 @@ class DataCard extends HTMLElement {
   #rangedWeapons = null;
   #meleeWeaponsSection = null;
   #meleeWeapons = null;
+  #unknownWeaponsSection = null;
+  #unknownWeapons = null;
+  #enhancement = null;
+  #enhancementInner = null;
   #abilities = null;
   #abilitiesInner = null;
   #wargear = null;
@@ -335,6 +366,10 @@ class DataCard extends HTMLElement {
     this.#rangedWeapons = this.shadowRoot.querySelector('#ranged-weapons tbody');
     this.#meleeWeaponsSection = this.shadowRoot.querySelector('#melee-weapons');
     this.#meleeWeapons = this.shadowRoot.querySelector('#melee-weapons tbody');
+    this.#unknownWeaponsSection = this.shadowRoot.querySelector('#unknown-weapons');
+    this.#unknownWeapons = this.shadowRoot.querySelector('#unknown-weapons tbody');
+    this.#enhancement = this.shadowRoot.querySelector('.enhancement');
+    this.#enhancementInner = this.shadowRoot.querySelector('.enhancement-inner');
     this.#abilities = this.shadowRoot.querySelector('.abilities');
     this.#abilitiesInner = this.shadowRoot.querySelector('.abilities-inner');
     this.#wargear = this.shadowRoot.querySelector('.wargear');
@@ -342,30 +377,7 @@ class DataCard extends HTMLElement {
     this.#unitComposition = this.shadowRoot.querySelector('.unit-composition');
     this.#keywords = this.shadowRoot.querySelector('.keywords');
 
-    // Set up event listeners
-    this.#setupEventListeners();
     this.#ready = true;
-  }
-
-  #setupEventListeners() {
-    // TODO
-    // // Delegate events for unit actions
-    // this.shadowRoot.addEventListener('click', evt => {
-    //   const btn = evt.target.closest('button');
-    //   if (!btn) return;
-    //   switch (btn.className) {
-    //     case 'remove-unit':
-    //       const unitSummary = btn.closest('.unit-summary');
-    //       const { unitId } = unitSummary.dataset;
-    //       this.#removeUnit(unitId);
-    //       break;
-    //     case 'options':
-    //       const optionsUnitSummary = btn.closest('.unit-summary');
-    //       const { unitId: optionsUnitId } = optionsUnitSummary.dataset;
-    //       this.#emit('unitOptions', optionsUnitId);
-    //       break;
-    //   }
-    // });
   }
 
   #render() {
@@ -426,6 +438,35 @@ class DataCard extends HTMLElement {
         this.#meleeWeaponsSection.style.display = 'none';
       }
     }
+
+    // under-defined weapons, if any
+    const underDefinedWeapons = this.#unitData.weapons?.filter(w => !w.type || !w.profile) || [];
+    if (underDefinedWeapons.length > 0) {
+      this.#unknownWeapons.innerHTML = '';
+      underDefinedWeapons.forEach(w => {
+        this.#unknownWeapons.appendChild(WeaponProfile(w));
+      });
+      this.#unknownWeaponsSection.style.display = '';
+    } else {
+      this.#unknownWeaponsSection.style.display = 'none';
+    }
+
+    // enhancement, if any
+    if (this.#enhancement) {
+      this.#enhancementInner.innerHTML = '';
+      if (this.#unitData.enhancement) {
+        this.#enhancementInner.appendChild(NameAndDescription(this.#unitData.enhancement));
+        this.#enhancement.style.display = '';
+      } else {
+        this.#enhancement.style.display = 'none';
+      }
+    }
+
+    console.log('about to check for enhancement: ', this.#unitData);
+    // <div class="unit-composition">
+    //   <h4>Unit Composition</h4>
+    //   <div class="model-count"><div class="ability-profile"><strong>Model Count: </strong><span>1</span></div><div class="ability-profile"><strong>Leader: </strong><span>This model can be attached to the following units: ^^**Ironkin Steeljacks with Heavy Volkanite Disintegrators^^**, ^^**Ironkin Steeljacks with Melee Weapons^^**</span></div></div>
+    // </div>
 
     // abilities
     const leaderAbility = this.#unitData.abilities?.find(a => a.name.toLowerCase() === 'leader');

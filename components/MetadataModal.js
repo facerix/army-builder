@@ -212,17 +212,6 @@ const buildStatsEditor = stats =>
     ]),
   ]);
 
-const buildTextareaField = (id, label, value, helper) =>
-  h(
-    'fieldset',
-    { className: 'field' },
-    [
-      h('label', { for: id, innerText: label }),
-      h('textarea', { id, name: id, value }),
-      helper ? h('div', { className: 'helper', innerText: helper }) : null,
-    ].filter(Boolean)
-  );
-
 const buildArrayList = (id, label, value, schema) => {
   const arrayList = h('array-list', { id, value });
   if (schema) {
@@ -232,22 +221,6 @@ const buildArrayList = (id, label, value, schema) => {
     h('label', { for: id, innerText: label }),
     arrayList,
   ]);
-};
-
-const parseJsonArray = (value, fieldLabel) => {
-  if (!value) {
-    return [];
-  }
-  let parsed;
-  try {
-    parsed = JSON.parse(value);
-  } catch (_error) {
-    throw new Error(`${fieldLabel} must be valid JSON.`);
-  }
-  if (!Array.isArray(parsed)) {
-    throw new Error(`${fieldLabel} must be a JSON array.`);
-  }
-  return parsed;
 };
 
 const ARRAY_LIST_CSS = `
@@ -561,6 +534,7 @@ customElements.define('array-list', ArrayList);
 class MetadataModal extends HTMLElement {
   #ready = false;
   #metadata = {};
+  #mode = 'unit'; // 'unit' or 'faction'
   #context = null;
 
   constructor() {
@@ -603,6 +577,7 @@ class MetadataModal extends HTMLElement {
   }
 
   open(context) {
+    this.#mode = context?.mode || 'unit';
     this.#context = context;
     this.#metadata = context?.metadata || {};
     if (!this.#ready) {
@@ -610,6 +585,7 @@ class MetadataModal extends HTMLElement {
     }
     this.render();
     this.dialog.showModal();
+    this.body.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   close() {
@@ -620,14 +596,17 @@ class MetadataModal extends HTMLElement {
 
   saveMetadata() {
     const formData = new window.FormData(this.form);
-    const statsRaw = [
-      formData.get('stat-m')?.trim(),
-      formData.get('stat-t')?.trim(),
-      formData.get('stat-sv')?.trim(),
-      formData.get('stat-w')?.trim(),
-      formData.get('stat-ld')?.trim(),
-      formData.get('stat-oc')?.trim(),
-    ].map(stat => parseInt(stat, 10));
+    const statsRaw =
+      this.#mode === 'unit'
+        ? [
+            formData.get('stat-m')?.trim(),
+            formData.get('stat-t')?.trim(),
+            formData.get('stat-sv')?.trim(),
+            formData.get('stat-w')?.trim(),
+            formData.get('stat-ld')?.trim(),
+            formData.get('stat-oc')?.trim(),
+          ].map(stat => parseInt(stat, 10))
+        : [];
     const errorElem = this.shadowRoot.querySelector('.error');
 
     if (errorElem) {
@@ -638,9 +617,10 @@ class MetadataModal extends HTMLElement {
       const weapons = this.form.querySelector('array-list#weapons').value ?? [];
       const wargear = this.form.querySelector('array-list#wargear').value ?? [];
       const abilities = this.form.querySelector('array-list#abilities').value ?? [];
+      const enhancements = this.form.querySelector('array-list#enhancements').value ?? [];
 
       const metadata = {};
-      if (statsRaw.length) {
+      if (this.#mode === 'unit' && statsRaw.length) {
         metadata.stats = statsRaw;
       }
       if (weapons.length) {
@@ -651,6 +631,9 @@ class MetadataModal extends HTMLElement {
       }
       if (abilities.length) {
         metadata.abilities = abilities;
+      }
+      if (this.#mode === 'faction' && enhancements.length) {
+        metadata.enhancements = enhancements;
       }
 
       this.dispatchEvent(
@@ -677,13 +660,14 @@ class MetadataModal extends HTMLElement {
 
     const unitName = this.#context?.unitName || 'Unit';
     if (this.titleElem) {
-      this.titleElem.textContent = `Datacard Metadata: ${unitName}`;
+      this.titleElem.textContent = `Datacard Metadata: ${this.#mode === 'unit' ? unitName : 'Faction'}`;
     }
 
     const statsValue = this.#metadata.stats?.map(stat => parseInt(stat, 10)) || [];
     const weaponsValue = JSON.stringify(this.#metadata.weapons || [], null, 2);
     const wargearValue = JSON.stringify(this.#metadata.wargear || [], null, 2);
     const abilitiesValue = JSON.stringify(this.#metadata.abilities || [], null, 2);
+    const enhancementsValue = JSON.stringify(this.#metadata.enhancements || [], null, 2);
 
     const fields = [
       buildStatsEditor(statsValue),
@@ -704,6 +688,17 @@ class MetadataModal extends HTMLElement {
       }),
       h('div', { className: 'error' }),
     ];
+
+    if (this.#mode === 'faction') {
+      // remove stats field for faction mode
+      fields.splice(0, 1);
+      fields.push(
+        buildArrayList('enhancements', 'Enhancements', enhancementsValue, {
+          name: 'String',
+          description: 'LongString',
+        })
+      );
+    }
 
     fields.forEach(field => {
       if (field) {

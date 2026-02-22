@@ -75,6 +75,7 @@ const CacheConfig = {
       '/aos/list/aos-list.js',
       '/components/AOSSection.js',
       '/components/DataCard.js',
+      '/components/ListView.js',
       '/components/MegaMenu.js',
       '/components/MetadataModal.js',
       '/components/TagList.js',

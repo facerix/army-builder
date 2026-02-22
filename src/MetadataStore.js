@@ -1,7 +1,7 @@
 const DB_NAME = 'PersonnelMetadataDB';
 const DB_VERSION = 1;
 const STORE_NAME = 'metadata';
-const SHARED_ENTITIES_UNIT_NAME = 'SHARED_ENTITIES';
+export const SHARED_ENTITIES_UNIT_NAME = 'SHARED_ENTITIES';
 
 let instance;
 
@@ -244,28 +244,32 @@ class MetadataStore {
     }
   }
 
-  async importMetadata(gameSystem, factionName, unitMetadataArray, sharedUpgradesMetadataArray) {
+  async importMetadata(gameSystem, factionName, unitsArray, sharedMetadata) {
     await this.#ensureInitialized();
     if (!this.#db) {
       return;
     }
 
     const records = [];
-    unitMetadataArray.forEach(unitMetadata => {
+    unitsArray.forEach(unitMetadata => {
       const { name, ...metadata } = unitMetadata;
       records.push(this.#buildRecord(gameSystem, factionName, name, metadata));
     });
 
-    if (sharedUpgradesMetadataArray?.length > 0) {
-      const sharedMetadata = {};
-      sharedUpgradesMetadataArray.forEach(sharedUpgradeMetadata => {
-        const { name, description } = sharedUpgradeMetadata;
-        sharedMetadata[name.toLowerCase()] = { description };
-      });
-      records.push(
-        this.#buildRecord(gameSystem, factionName, SHARED_ENTITIES_UNIT_NAME, sharedMetadata)
-      );
-    }
+    const normalizedShared = {};
+    Object.entries(sharedMetadata).forEach(([key, value]) => {
+      normalizedShared[key] = value.map(item => ({
+        ...item,
+        name: item.name.toLowerCase(),
+      }));
+    });
+    const sharedRecord = this.#buildRecord(
+      gameSystem,
+      factionName,
+      SHARED_ENTITIES_UNIT_NAME,
+      normalizedShared
+    );
+    records.push(sharedRecord);
 
     if (records.length === 0) {
       return;
@@ -343,8 +347,8 @@ export const setFactionMetadata = (gameSystem, factionName, metadata) =>
 export const deleteUnitMetadata = (gameSystem, factionName, unitName) =>
   metadataStore.deleteUnitMetadata(gameSystem, factionName, unitName);
 
-export const importMetadata = (gameSystem, factionName, unitMetadataArray) =>
-  metadataStore.importMetadata(gameSystem, factionName, unitMetadataArray);
+export const importMetadata = (gameSystem, factionName, unitsArray, sharedMetadata) =>
+  metadataStore.importMetadata(gameSystem, factionName, unitsArray, sharedMetadata);
 
 export const exportMetadata = (gameSystem, factionName) =>
   metadataStore.exportMetadata(gameSystem, factionName);

@@ -17,10 +17,11 @@ import {
   getFactionMetadata,
   setFactionMetadata,
   importMetadata,
+  SHARED_ENTITIES_UNIT_NAME,
 } from '/src/MetadataStore.js';
 import { parseBattleScribeCatalogue } from '/src/battlescribe-parser.js';
 
-const SUPPORTED_METADATA_KEYS = ['stats', 'abilities', 'weapons', 'wargear'];
+const SUPPORTED_METADATA_KEYS = ['stats', 'abilities', 'weapons', 'wargear', 'enhancements'];
 const isMetadataNonNull = metadata => {
   return !!metadata && Object.values(metadata).length > 0;
 };
@@ -47,7 +48,7 @@ const loadAndParse = async function (catalogFile) {
         weapons: unit.weapons,
         wargear: unit.wargear,
       })),
-      sharedUpgrades: rawData.sharedUpgrades ?? [],
+      shared: rawData.shared,
     };
   } catch (error) {
     console.error('Error:', error);
@@ -183,14 +184,19 @@ whenLoaded.then(async () => {
       if (parsedData.faction !== factionName) {
         showFactionMismatchWarning(parsedData.faction);
       }
+      const sharedCount =
+        parsedData.shared?.abilities?.length +
+        parsedData.shared?.weapons?.length +
+        parsedData.shared?.wargear?.length +
+        parsedData.shared?.enhancements?.length;
       const importButton = h('button', { type: 'button', innerText: 'Import' });
       importButton.addEventListener('click', async () => {
-        importMetadata('40k', parsedData.faction, parsedData.units, parsedData.sharedUpgrades)
+        importMetadata('40k', parsedData.faction, parsedData.units, parsedData.shared)
           .then(() => {
             render();
             let successText = `Imported ${parsedData.units.length} units`;
-            if (parsedData.sharedUpgrades.length > 0) {
-              successText += ` and ${parsedData.sharedUpgrades.length} shared upgrades`;
+            if (sharedCount > 0) {
+              successText += ` and ${sharedCount} shared entities`;
             }
             uploadStatus.replaceChildren(
               h('div', {
@@ -208,16 +214,21 @@ whenLoaded.then(async () => {
             );
           });
       });
+      let successText = `Found ${parsedData.units.length} units`;
+      if (sharedCount > 0) {
+        successText += ` and ${sharedCount} shared entities`;
+      }
       uploadStatus.appendChild(
-        h('div', { className: 'success', innerText: `Found ${parsedData.units.length} units.` }, [
-          importButton,
-        ])
+        h('div', { className: 'success', innerText: `${successText}.` }, [importButton])
       );
 
+      const unitNames = parsedData.units.map(unit => unit.name).join(', ');
       uploadStatus.appendChild(
         h('details', {}, [
           h('summary', { innerText: 'Parsed data' }),
-          h('textarea', { value: JSON.stringify(parsedData, null, 2), rows: 10, cols: 80 }),
+          h('div', { innerText: `Units: ${unitNames}` }),
+          h('label', { innerText: 'Shared entities:' }),
+          h('textarea', { innerText: JSON.stringify(parsedData.shared, null, 2) }),
         ])
       );
     } catch (error) {
@@ -233,8 +244,34 @@ whenLoaded.then(async () => {
   });
 
   const render = async () => {
+    metadataTable.innerHTML = '';
+
+    if (factionMetadata) {
+      const row = h('tr', {}, [
+        h('td', { innerText: 'Shared elements (rules, weapons, wargear)' }),
+      ]);
+      row.dataset.unitName = SHARED_ENTITIES_UNIT_NAME;
+      const statusCell = h('td', {});
+      Object.keys(factionMetadata).forEach(key => {
+        if (SUPPORTED_METADATA_KEYS.includes(key) && isMetadataNonNull(factionMetadata[key])) {
+          statusCell.appendChild(
+            h('span', { className: 'md-cat' }, [
+              h('img', { src: `/images/${key}.svg`, alt: key }),
+              h('span', { innerText: key }),
+            ])
+          );
+        }
+      });
+      row.appendChild(statusCell);
+      row.appendChild(
+        h('td', {}, [
+          h('button', { innerText: 'Edit', type: 'button', title: 'Edit metadata for this unit' }),
+        ])
+      );
+      metadataTable.appendChild(row);
+    }
+
     if (factionCoreData) {
-      metadataTable.innerHTML = '';
       factionCoreData.units.forEach(unit => {
         const row = h('tr', {}, [h('td', { innerText: unit.name })]);
         row.dataset.unitName = unit.name;
@@ -261,24 +298,6 @@ whenLoaded.then(async () => {
         }, 0);
         metadataTable.appendChild(row);
       });
-
-      if (Object.keys(factionMetadata).length > 0) {
-        const row = h('tr', {}, [h('td', { innerText: 'Shared Upgrades' })]);
-        row.dataset.unitName = SHARED_ENTITIES_UNIT_NAME;
-        const statusCell = h('td', { innerText: '...checking...' });
-        const actionsCell = h('td', {}, [
-          h('button', { innerText: 'Edit', type: 'button', title: 'Edit metadata for this unit' }),
-        ]);
-        row.appendChild(statusCell);
-        row.appendChild(actionsCell);
-        metadataTable.appendChild(row);
-        // const sharedUpgrades = factionMetadata[SHARED_ENTITIES_UNIT_NAME];
-        // if (sharedUpgrades?.length > 0) {
-        //   sharedUpgrades.forEach(sharedUpgrade => {
-        //     const row = h('tr', {}, [h('td', { innerText: sharedUpgrade.name })]);
-        //   });
-        // }
-      }
     } else {
       console.error('No core data found');
     }
@@ -289,6 +308,7 @@ whenLoaded.then(async () => {
     if (target.tagName === 'BUTTON') {
       const row = target.closest('tr');
       const unitName = row.dataset.unitName;
+      const mode = unitName !== SHARED_ENTITIES_UNIT_NAME ? 'unit' : 'faction';
       if (unitName) {
         const metadata = await getUnitMetadata('40k', factionName, unitName);
         metadataModal.open({
@@ -296,6 +316,7 @@ whenLoaded.then(async () => {
           factionName,
           unitName,
           metadata,
+          mode,
         });
       }
     }
@@ -307,7 +328,11 @@ whenLoaded.then(async () => {
     if (!gameSystem || !savedFaction || !unitName) {
       return;
     }
-    await setUnitMetadata(gameSystem, savedFaction, unitName, metadata);
+    if (unitName === SHARED_ENTITIES_UNIT_NAME) {
+      await setFactionMetadata(gameSystem, savedFaction, metadata);
+    } else {
+      await setUnitMetadata(gameSystem, savedFaction, unitName, metadata);
+    }
     render();
   });
 

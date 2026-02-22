@@ -781,27 +781,6 @@ export const parseBattleScribeCatalogue = xmlString => {
     };
   }
 
-  // shared upgrade entries (i.e. usually wargear / weapons)
-  const sharedUpgrades = [];
-  const sharedUpgradeEntries = Array.from(
-    sharedSelectionEntries.querySelectorAll(':scope > selectionEntry[type="upgrade"]')
-  );
-  sharedUpgradeEntries.forEach(entry => {
-    const name = entry.getAttribute('name');
-    const description = unescapeQuotes(
-      entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? ''
-    );
-    if (name && description) {
-      sharedUpgrades.push({
-        name,
-        description,
-      });
-    } else {
-      // console.warn(`shared upgrade entry '${name}' has no name or description`);
-      // console.log('entry: ', entry);
-    }
-  });
-
   // Find all unit-type selectionEntry elements
   // Handle XML namespaces - querySelector should work, but we can also use getElementsByTagName
   const unitEntries = Array.from(
@@ -865,10 +844,90 @@ export const parseBattleScribeCatalogue = xmlString => {
     });
   }
 
+  // get shared entities (rules, weapons, wargear)
+  // shared upgrade entries (i.e. usually wargear / weapons)
+  const shared = {
+    abilities: [],
+    weapons: [],
+    wargear: [],
+    enhancements: [],
+  };
+  const sharedRuleEntries = Array.from(catalogue.querySelectorAll(':scope > sharedRules > rule'));
+  const sharedProfileEntries = Array.from(
+    catalogue.querySelectorAll(':scope > sharedProfiles > profile')
+  );
+  sharedRuleEntries.forEach(entry => {
+    const name = entry.getAttribute('name');
+    const description = unescapeQuotes(
+      entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? ''
+    );
+    if (name && description) {
+      shared.abilities.push({
+        name,
+        description,
+      });
+    }
+  });
+  sharedProfileEntries.forEach(entry => {
+    const type = entry.getAttribute('typeName');
+    const name = entry.getAttribute('name');
+    const description = unescapeQuotes(
+      entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? ''
+    );
+    switch (type) {
+      case 'Abilities':
+        shared.abilities.push({
+          name,
+          description,
+        });
+        break;
+      default:
+        // everything else is (probably) weapons
+        shared.weapons.push({
+          name,
+          type: type === 'Ranged Weapons' ? 'Ranged' : 'Melee',
+          profile: extractWeaponStats(entry),
+          keywords: extractWeaponKeywords(entry),
+        });
+        break;
+    }
+  });
+  const sharedWargearEntries = Array.from(
+    sharedSelectionEntries.querySelectorAll(':scope > selectionEntry[type="upgrade"]')
+  );
+  sharedWargearEntries.forEach(entry => {
+    const name = entry.getAttribute('name');
+    const description = unescapeQuotes(
+      entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? ''
+    );
+    if (name && description) {
+      shared.wargear.push({
+        name,
+        description,
+      });
+    }
+  });
+  const sharedEnhancementEntries = Array.from(
+    catalogue.querySelectorAll(
+      'selectionEntryGroup[name="Enhancements"] selectionEntry[type="upgrade"]'
+    )
+  );
+  sharedEnhancementEntries.forEach(entry => {
+    const name = entry.getAttribute('name');
+    const description = unescapeQuotes(
+      entry.querySelector('characteristic[name="Description"]')?.textContent.trim() ?? ''
+    );
+    if (name && description) {
+      shared.enhancements.push({
+        name,
+        description,
+      });
+    }
+  });
   return {
     faction: factionName,
     units,
     enhancements,
-    sharedUpgrades,
+    shared,
   };
 };

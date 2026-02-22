@@ -1,7 +1,7 @@
 import DataStore from '/src/DataStore.js';
-import { h } from '/src/domUtils.js';
 import '/components/UpdateNotification.js';
 import '/components/DataCard.js';
+import '/components/ListView.js';
 import '/components/MetadataModal.js';
 import { get40kArmyData } from '../army-data-loader.js';
 import { FACTION_NAMES } from '/40k/army-data/factions.js';
@@ -14,7 +14,7 @@ import { getUnitMetadata, getFactionMetadata, setUnitMetadata } from '/src/Metad
  * and splitting multi-profile weapons into separate weapons
  * @param {Array} unitWeapons
  * @param {Array} weaponMetadata
- * @param {Object} factionMetadata
+ * @param {Array} factionMetadata
  * @returns {Array} - Array of weapon objects with metadata applied
  */
 const processWeapons = (unitWeapons, weaponMetadata, factionMetadata, defaultCount = 1) => {
@@ -22,7 +22,7 @@ const processWeapons = (unitWeapons, weaponMetadata, factionMetadata, defaultCou
   for (const weapon of unitWeapons) {
     const weaponLookup = weapon.name.toLowerCase();
     const metadata = weaponMetadata.find(w => w.name.toLowerCase() === weaponLookup);
-    const sharedMetadata = factionMetadata?.[weaponLookup];
+    const sharedMetadata = factionMetadata.find(w => w.name.toLowerCase() === weaponLookup);
     const weaponType = metadata?.type || sharedMetadata?.type;
     if (weaponType === 'Multi') {
       const variants = weapon.variants || metadata?.variants || sharedMetadata?.variants || [];
@@ -83,7 +83,7 @@ const getUnitFullDatacardData = (unit, datacardData, factionMetadata = {}) => {
       normalized.weapons = processWeapons(
         weaponMetadata,
         weaponMetadata,
-        factionMetadata,
+        factionMetadata?.weapons || [],
         normalized.modelCount
       );
     } else {
@@ -91,7 +91,7 @@ const getUnitFullDatacardData = (unit, datacardData, factionMetadata = {}) => {
       normalized.weapons = processWeapons(
         unitWeapons,
         weaponMetadata,
-        factionMetadata,
+        factionMetadata?.weapons || [],
         normalized.modelCount
       );
     }
@@ -107,7 +107,9 @@ const getUnitFullDatacardData = (unit, datacardData, factionMetadata = {}) => {
     for (const wg of unitWargear) {
       const nameLookup = wg.name.toLowerCase();
       const metadata = wargearMetadata.find(w => w.name.toLowerCase() === nameLookup);
-      const sharedMetadata = factionMetadata?.[nameLookup];
+      const sharedMetadata = factionMetadata?.wargear?.find(
+        w => w.name.toLowerCase() === nameLookup
+      );
       normalized.wargear.push({
         name: wg.name,
         description: metadata?.description || sharedMetadata?.description || '',
@@ -130,6 +132,20 @@ const getUnitFullDatacardData = (unit, datacardData, factionMetadata = {}) => {
       description: r.description || sharedRule?.description || '',
     };
   });
+
+  // enhancement, if any
+  if (unit.characterDetails?.enhancementName) {
+    const enhancementName = unit.characterDetails.enhancementName;
+    const enhancement = factionMetadata?.enhancements?.find(
+      e => e.name.toLowerCase() === enhancementName.toLowerCase()
+    );
+    if (enhancement) {
+      normalized.enhancement = {
+        name: enhancementName,
+        description: enhancement.description,
+      };
+    }
+  }
 
   return normalized;
 };
@@ -158,6 +174,7 @@ const isCardComplete = unitDatacardData => {
 const whenLoaded = Promise.all([
   customElements.whenDefined('update-notification'),
   customElements.whenDefined('data-card'),
+  customElements.whenDefined('list-view'),
 ]);
 
 whenLoaded.then(async () => {
@@ -203,7 +220,7 @@ whenLoaded.then(async () => {
   const armyName = document.querySelector('#armyName');
   const detachmentName = document.querySelector('#detachment');
   const totalPoints = document.querySelector('#totalPoints');
-  const unitNamesSelect = document.querySelector('#unitNames');
+  const unitList = document.querySelector('#unitList');
   const datacardElement = document.querySelector('data-card');
   const warningElement = document.querySelector('.warning');
   const warningButton = document.querySelector('#btnEditMetadata');
@@ -256,8 +273,8 @@ whenLoaded.then(async () => {
     });
   }
 
-  unitNamesSelect.addEventListener('change', async evt => {
-    const unitId = evt.target.value;
+  unitList.addEventListener('change', async evt => {
+    const unitId = evt.detail.id;
     selectedUnitId = unitId;
     const unit = cachedCanonicalUnits?.get(unitId);
 
@@ -345,9 +362,8 @@ whenLoaded.then(async () => {
     }
 
     sortedUnitList.forEach(unit => {
-      unitNamesSelect.append(h('option', { value: unit.id, innerText: unit.name }));
+      unitList.addItem(unit);
     });
-    unitNamesSelect.size = sortedUnitList.length;
   };
 
   DataStore.init();
