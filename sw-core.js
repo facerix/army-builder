@@ -142,8 +142,11 @@ const CacheConfig = {
   getStaticAssets() {
     return [
       // Logos and favicons
-      '/icon512_maskable.png',
-      '/icon512_rounded.png',
+      '/icon.svg',
+      '/favicon.ico',
+      '/icons/icon512_maskable.png',
+      '/icons/icon512_rounded.png',
+      '/icons/icon-192x192.png',
 
       // 40k logos
       '/images/40k/astartes.svg',
@@ -195,7 +198,6 @@ const CacheConfig = {
       '/images/aos/tzeentch.svg',
       
       // SVG images
-      '/crossed-swords.svg',
       '/images/40k-dots.svg',
       '/images/40k-gear-spinner.svg',
       '/images/aos-infinite-spinner.svg',

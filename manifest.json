@@ -11,16 +11,12 @@
   "lang": "en-US",
   "icons": [
     {
-      "purpose": "maskable",
+      "src": "icons/icon512_maskable.png",
+      "type": "image/png",
       "sizes": "512x512",
-      "src": "icon512_maskable.png",
-      "type": "image/png"
+      "purpose": "maskable"
     },
-    {
-      "purpose": "any",
-      "sizes": "512x512",
-      "src": "icon512_rounded.png",
-      "type": "image/png"
-    }
+    { "src": "icons/icon512_rounded.png", "type": "image/png", "sizes": "512x512" },
+    { "src": "icons/icon-192x192.png", "type": "image/png", "sizes": "192x192" }
   ]
 }
