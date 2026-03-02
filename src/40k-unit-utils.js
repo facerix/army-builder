@@ -551,6 +551,150 @@ const buildSelectedWargear = (baseWargear = [], wargearOptions = []) => {
   return uniqueNames.map(name => ({ name }));
 };
 
+// --- Weapon metadata processing (for datacard generation) ---
+
+/**
+ * Expands weapon items that encapsulate multiple actual weapons (e.g. "Bolt revolver & Plasma knife"
+ * or "L7 missile launcher & 1 Sagitaur missile launcher") into separate items before metadata lookup.
+ * Handles optional numeric prefixes like "1 Sagitaur missile launcher" as the count for that weapon.
+ * @param {Array} weapons - Array of {name, count?, ...}
+ * @returns {Array} - Expanded array of weapon items
+ */
+export const expandWeaponItems = weapons => {
+  const expanded = [];
+  for (const weapon of weapons) {
+    const name = weapon.name || '';
+    if (!name.includes('&')) {
+      expanded.push({ ...weapon });
+      continue;
+    }
+    const parts = name.split(/\s+&\s+/);
+    for (const part of parts) {
+      const trimmed = part.trim();
+      const countMatch = trimmed.match(/^(\d+)\s+(.+)$/);
+      if (countMatch) {
+        expanded.push({
+          ...weapon,
+          name: countMatch[2].trim(),
+          count: parseInt(countMatch[1], 10),
+        });
+      } else {
+        expanded.push({
+          ...weapon,
+          name: trimmed,
+        });
+      }
+    }
+  }
+  return expanded;
+};
+
+/**
+ * Extracts the base weapon name from a metadata entry for comparison.
+ * Strips leading symbols (➤, ►, etc.) and trailing " – [attack type]" or " - [attack type]".
+ * @param {string} name - Metadata weapon name
+ * @returns {string} - Normalized base name (lowercase)
+ */
+const getBaseWeaponName = name => {
+  const stripped = (name || '').replace(/^[\s➤►→\u2022]*/, '').trim();
+  const parts = stripped.split(/\s+[–—-]\s+/);
+  return parts[0].toLowerCase().trim();
+};
+
+const toSingular = s => {
+  if (!s || s.length < 2) return s;
+  if (s.endsWith('es') && s.length > 3) return s.slice(0, -2);
+  if (s.endsWith('s')) return s.slice(0, -1);
+  return s;
+};
+
+const toPlural = s => {
+  if (!s || s.length < 1) return s;
+  if (/[sxz]$|sh$|ch$/.test(s)) return s + 'es';
+  return s + 's';
+};
+
+const getWeaponLookupVariants = weaponLookup => {
+  const variants = [weaponLookup];
+  const singular = toSingular(weaponLookup);
+  const plural = toPlural(weaponLookup);
+  if (singular !== weaponLookup) variants.push(singular);
+  if (plural !== weaponLookup) variants.push(plural);
+  return variants;
+};
+
+/**
+ * Finds all metadata entries that match a weapon (exact or base-name match).
+ * Tries both singular and plural forms to catch "Bolt revolver"/"Bolt revolvers" and
+ * "Armored wheel"/"Armored wheels".
+ * Handles multi-profile weapons stored as "[name] – [attack type]" or "➤ [name] - [attack type]".
+ * @param {string} weaponLookup - Weapon name (lowercase)
+ * @param {Array} metadataArray - Array of weapon metadata
+ * @returns {Array} - All matching metadata entries
+ */
+export const findMatchingWeaponMetadata = (weaponLookup, metadataArray) => {
+  const variants = new Set(getWeaponLookupVariants(weaponLookup));
+  return metadataArray.filter(w => {
+    const metaName = w.name.toLowerCase();
+    const metaBase = getBaseWeaponName(w.name);
+    return variants.has(metaName) || variants.has(metaBase);
+  });
+};
+
+/**
+ * Processes weapons for datacard generation, adding metadata where available
+ * @param {Array} unitWeapons
+ * @param {Array} weaponMetadata
+ * @param {Array} factionMetadata
+ * @param {number} defaultCount
+ * @returns {Array} - Array of weapon objects with metadata applied
+ */
+export const processWeapons = (unitWeapons, weaponMetadata, factionMetadata, defaultCount = 1) => {
+  const expandedWeapons = expandWeaponItems(unitWeapons);
+  const weapons = [];
+  const expandedProfileKeys = new Set();
+
+  for (const weapon of expandedWeapons) {
+    const weaponLookup = weapon.name.toLowerCase();
+    const unitMatches = findMatchingWeaponMetadata(weaponLookup, weaponMetadata);
+    const sharedMatches = findMatchingWeaponMetadata(weaponLookup, factionMetadata);
+    const matches = unitMatches.length > 0 ? unitMatches : sharedMatches;
+    const metadata = matches[0];
+
+    if (matches.length > 1) {
+      const profileKey = matches
+        .map(m => `${(m.name || '').toLowerCase()}|${m.type || ''}`)
+        .sort()
+        .join(';');
+      if (expandedProfileKeys.has(profileKey)) continue;
+      expandedProfileKeys.add(profileKey);
+
+      matches.forEach(m => {
+        weapons.push({
+          name: m.name,
+          description: m.description || '',
+          count: weapon.count || m.count || defaultCount,
+          type: m.type,
+          profile: m.profile,
+          keywords: m.keywords ?? m.tags ?? [],
+        });
+      });
+    } else {
+      weapons.push({
+        name: weapon.name,
+        description: metadata?.description || '',
+        count: weapon.count || metadata?.count || defaultCount,
+        type: metadata?.type,
+        profile: metadata?.profile,
+        keywords: metadata?.keywords ?? metadata?.tags ?? [],
+      });
+    }
+  }
+  return weapons;
+};
+
+// --- End weapon metadata processing ---
+
 /**
  * Gets the canonical form of a unit instance - a simplified representation of the unit's actual configuration
  * Takes core unit data from army-data, unit instance data from localStorage, and detachment name,

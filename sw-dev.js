@@ -1,7 +1,7 @@
 // Development Service Worker with Mock Server
 // This version includes the mock server for local development
 // Import shared caching core
-const VERSION = '3.7.2-dev';
+const VERSION = '3.8.0-dev';
 importScripts(`/sw-core.js?v=${VERSION}`);
 
 // Configure cache using shared config helper

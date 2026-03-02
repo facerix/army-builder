@@ -664,7 +664,12 @@ class MetadataModal extends HTMLElement {
     }
 
     const statsValue = this.#metadata.stats?.map(stat => parseInt(stat, 10)) || [];
-    const weaponsValue = JSON.stringify(this.#metadata.weapons || [], null, 2);
+    const weapons = (this.#metadata.weapons || []).map(w => {
+      const keywords = w.keywords ?? w.tags ?? [];
+      const { tags, ...rest } = w;
+      return { ...rest, keywords };
+    });
+    const weaponsValue = JSON.stringify(weapons, null, 2);
     const wargearValue = JSON.stringify(this.#metadata.wargear || [], null, 2);
     const abilitiesValue = JSON.stringify(this.#metadata.abilities || [], null, 2);
     const enhancementsValue = JSON.stringify(this.#metadata.enhancements || [], null, 2);
@@ -675,7 +680,7 @@ class MetadataModal extends HTMLElement {
         name: 'String',
         type: ['Ranged', 'Melee'],
         profile: 'String',
-        tags: 'TagList',
+        keywords: 'TagList',
       }),
       buildArrayList('wargear', 'Wargear', wargearValue, {
         name: 'String',

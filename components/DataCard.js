@@ -1,5 +1,34 @@
 import { h } from '../src/domUtils.js';
 
+/**
+ * Returns an array of metadata categories that are missing for the unit datacard.
+ * @param {Object} unitDatacardData - The normalized unit datacard data
+ * @returns {string[]} - Array of missing category names (e.g. ['weapons', 'wargear'])
+ */
+const getMissingMetadata = unitDatacardData => {
+  if (!unitDatacardData) return [];
+  const missing = [];
+  if (!unitDatacardData.stats) {
+    missing.push('stats');
+  }
+  const hasWeaponProfiles =
+    unitDatacardData.weapons?.length > 0 && unitDatacardData.weapons?.every(w => !!w.profile);
+  if (!hasWeaponProfiles) {
+    missing.push('weapons');
+  }
+  const hasWargearDescriptions = unitDatacardData.wargear?.every(w => !!w.description);
+  if (!hasWargearDescriptions) {
+    missing.push('wargear');
+  }
+  const hasAbilityDescriptions = unitDatacardData.abilities?.every(
+    a => !!a.description || ['Core', 'Faction'].includes(a.type)
+  );
+  if (!hasAbilityDescriptions) {
+    missing.push('abilities');
+  }
+  return missing;
+};
+
 const CSS = `
 :host {
   
@@ -162,9 +191,43 @@ const CSS = `
       }
     }
   }
-  footer {
+    footer {
     border-top: 1px solid #ccc;
     padding: 0 0.5rem;
+  }
+
+  .metadata-missing {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #c00;
+
+    button {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      border-radius: 0.25rem;
+      background: #f8f8f8;
+
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+
+  .section-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .metadata-missing-bar {
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 0.25rem;
   }
 }
 `;
@@ -220,6 +283,7 @@ const TEMPLATE = `<header>
       </thead>
       <tbody></tbody>
     </table>
+    <div class="metadata-missing-bar" id="weapons-metadata-bar"></div>
     <div class="enhancement">
       <h4>Enhancement</h4>
       <div class="enhancement-inner"></div>
@@ -228,10 +292,12 @@ const TEMPLATE = `<header>
   <aside>
     <div class="abilities">
       <h4>Abilities</h4>
+      <span id="abilities-metadata-bar"></span>
       <div class="abilities-inner"></div>
     </div>
     <div class="wargear">
       <h4>Wargear Abilities</h4>
+      <span id="wargear-metadata-bar"></span>
       <div class="wargear-inner"></div>
     </div>
     <div class="unit-composition">
@@ -266,8 +332,12 @@ const StatLine = stats => {
 };
 
 const WeaponProfile = weapon => {
-  const { name, profile, type = 'Melee', tags = [] } = weapon;
-  const normalizedTags = Array.isArray(tags) ? tags : (tags?.split(',') ?? []);
+  const { name, profile, type = 'Melee', keywords = [], tags = [] } = weapon;
+  const normalizedKeywords = Array.isArray(keywords)
+    ? keywords
+    : Array.isArray(tags)
+      ? tags
+      : (keywords?.split(',') ?? tags?.split(',') ?? []);
   const normalizedProfile = Array.isArray(profile) ? profile : (profile?.split(',') ?? []);
   if (!name) {
     return document.createDocumentFragment();
@@ -276,8 +346,9 @@ const WeaponProfile = weapon => {
   const columns = [
     h('td', { className: 'attack-name' }, [
       h('span', { className: 'attack-name-text', innerText: label }),
-      ...(normalizedTags?.map(tag => h('span', { className: 'attack-name-tag', innerText: tag })) ||
-        []),
+      ...(normalizedKeywords?.map(kw =>
+        h('span', { className: 'attack-name-tag', innerText: kw })
+      ) || []),
     ]),
   ];
   if (!normalizedProfile || normalizedProfile.length === 0) {
@@ -315,9 +386,31 @@ const InlineAbilities = (abilities, type) => {
   ]);
 };
 
+const AddMetadataButton = () => {
+  const btn = h('button', { type: 'button', innerText: 'Add metadata' });
+  btn.addEventListener('click', () => {
+    btn.dispatchEvent(
+      new CustomEvent('add-metadata-requested', {
+        bubbles: true,
+        composed: true,
+      })
+    );
+  });
+  return btn;
+};
+
+const MetadataMissingIndicator = (message, showButton = true) => {
+  const parts = [h('span', { innerText: message })];
+  if (showButton) {
+    parts.push(AddMetadataButton());
+  }
+  return h('span', { className: 'metadata-missing' }, parts);
+};
+
 class DataCard extends HTMLElement {
   #ready = false;
   #unitData = null;
+  #missingMetadata = [];
 
   // DOM element references to hang onto for easy access
   #unitName = null;
@@ -336,6 +429,9 @@ class DataCard extends HTMLElement {
   #wargearInner = null;
   #unitComposition = null;
   #keywords = null;
+  #weaponsMetadataBar = null;
+  #abilitiesMetadataBar = null;
+  #wargearMetadataBar = null;
 
   constructor() {
     super();
@@ -376,6 +472,9 @@ class DataCard extends HTMLElement {
     this.#wargearInner = this.shadowRoot.querySelector('.wargear-inner');
     this.#unitComposition = this.shadowRoot.querySelector('.unit-composition');
     this.#keywords = this.shadowRoot.querySelector('.keywords');
+    this.#weaponsMetadataBar = this.shadowRoot.querySelector('#weapons-metadata-bar');
+    this.#abilitiesMetadataBar = this.shadowRoot.querySelector('#abilities-metadata-bar');
+    this.#wargearMetadataBar = this.shadowRoot.querySelector('#wargear-metadata-bar');
 
     this.#ready = true;
   }
@@ -405,7 +504,10 @@ class DataCard extends HTMLElement {
       if (this.#unitData.stats) {
         this.#statLine.appendChild(StatLine(this.#unitData.stats));
       } else {
-        this.#statLine.textContent = '[Missing statline for this unit]';
+        const container = h('div', { className: 'metadata-missing-wrapper' }, [
+          MetadataMissingIndicator('Missing statline', this.#missingMetadata?.includes('stats')),
+        ]);
+        this.#statLine.appendChild(container);
       }
     }
 
@@ -451,6 +553,18 @@ class DataCard extends HTMLElement {
       this.#unknownWeaponsSection.style.display = 'none';
     }
 
+    // weapons metadata bar
+    if (this.#weaponsMetadataBar) {
+      this.#weaponsMetadataBar.innerHTML = '';
+      this.#weaponsMetadataBar.style.display = 'none';
+      if (this.#missingMetadata?.includes('weapons')) {
+        this.#weaponsMetadataBar.appendChild(
+          MetadataMissingIndicator('Missing weapon profiles', true)
+        );
+        this.#weaponsMetadataBar.style.display = '';
+      }
+    }
+
     // enhancement, if any
     if (this.#enhancement) {
       this.#enhancementInner.innerHTML = '';
@@ -461,12 +575,6 @@ class DataCard extends HTMLElement {
         this.#enhancement.style.display = 'none';
       }
     }
-
-    console.log('about to check for enhancement: ', this.#unitData);
-    // <div class="unit-composition">
-    //   <h4>Unit Composition</h4>
-    //   <div class="model-count"><div class="ability-profile"><strong>Model Count: </strong><span>1</span></div><div class="ability-profile"><strong>Leader: </strong><span>This model can be attached to the following units: ^^**Ironkin Steeljacks with Heavy Volkanite Disintegrators^^**, ^^**Ironkin Steeljacks with Melee Weapons^^**</span></div></div>
-    // </div>
 
     // abilities
     const leaderAbility = this.#unitData.abilities?.find(a => a.name.toLowerCase() === 'leader');
@@ -494,6 +602,14 @@ class DataCard extends HTMLElement {
       } else {
         this.#abilities.style.display = 'none';
       }
+      if (this.#abilitiesMetadataBar) {
+        this.#abilitiesMetadataBar.innerHTML = '';
+        if (this.#missingMetadata?.includes('abilities')) {
+          this.#abilitiesMetadataBar.appendChild(
+            MetadataMissingIndicator('Missing ability descriptions', true)
+          );
+        }
+      }
     }
 
     // wargear
@@ -506,6 +622,14 @@ class DataCard extends HTMLElement {
         this.#wargear.style.display = '';
       } else {
         this.#wargear.style.display = 'none';
+      }
+      if (this.#wargearMetadataBar) {
+        this.#wargearMetadataBar.innerHTML = '';
+        if (this.#missingMetadata?.includes('wargear')) {
+          this.#wargearMetadataBar.appendChild(
+            MetadataMissingIndicator('Missing wargear descriptions', true)
+          );
+        }
       }
     }
 
@@ -530,6 +654,7 @@ class DataCard extends HTMLElement {
 
   set unitData(data) {
     this.#unitData = data;
+    this.#missingMetadata = getMissingMetadata(data);
     this.#render();
   }
 

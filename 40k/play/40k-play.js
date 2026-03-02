@@ -6,49 +6,8 @@ import '/components/MetadataModal.js';
 import { get40kArmyData } from '../army-data-loader.js';
 import { FACTION_NAMES } from '/40k/army-data/factions.js';
 import { serviceWorkerManager } from '/src/ServiceWorkerManager.js';
-import { getUnitCanonicalForm } from '/src/40k-unit-utils.js';
+import { getUnitCanonicalForm, processWeapons } from '/src/40k-unit-utils.js';
 import { getUnitMetadata, getFactionMetadata, setUnitMetadata } from '/src/MetadataStore.js';
-
-/**
- * Processes weapons for datacard generation, adding metadata where available
- * and splitting multi-profile weapons into separate weapons
- * @param {Array} unitWeapons
- * @param {Array} weaponMetadata
- * @param {Array} factionMetadata
- * @returns {Array} - Array of weapon objects with metadata applied
- */
-const processWeapons = (unitWeapons, weaponMetadata, factionMetadata, defaultCount = 1) => {
-  const weapons = [];
-  for (const weapon of unitWeapons) {
-    const weaponLookup = weapon.name.toLowerCase();
-    const metadata = weaponMetadata.find(w => w.name.toLowerCase() === weaponLookup);
-    const sharedMetadata = factionMetadata.find(w => w.name.toLowerCase() === weaponLookup);
-    const weaponType = metadata?.type || sharedMetadata?.type;
-    if (weaponType === 'Multi') {
-      const variants = weapon.variants || metadata?.variants || sharedMetadata?.variants || [];
-      variants.forEach(variant => {
-        weapons.push({
-          name: `${weapon.name}${variant.name ? ` – ${variant.name}` : ''}`,
-          description: metadata?.description || sharedMetadata?.description || '',
-          count: weapon.count || metadata?.count || sharedMetadata?.count || defaultCount,
-          type: variant.type,
-          profile: variant.profile,
-          tags: variant.tags,
-        });
-      });
-    } else {
-      weapons.push({
-        name: weapon.name,
-        description: metadata?.description || sharedMetadata?.description || '',
-        count: weapon.count || metadata?.count || sharedMetadata?.count || defaultCount,
-        type: metadata?.type || sharedMetadata?.type,
-        profile: metadata?.profile || sharedMetadata?.profile,
-        tags: metadata?.tags || sharedMetadata?.tags,
-      });
-    }
-  }
-  return weapons;
-};
 
 /**
  * Normalizes unit data for datacard generation into a consistent structure
@@ -150,27 +109,6 @@ const getUnitFullDatacardData = (unit, datacardData, factionMetadata = {}) => {
   return normalized;
 };
 
-const isCardComplete = unitDatacardData => {
-  const hasStats = !!unitDatacardData.stats;
-  const hasWeaponProfiles =
-    unitDatacardData.weapons.length > 0 && unitDatacardData.weapons?.every(w => !!w.profile);
-  const hasWargearDescriptions = unitDatacardData.wargear?.every(w => !!w.description);
-  const hasAbilityDescriptions = unitDatacardData.abilities?.every(
-    a => !!a.description || ['Core', 'Faction'].includes(a.type)
-  );
-  const returnValue =
-    hasStats && hasWeaponProfiles && hasWargearDescriptions && hasAbilityDescriptions;
-  if (!returnValue) {
-    console.group('card is incomplete due to:');
-    console.log('hasStats', hasStats);
-    console.log('hasWeaponProfiles', hasWeaponProfiles);
-    console.log('hasWargearDescriptions', hasWargearDescriptions);
-    console.log('hasAbilityDescriptions', hasAbilityDescriptions);
-    console.groupEnd();
-  }
-  return returnValue;
-};
-
 const whenLoaded = Promise.all([
   customElements.whenDefined('update-notification'),
   customElements.whenDefined('data-card'),
@@ -222,16 +160,10 @@ whenLoaded.then(async () => {
   const totalPoints = document.querySelector('#totalPoints');
   const unitList = document.querySelector('#unitList');
   const datacardElement = document.querySelector('data-card');
-  const warningElement = document.querySelector('.warning');
-  const warningButton = document.querySelector('#btnEditMetadata');
   const metadataModal = document.querySelector('metadata-modal');
   const btnMetadata = document.querySelector('#btnMetadata');
   btnMetadata.href = `/40k/metadata/?faction=${faction}`;
   let selectedUnitId = null;
-
-  if (warningButton) {
-    warningButton.disabled = true;
-  }
 
   if (metadataModal) {
     metadataModal.addEventListener('metadataSaved', async evt => {
@@ -248,21 +180,15 @@ whenLoaded.then(async () => {
         const unitDatacardData = getUnitFullDatacardData(unit, metadata, factionMetadata);
         cachedUnitDatacardData.set(unit.id, unitDatacardData);
 
-        const showWarning = !isCardComplete(unitDatacardData);
-        if (warningElement) {
-          warningElement.classList[showWarning ? 'remove' : 'add']('u-hidden');
-        }
         datacardElement.unitData = unitDatacardData;
       }
     });
   }
 
-  if (warningButton && metadataModal) {
-    warningButton.addEventListener('click', async () => {
+  if (datacardElement && metadataModal) {
+    datacardElement.addEventListener('add-metadata-requested', async () => {
       const unit = selectedUnitId ? cachedCanonicalUnits?.get(selectedUnitId) : null;
-      if (!unit || !factionName) {
-        return;
-      }
+      if (!unit || !factionName) return;
       const metadata = await getUnitMetadata('40k', factionName, unit.name);
       metadataModal.open({
         gameSystem: '40k',
@@ -279,9 +205,6 @@ whenLoaded.then(async () => {
     const unit = cachedCanonicalUnits?.get(unitId);
 
     if (unit && faction) {
-      if (warningButton) {
-        warningButton.disabled = false;
-      }
       // Check cache first, normalize only if not cached
       let unitDatacardData = cachedUnitDatacardData.get(unitId);
       let unitMetadata;
@@ -293,13 +216,7 @@ whenLoaded.then(async () => {
         cachedUnitDatacardData.set(unitId, unitDatacardData);
       }
 
-      const showWarning = !isCardComplete(unitDatacardData);
-      if (warningElement) {
-        warningElement.classList[showWarning ? 'remove' : 'add']('u-hidden');
-      }
       datacardElement.unitData = unitDatacardData;
-    } else if (warningButton) {
-      warningButton.disabled = true;
     }
   });
 
