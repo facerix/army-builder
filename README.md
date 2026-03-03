@@ -45,3 +45,12 @@ Separate `sw.js` (production) and `sw-dev.js` (development) files.
 - **40k**: Units in `{units}` array (migrated from old `{characters, battleline, otherUnits}` format)
 - **AoS**: Units in `{regiments, auxiliaryUnits, lores, terrain}` structure
 - Both use similar patterns but different categorization
+
+## Credits
+
+- Art assets from [SVG Repo](https://www.svgrepo.com/)
+- Placeholder animations from [SVGBackgrounds.com](https://www.svgbackgrounds.com/elements/animated-svg-preloaders)
+- AoS & 40k icons from [Warhammer40kGroup](https://github.com/Warhammer40kGroup/wh40k-icon)
+- Faction icons from [Certseeds](https://github.com/Certseeds/wh40k-icon)
+- Additional 40k icons from [Locequen](https://github.com/Locequen/40k-Data-Card)
+- Everything else by [me](https://www.facerix.com/about) and Cursor.
